@@ -1,0 +1,10 @@
+name: PrimesCore
+version: '${project.version}'
+main: net.primegames.PrimesCore
+prefix: Prime
+authors: [ nasir_idrishi ]
+description: PrimeGames Core Plugin for Paper Spigot
+website: htttps://primegames.net
+depend:
+  - floodgate
+  - Geyser-Spigot
