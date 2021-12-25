@@ -1,8 +1,8 @@
 package net.primegames.core.player;
 
 import net.primegames.core.PrimesCore;
-import net.primegames.core.groups.GroupIds;
 import net.primegames.core.providor.task.player.PlayerLoadTask;
+import net.primegames.core.utils.LoggerUtils;
 import org.bukkit.entity.Player;
 import org.geysermc.api.Geyser;
 import org.geysermc.api.session.Connection;
@@ -54,12 +54,23 @@ public class CorePlayer {
 
     //gets original xbox Uuid
     public static UUID getUuid(Player player){
+        FloodgateApi api = FloodgateApi.getInstance();
+        if(!api.isFloodgatePlayer(player.getUniqueId())){
+            LoggerUtils.warn("Not a bedrock player");
+        }
+        if (!api.isFloodgateId(player.getUniqueId())){
+            LoggerUtils.warn("Not a bedrock player");
+        }
         FloodgatePlayer fPlayer = FloodgateApi.getInstance().getPlayer(player.getUniqueId());
         if(fPlayer != null){
             Connection connection = Geyser.api().connectionByXuid(fPlayer.getXuid());
             if(connection != null) {
                 return connection.uuid();
+            }else {
+                LoggerUtils.error("Could not get Connection for " + player.getName());
             }
+        }else {
+            LoggerUtils.error("Could not get FloodgatePlayer for player " + player.getName());
         }
         return null;
     }

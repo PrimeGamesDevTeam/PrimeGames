@@ -2,9 +2,9 @@ package net.primegames.core.groups;
 
 import lombok.Getter;
 
-public enum GroupIds {
+public enum GroupTier {
 
-    OWNER(0, 20),
+    OWNER(1, 20),
     CHIEF(19, 18),
     LOS(2, 17),
     DEV(3, 16),
@@ -30,7 +30,7 @@ public enum GroupIds {
     @Getter
     private final int priority;
 
-    GroupIds(int id, int priority){
+    GroupTier(int id, int priority){
         this.id = id;
         this.priority = priority;
     }

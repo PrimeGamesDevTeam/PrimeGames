@@ -1,6 +1,8 @@
 package net.primegames.core;
 
 import lombok.Getter;
+import net.luckperms.api.LuckPerms;
+import net.luckperms.api.LuckPermsProvider;
 import net.primegames.core.gamemode.GameMode;
 import net.primegames.core.gamemode.GameModeId;
 import net.primegames.core.listener.CorePlayerListener;
@@ -23,6 +25,8 @@ public final class PrimesCore extends JavaPlugin {
     private static PrimesCore instance;
     @Getter
     private GameMode gameMode;
+    @Getter
+    private LuckPerms luckPerms;
 
     @Override
     public void onLoad() {
@@ -54,6 +58,9 @@ public final class PrimesCore extends JavaPlugin {
                 getServer().shutdown();
             }
         }
+
+        //Load LuckPerms
+        this.luckPerms = LuckPermsProvider.get();
     }
 
     @Override

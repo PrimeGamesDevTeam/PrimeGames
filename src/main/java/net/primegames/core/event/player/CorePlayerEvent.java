@@ -11,6 +11,11 @@ public abstract class CorePlayerEvent extends CoreEvent {
         this.player = player;
     }
 
+    public CorePlayerEvent(Player player, boolean async) {
+        super(async);
+        this.player = player;
+    }
+
     public Player getPlayer() {
         return player;
     }

@@ -23,5 +23,4 @@ abstract public class GameMode {
     public PrimesCore getPlugin() {
         return PrimesCore.getInstance();
     }
-
 }

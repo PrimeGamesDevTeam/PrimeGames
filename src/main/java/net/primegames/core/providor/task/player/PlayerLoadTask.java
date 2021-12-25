@@ -9,6 +9,7 @@
 package net.primegames.core.providor.task.player;
 
 import net.primegames.core.PrimesCore;
+import net.primegames.core.event.player.CoreGroupsLoadedEvent;
 import net.primegames.core.event.player.CorePlayerLoadedEvent;
 import net.primegames.core.player.CorePlayer;
 import net.primegames.core.player.CorePlayerData;
@@ -20,6 +21,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.UUID;
 
 final public class PlayerLoadTask extends MySqlFetchQueryTask {
@@ -50,7 +52,6 @@ final public class PlayerLoadTask extends MySqlFetchQueryTask {
     protected void handleResult(ResultSet resultSet) throws SQLException {
         Player player = CorePlayer.getPlayer(uuid);
         if(player != null){
-            CorePlayerData playerDatabaseData = null;
             //todo do rank setups etc here as per the plugin
             if(resultSet.next()){
                 try {
@@ -73,9 +74,11 @@ final public class PlayerLoadTask extends MySqlFetchQueryTask {
                             player.locale().toString()
                     ));
                     String[] groupIds = resultSet.getString("all_groups").split(",");
+                    ArrayList<Integer> groupIdList = new ArrayList<>();
                     for (String groupdId: groupIds){
-                        //todo Groups
+                        groupIdList.add(Integer.parseInt(groupdId));
                     }
+                    (new CoreGroupsLoadedEvent(player, groupIdList)).callEvent();
                     LoggerUtils.info("Core Player: " + player.getName() + " successfully loaded for with Core UUID: " + uuid);
                     (new CorePlayerLoadedEvent(player)).callEvent();
                 } catch (SQLException exception) {

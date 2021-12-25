@@ -8,3 +8,4 @@ website: htttps://primegames.net
 depend:
   - floodgate
   - Geyser-Spigot
+  - LuckPerms
