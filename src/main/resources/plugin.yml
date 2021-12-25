@@ -1,6 +1,6 @@
 name: PrimesCore
 version: '${project.version}'
-main: net.primegames.PrimesCore
+main: net.primegames.core.PrimesCore
 prefix: Prime
 authors: [ nasir_idrishi ]
 description: PrimeGames Core Plugin for Paper Spigot

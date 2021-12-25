@@ -4,3 +4,6 @@ mysql:
   username: beta
   password: beta
   database: beta
+
+#Survival, Prison, Factions, Skyblock
+GameMode: NONE
