@@ -55,6 +55,7 @@ public class SurvivalGroupListener implements Listener {
                     InheritanceNode node = InheritanceNode.builder(finalGroup.getName()).value(true).build();
                     if (user.data().add(node) == DataMutateResult.SUCCESS) {
                         user.setPrimaryGroup(finalGroup.getName());
+                        luckPerms.getUserManager().saveUser(user);
                         PrimesCore.getInstance().getLogger().log(Level.INFO, "Set " + player.getName() + "'s group to " + finalGroup.getName());
                     }else {
                         LoggerUtils.error("Failed to set " + player.getName() + "'s group to " + finalGroup.getName());
