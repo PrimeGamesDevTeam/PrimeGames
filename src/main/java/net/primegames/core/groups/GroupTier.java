@@ -29,9 +29,48 @@ public enum GroupTier {
     private final int id;
     @Getter
     private final int priority;
+    @Getter
+    private final boolean staff = false;
 
     GroupTier(int id, int priority){
         this.id = id;
         this.priority = priority;
     }
+
+    GroupTier(int id, int priority, boolean staff){
+        this.id = id;
+        this.priority = priority;
+
+    }
+
+    public static GroupTier fromId(int id){
+        for(GroupTier tier : GroupTier.values()){
+            if(tier.getId() == id){
+                return tier;
+            }
+        }
+        return null;
+    }
+
+    public static GroupTier getByPriority(int priority){
+        for(GroupTier tier : GroupTier.values()){
+            if(tier.getPriority() == priority){
+                return tier;
+            }
+        }
+        return null;
+    }
+
+    public static GroupTier getHighestTierPlayer(){
+        GroupTier highest = GroupTier.TIER_0;
+        for(GroupTier tier : GroupTier.values()){
+            if(tier.isStaff()) continue;
+            if(tier.getPriority() > highest.getPriority()){
+                highest = tier;
+            }
+        }
+        return highest;
+    }
+
 }
+

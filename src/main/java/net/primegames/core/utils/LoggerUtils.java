@@ -20,7 +20,7 @@ public class LoggerUtils {
     }
 
     static public void debug(String $msg){
-        PrimesCore.getInstance().getLogger().log(Level.INFO, $msg);
+        PrimesCore.getInstance().getLogger().log(Level.CONFIG, $msg);
     }
 
 }

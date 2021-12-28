@@ -8,20 +8,19 @@
 
 package net.primegames.core.providor.task.player;
 
-import net.primegames.core.player.CorePlayerData;
-import net.primegames.core.player.PlayerStatus;
+import net.primegames.core.player.CorePlayer;
 import net.primegames.core.providor.MySqlPostQueryTask;
-import net.primegames.core.utils.LoggerUtils;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 final public class PlayerUpdateTask extends MySqlPostQueryTask {
 
-    private final CorePlayerData playerData;
+    private final CorePlayer corePlayer;
 
-    public PlayerUpdateTask(CorePlayerData db){
-        playerData = db;
+    public PlayerUpdateTask(CorePlayer player){
+        this.corePlayer = player;
     }
 
     @Override
@@ -49,32 +48,28 @@ final public class PlayerUpdateTask extends MySqlPostQueryTask {
 
                 "last_connection = CURRENT_TIMESTAMP" +
                 "WHERE id = ?");
-        statement.setString(1, playerData.getUuid().toString());
-        statement.setString(2, playerData.getUsername());
-        statement.setString(3, playerData.getCurrentIp());
-        statement.setInt(4, playerData.getReputation());
-        statement.setString(5, playerData.getLocale());
-        statement.setString(6, playerData.getContinentCode());
-        statement.setString(7, playerData.getCountryCode());
-        statement.setInt(8, playerData.getCommonKeys());
-        statement.setInt(9, playerData.getVoteKeys());
-        statement.setInt(10, playerData.getRareKeys());
-        statement.setInt(11, playerData.getLegendaryKeys());
-        statement.setLong(12, playerData.getTimePlayed());
-        statement.setLong(13, playerData.getLastSessionDuration());
+        statement.setString(1, corePlayer.getOriginalUUID().toString());
+        statement.setString(2, corePlayer.getUsername());
+        statement.setString(3, corePlayer.getCurrentIp());
+        statement.setInt(4, corePlayer.getReputation());
+        statement.setString(5, corePlayer.getLocale());
+        statement.setString(6, corePlayer.getContinentCode());
+        statement.setString(7, corePlayer.getCountryCode());
+        statement.setInt(8, corePlayer.getCommonKeys());
+        statement.setInt(9, corePlayer.getVoteKeys());
+        statement.setInt(10, corePlayer.getRareKeys());
+        statement.setInt(11, corePlayer.getLegendaryKeys());
+        statement.setLong(12, corePlayer.getTimePlayed());
+        statement.setLong(13, corePlayer.getLastSessionDuration());
 
-        statement.setInt(14, playerData.getWarnings());
-        statement.setInt(15, playerData.getInternalId());
+        statement.setInt(14, corePlayer.getWarnings());
+        statement.setInt(15, corePlayer.getInternalId());
 
         return statement;
     }
 
     @Override
     protected void onInsert(int Id) {
-        if (playerData.isOnline()){
-             playerData.setPlayerStatus(PlayerStatus.ONLINE);
-        }else {
-            LoggerUtils.info("Player " + playerData.getUsername() + " logged out before their data could be saved");
-        }
+        //todo
     }
 }

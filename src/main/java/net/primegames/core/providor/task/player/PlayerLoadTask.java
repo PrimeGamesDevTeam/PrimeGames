@@ -9,10 +9,9 @@
 package net.primegames.core.providor.task.player;
 
 import net.primegames.core.PrimesCore;
-import net.primegames.core.event.player.CoreGroupsLoadedEvent;
 import net.primegames.core.event.player.CorePlayerLoadedEvent;
+import net.primegames.core.player.CorePlayerManager;
 import net.primegames.core.player.CorePlayer;
-import net.primegames.core.player.CorePlayerData;
 import net.primegames.core.providor.MySqlFetchQueryTask;
 import net.primegames.core.utils.LoggerUtils;
 import org.bukkit.entity.Player;
@@ -26,13 +25,14 @@ import java.util.UUID;
 
 final public class PlayerLoadTask extends MySqlFetchQueryTask {
 
-    private final UUID uuid;
-
+    private final UUID originalUuid;
+    private final UUID serverUuid;
     private final String name;
 
     public PlayerLoadTask(UUID uuid, Player player){
         LoggerUtils.debug("Initiating data load task for " + player.getName() + " with uuid: " + uuid + "from MySQL");
-        this.uuid = uuid;
+        this.originalUuid = uuid;
+        this.serverUuid = player.getUniqueId();
         this.name = player.getName();
     }
 
@@ -44,22 +44,24 @@ final public class PlayerLoadTask extends MySqlFetchQueryTask {
                         " WHERE uuid = UUID_TO_BIN(?) " +
                         "GROUP BY users.id " +
                         "LIMIT 1");
-        statement.setString(1, uuid.toString());
+        statement.setString(1, originalUuid.toString());
         return statement;
     }
 
     @Override
     protected void handleResult(ResultSet resultSet) throws SQLException {
-        Player player = CorePlayer.getPlayer(uuid);
+        Player player = PrimesCore.getInstance().getServer().getPlayer(serverUuid);
         if(player != null){
             //todo do rank setups etc here as per the plugin
             if(resultSet.next()){
                 try {
-                    CorePlayer.store(new CorePlayerData(
-                            player,
+                    CorePlayer corePlayer = new CorePlayer(
                             resultSet.getInt("id"),
-                            uuid,
+                            originalUuid,
+                            serverUuid,
+                            player.getName(),
                             resultSet.getString("last_ip"),
+                            (player.getAddress() != null) ? player.getAddress().getHostName() : resultSet.getString("last_ip"),
                             resultSet.getString("country_code"),
                             resultSet.getString("continent_code"),
                             resultSet.getInt("reputation"),
@@ -72,21 +74,22 @@ final public class PlayerLoadTask extends MySqlFetchQueryTask {
                             resultSet.getInt("rare_keys"),
                             resultSet.getInt("legendary_keys"),
                             player.locale().toString()
-                    ));
+                    );
+                    CorePlayerManager.getInstance().addPlayer(corePlayer);
                     String[] groupIds = resultSet.getString("all_groups").split(",");
                     ArrayList<Integer> groupIdList = new ArrayList<>();
                     for (String groupdId: groupIds){
                         groupIdList.add(Integer.parseInt(groupdId));
                     }
-                    (new CoreGroupsLoadedEvent(player, groupIdList)).callEvent();
-                    LoggerUtils.info("Core Player: " + player.getName() + " successfully loaded for with Core UUID: " + uuid);
-                    (new CorePlayerLoadedEvent(player)).callEvent();
+                    corePlayer.addGroups(groupIdList);
+                    (new CorePlayerLoadedEvent(player, corePlayer)).callEvent();
+                    LoggerUtils.info("Core Player: " + player.getName() + " successfully loaded for with Core UUID: " + originalUuid);
                 } catch (SQLException exception) {
                     exception.printStackTrace();
                 }
             }else {
                 LoggerUtils.info("Data was not found for " + player.getName() + " Initiating new registration");
-                PrimesCore.getInstance().getMySQLProvider().scheduleTask(new PlayerRegisterTask(uuid, player));
+                PrimesCore.getInstance().getMySQLProvider().scheduleTask(new PlayerRegisterTask(originalUuid, player));
             }
         }else {
             LoggerUtils.warn("Player disconnected while data was being loaded");

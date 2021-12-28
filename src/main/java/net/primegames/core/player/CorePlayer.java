@@ -1,77 +1,100 @@
+/*
+ *
+ *  * Copyright (C) PrimeGames - All Rights Reserved
+ *  * Unauthorized copying of this file, via any medium is strictly prohibited
+ *  * Proprietary and confidential
+ *
+ */
+
 package net.primegames.core.player;
 
-import net.primegames.core.PrimesCore;
-import net.primegames.core.providor.task.player.PlayerLoadTask;
+import lombok.Data;
+import net.primegames.core.groups.GroupTier;
 import net.primegames.core.utils.LoggerUtils;
 import org.bukkit.entity.Player;
-import org.geysermc.api.Geyser;
-import org.geysermc.api.session.Connection;
-import org.geysermc.floodgate.api.FloodgateApi;
-import org.geysermc.floodgate.api.player.FloodgatePlayer;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
+@Data
 public class CorePlayer {
 
-    private static final Map<UUID, CorePlayerData> playerData = new HashMap<>();
-    private static final Map<UUID, Player> players = new HashMap<>();
+    private final UUID originalUUID;
+    private final UUID serverUUID;
+    private final String username;
+    private final long lastSession;
+    private final int internalId;
+    private final String lastIp;
+    private final String currentIp;
+    private final String continentCode;
+    private final String countryCode;
+    private final int reputation;
+    private final int warnings;
+    private final long timePlayed;
+    private final long lastSessionDuration;
+    private final Date registeredAt;
+    private final int voteKeys;
+    private final int legendaryKeys;
+    private final int rareKeys;
+    private final int commonKeys;
+    private final PlayerStatus playerStatus = PlayerStatus.LOAD_PENDING;
+    private final String locale;
+    private ArrayList<@NonNull GroupTier> groupTiers = new ArrayList<>();
 
-    public static void store(CorePlayerData player) {
-        playerData.put(player.getPlayer().getUniqueId(), player);
+    public CorePlayer(int internalId, UUID originalUuid, UUID serverUuid, String username, String lastIp, String currentIp, String countryCode, String continentCode, int reputation, int warnings, long timePlayed, long lastSessionDuration, Date registeredAt, int voteKeys, int commonKeys, int rareKeys, int legendaryKeys, String locale){
+        this.originalUUID = originalUuid;
+        this.serverUUID = serverUuid;
+        this.lastSession = System.currentTimeMillis();
+        this.internalId = internalId;
+        this.username = username;
+        this.lastIp = lastIp;
+        this.continentCode = continentCode;
+        this.reputation = reputation;
+        this.warnings = warnings;
+        this.timePlayed = timePlayed;
+        this.lastSessionDuration = lastSessionDuration;
+        this.registeredAt = registeredAt;
+        this.voteKeys = voteKeys;
+        this.commonKeys = commonKeys;
+        this.rareKeys = rareKeys;
+        this.legendaryKeys = legendaryKeys;
+        this.locale = locale;
+        this.countryCode = countryCode;
+        this.currentIp = currentIp;
     }
 
-    public static CorePlayerData getCoreData(Player player) {
-        UUID uuid = getUuid(player);
-        if (uuid != null){
-            return playerData.get(uuid);
+    public void addGroupTier(GroupTier groupTier){
+        groupTiers.add(groupTier);
+    }
+
+    public void addGroups(List<Integer> groups){
+        for (int group : groups){
+            AddGroupTierFromId(group);
         }
-        return null;
     }
 
-    public static void remove(UUID uuid) {
-        playerData.remove(uuid);
-        players.remove(uuid);
-    }
-
-    public static Map<UUID, Player> getPlayers() {
-        return players;
-    }
-
-    public static Player getPlayer(UUID uuid) {
-        Player player = players.get(uuid);
-        if (player != null && player.isOnline()) {
-            return player;
-        }
-        return null;
-    }
-
-    public static void load(UUID uuid, Player player) {
-        players.put(uuid, player);
-        PrimesCore.getInstance().getMySQLProvider().scheduleTask(new PlayerLoadTask(uuid, player));
-    }
-
-    //gets original xbox Uuid
-    public static UUID getUuid(Player player){
-        FloodgateApi api = FloodgateApi.getInstance();
-        if(!api.isFloodgatePlayer(player.getUniqueId())){
-            LoggerUtils.warn("Not a bedrock player");
-        }
-        if (!api.isFloodgateId(player.getUniqueId())){
-            LoggerUtils.warn("Not a bedrock player");
-        }
-        FloodgatePlayer fPlayer = FloodgateApi.getInstance().getPlayer(player.getUniqueId());
-        if(fPlayer != null){
-            Connection connection = Geyser.api().connectionByXuid(fPlayer.getXuid());
-            if(connection != null) {
-                return connection.uuid();
-            }else {
-                LoggerUtils.error("Could not get Connection for " + player.getName());
-            }
+    public void AddGroupTierFromId(int id) {
+        GroupTier groupTier = GroupTier.fromId(id);
+        if (groupTier != null){
+            groupTiers.add(groupTier);
         }else {
-            LoggerUtils.error("Could not get FloodgatePlayer for player " + player.getName());
+            LoggerUtils.error("GroupTier with id " + id + " not found!");
         }
-        return null;
     }
+
+    public void removeGroupTier(GroupTier groupTier){
+        groupTiers.remove(groupTier);
+    }
+
+    public Player getPlayer(){
+        return org.bukkit.Bukkit.getPlayer(serverUUID);
+    }
+
+    public boolean isOnline(){
+        return getPlayer() != null && getPlayer().isOnline();
+    }
+
 }

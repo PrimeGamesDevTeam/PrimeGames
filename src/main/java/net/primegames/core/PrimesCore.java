@@ -6,6 +6,7 @@ import net.luckperms.api.LuckPermsProvider;
 import net.primegames.core.gamemode.GameMode;
 import net.primegames.core.gamemode.GameModeId;
 import net.primegames.core.listener.CorePlayerListener;
+import net.primegames.core.player.CorePlayerManager;
 import net.primegames.core.providor.task.MySQLInitialCoreTask;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.PluginManager;
@@ -27,12 +28,15 @@ public final class PrimesCore extends JavaPlugin {
     private GameMode gameMode;
     @Getter
     private LuckPerms luckPerms;
+    @Getter
+    private CorePlayerManager corePlayerManager;
 
     @Override
     public void onLoad() {
         instance = this;
         this.saveDefaultConfig();
-        mySQLprovider = new MySqlProvider();
+        this.mySQLprovider = new MySqlProvider();
+        this.corePlayerManager = new CorePlayerManager();
     }
 
     @Override

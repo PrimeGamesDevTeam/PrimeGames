@@ -8,9 +8,10 @@
 
 package net.primegames.core.providor.task.player;
 
+import net.primegames.core.PrimesCore;
 import net.primegames.core.event.player.CorePlayerRegisteredEvent;
 import net.primegames.core.player.CorePlayer;
-import net.primegames.core.player.CorePlayerData;
+import net.primegames.core.player.CorePlayerManager;
 import net.primegames.core.providor.MySqlPostQueryTask;
 import net.primegames.core.utils.LoggerUtils;
 import org.bukkit.entity.Player;
@@ -20,17 +21,18 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
-import java.util.Objects;
 import java.util.UUID;
 
 final public class PlayerRegisterTask extends MySqlPostQueryTask {
 
-    private final UUID uuid;
+    private final UUID originalUuid;
+    private final UUID serverUuid;
     private final String userName;
     private String address = "0.0.0.0";
 
     public PlayerRegisterTask(UUID uuid, Player player){
-        this.uuid = uuid;
+        this.originalUuid = uuid;
+        this.serverUuid = player.getUniqueId();
         userName = player.getName();
         if (player.getAddress() != null) {
             address = player.getAddress().getHostName();
@@ -40,7 +42,7 @@ final public class PlayerRegisterTask extends MySqlPostQueryTask {
     @Override
     protected PreparedStatement preparedStatement(Connection connection) throws SQLException {
         PreparedStatement statement = connection.prepareStatement("INSERT INTO users (uuid, username, last_ip) VALUES (UUID_TO_BIN(?), ?, ?)", Statement.RETURN_GENERATED_KEYS);
-        statement.setString(1, uuid.toString());
+        statement.setString(1, originalUuid.toString());
         statement.setString(2, userName);
         statement.setString(3, address);
         return statement;
@@ -48,12 +50,16 @@ final public class PlayerRegisterTask extends MySqlPostQueryTask {
 
     @Override
     protected void onInsert(int id) {
-        Player player = CorePlayer.getPlayer(uuid);
+        Player player = PrimesCore.getInstance().getServer().getPlayer(serverUuid);
         if(player != null) {
-            CorePlayer.store(new CorePlayerData(player,
+            String address = (player.getAddress() != null) ? player.getAddress().getHostName() : "0.0.0.0";
+            CorePlayerManager.getInstance().addPlayer(new CorePlayer(
                     id,
-                    uuid,
-                    Objects.requireNonNull(player.getAddress()).getHostName(),
+                    originalUuid,
+                    serverUuid,
+                    player.getName(),
+                    address,
+                    address,
                     "??",
                     "??",
                     0,
@@ -69,6 +75,8 @@ final public class PlayerRegisterTask extends MySqlPostQueryTask {
                     ));
             (new CorePlayerRegisteredEvent(player)).callEvent();
             LoggerUtils.debug("new registration successful for " + player.getName());
+        } else {
+            LoggerUtils.debug( userName + " logged out before their registration could be completed");
         }
     }
 }
