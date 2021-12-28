@@ -17,11 +17,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class MySqlConnectionBuilder{
+public class MySqlConnectionBuilder {
 
     private Connection connection;
 
-    public MySqlConnectionBuilder(){
+    public MySqlConnectionBuilder() {
         open(PrimesCore.getInstance().getConfig());
     }
 

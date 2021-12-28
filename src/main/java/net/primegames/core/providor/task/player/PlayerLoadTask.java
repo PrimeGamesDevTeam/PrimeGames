@@ -10,8 +10,8 @@ package net.primegames.core.providor.task.player;
 
 import net.primegames.core.PrimesCore;
 import net.primegames.core.event.player.CorePlayerLoadedEvent;
-import net.primegames.core.player.CorePlayerManager;
 import net.primegames.core.player.CorePlayer;
+import net.primegames.core.player.CorePlayerManager;
 import net.primegames.core.providor.MySqlFetchQueryTask;
 import net.primegames.core.utils.LoggerUtils;
 import org.bukkit.entity.Player;
@@ -29,7 +29,7 @@ final public class PlayerLoadTask extends MySqlFetchQueryTask {
     private final UUID serverUuid;
     private final String name;
 
-    public PlayerLoadTask(UUID uuid, Player player){
+    public PlayerLoadTask(UUID uuid, Player player) {
         LoggerUtils.debug("Initiating data load task for " + player.getName() + " with uuid: " + uuid + "from MySQL");
         this.originalUuid = uuid;
         this.serverUuid = player.getUniqueId();
@@ -40,10 +40,10 @@ final public class PlayerLoadTask extends MySqlFetchQueryTask {
     protected PreparedStatement prepareStatement(Connection connection) throws SQLException {
         LoggerUtils.debug("preparing stmt load task for " + name);
         PreparedStatement statement = connection.prepareStatement("SELECT users.*, GROUP_CONCAT(user_groups.group_id) AS all_groups FROM users " +
-                        "LEFT JOIN user_groups ON user_groups.user_id = users.id" +
-                        " WHERE uuid = UUID_TO_BIN(?) " +
-                        "GROUP BY users.id " +
-                        "LIMIT 1");
+                "LEFT JOIN user_groups ON user_groups.user_id = users.id" +
+                " WHERE uuid = UUID_TO_BIN(?) " +
+                "GROUP BY users.id " +
+                "LIMIT 1");
         statement.setString(1, originalUuid.toString());
         return statement;
     }
@@ -51,9 +51,9 @@ final public class PlayerLoadTask extends MySqlFetchQueryTask {
     @Override
     protected void handleResult(ResultSet resultSet) throws SQLException {
         Player player = PrimesCore.getInstance().getServer().getPlayer(serverUuid);
-        if(player != null){
+        if (player != null) {
             //todo do rank setups etc here as per the plugin
-            if(resultSet.next()){
+            if (resultSet.next()) {
                 try {
                     CorePlayer corePlayer = new CorePlayer(
                             resultSet.getInt("id"),
@@ -78,7 +78,7 @@ final public class PlayerLoadTask extends MySqlFetchQueryTask {
                     CorePlayerManager.getInstance().addPlayer(corePlayer);
                     String[] groupIds = resultSet.getString("all_groups").split(",");
                     ArrayList<Integer> groupIdList = new ArrayList<>();
-                    for (String groupdId: groupIds){
+                    for (String groupdId : groupIds) {
                         groupIdList.add(Integer.parseInt(groupdId));
                     }
                     corePlayer.addGroups(groupIdList);
@@ -87,11 +87,11 @@ final public class PlayerLoadTask extends MySqlFetchQueryTask {
                 } catch (SQLException exception) {
                     exception.printStackTrace();
                 }
-            }else {
+            } else {
                 LoggerUtils.info("Data was not found for " + player.getName() + " Initiating new registration");
                 PrimesCore.getInstance().getMySQLProvider().scheduleTask(new PlayerRegisterTask(originalUuid, player));
             }
-        }else {
+        } else {
             LoggerUtils.warn("Player disconnected while data was being loaded");
         }
         resultSet.close();

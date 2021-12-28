@@ -20,24 +20,24 @@ public enum GameModeId {
     @Getter
     private final Class<? extends GameMode> gameModeClass;
 
-    GameModeId(String identifier, Class<? extends GameMode> gameModeClass){
+    GameModeId(String identifier, Class<? extends GameMode> gameModeClass) {
         this.identifier = identifier;
         this.gameModeClass = gameModeClass;
+    }
+
+    @NonNull
+    public static GameModeId getGameModeId(String identifier) {
+        for (GameModeId gameModeId : values()) {
+            if (gameModeId.getIdentifier().equalsIgnoreCase(identifier)) {
+                return gameModeId;
+            }
+        }
+        throw new IllegalArgumentException("No GameMode with the identifier " + identifier + " exists!");
     }
 
     @Override
     public String toString() {
         return this.identifier;
-    }
-
-    @NonNull
-    public static GameModeId getGameModeId(String identifier){
-        for(GameModeId gameModeId : values()){
-            if(gameModeId.getIdentifier().equalsIgnoreCase(identifier)){
-                return gameModeId;
-            }
-        }
-        throw new IllegalArgumentException("No GameMode with the identifier " + identifier + " exists!");
     }
 
 }

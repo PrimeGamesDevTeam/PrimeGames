@@ -43,28 +43,28 @@ public class CorePlayerManager {
     }
 
 
-    public void initPlayer(Player player){
+    public void initPlayer(Player player) {
         FloodgatePlayer floodgatePlayer = getFloodGatePlayer(player);
-        if (floodgatePlayer != null){
+        if (floodgatePlayer != null) {
             Connection connection = Geyser.api().connectionByXuid(floodgatePlayer.getXuid());
-            if (connection != null){
+            if (connection != null) {
                 PrimesCore.getInstance().getMySQLProvider().scheduleTask(new PlayerLoadTask(connection.uuid(), player));
                 //todo check if bedrock player has a linked java account and if yes then save it to database: (javaUuid, bedrockUuid, xboxUuid)
                 //todo and if player is not liked then try to delete store from database
             } else {
                 LoggerUtils.error("Could not get Geyser Connection for floodgate/bedrock player: " + player.getName());
             }
-        }else {
+        } else {
             LoggerUtils.info(player.getName() + "is not a floodgate/bedrock player");
             //todo check if java player is a linked player, if yes then extract bedrockUuid and xboxUuid from Database
         }
     }
 
     //Check if the player is a linked player in floodgate
-    private void initLinkedPlayer(Player player, Callback callback){
+    private void initLinkedPlayer(Player player, Callback callback) {
         FloodgateApi api = FloodgateApi.getInstance();
         api.getPlayerLink().isLinkedPlayer(player.getUniqueId()).thenAcceptAsync(isLinked -> {
-            if (isLinked){
+            if (isLinked) {
                 callback.call(player);
             } else {
                 //todo
@@ -72,7 +72,7 @@ public class CorePlayerManager {
         });
     }
 
-    public FloodgatePlayer getFloodGatePlayer(Player player){
+    public FloodgatePlayer getFloodGatePlayer(Player player) {
         return FloodgateApi.getInstance().getPlayer(player.getUniqueId());
     }
 

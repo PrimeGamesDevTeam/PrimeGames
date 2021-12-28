@@ -15,7 +15,7 @@ import java.sql.PreparedStatement;
 
 final public class MySQLPardonPlayerTask extends MySqlPostQueryTask {
     @Override
-    protected PreparedStatement preparedStatement(Connection connection)  {
+    protected PreparedStatement preparedStatement(Connection connection) {
         return null;
     }
 }

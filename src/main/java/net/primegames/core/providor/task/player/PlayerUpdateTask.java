@@ -19,7 +19,7 @@ final public class PlayerUpdateTask extends MySqlPostQueryTask {
 
     private final CorePlayer corePlayer;
 
-    public PlayerUpdateTask(CorePlayer player){
+    public PlayerUpdateTask(CorePlayer player) {
         this.corePlayer = player;
     }
 

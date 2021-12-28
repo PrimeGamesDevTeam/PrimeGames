@@ -26,12 +26,12 @@ public class SurvivalGroupListener implements Listener {
         List<GroupTier> groupTiers = event.getPlayerData().getGroupTiers();
         ArrayList<SurvivalGroup> survivalGroups = new ArrayList<>();
         Player player = event.getPlayer();
-        LoggerUtils.info( ChatColor.YELLOW + "Loading survival groups for " + player.getName());
+        LoggerUtils.info(ChatColor.YELLOW + "Loading survival groups for " + player.getName());
         for (GroupTier groupId : groupTiers) {
             SurvivalGroup survivalGroup = SurvivalGroup.fromTier(groupId);
             if (survivalGroup != null) {
                 survivalGroups.add(survivalGroup);
-            }else {
+            } else {
                 LoggerUtils.error("Group " + groupId + " is not a survival group!");
             }
         }
@@ -48,7 +48,7 @@ public class SurvivalGroupListener implements Listener {
                         user.setPrimaryGroup(finalGroup.getName());
                         luckPerms.getUserManager().saveUser(user);
                         LoggerUtils.info("Set " + player.getName() + "'s group to " + finalGroup.getName());
-                    }else {
+                    } else {
                         LoggerUtils.error("Failed to set " + player.getName() + "'s group to " + finalGroup.getName());
                     }
                 }

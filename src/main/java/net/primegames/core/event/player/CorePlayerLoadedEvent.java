@@ -21,11 +21,11 @@ public class CorePlayerLoadedEvent extends Event {
         this.playerData = playerData;
     }
 
-    public @NotNull HandlerList getHandlers() {
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 
-    public static HandlerList getHandlerList() {
+    public @NotNull HandlerList getHandlers() {
         return handlers;
     }
 }

@@ -29,47 +29,47 @@ public enum SurvivalGroup {
     @Getter
     private final GroupTier tier;
 
-    SurvivalGroup(String name, GroupTier groupTier){
+    SurvivalGroup(String name, GroupTier groupTier) {
         this.tier = groupTier;
         this.name = name;
     }
 
-    public static SurvivalGroup fromTier(GroupTier groupTier){
+    public static SurvivalGroup fromTier(GroupTier groupTier) {
         SurvivalGroup[] groups = SurvivalGroup.values();
-        for(SurvivalGroup group : groups){
-            if(group.getTier().equals(groupTier)){
+        for (SurvivalGroup group : groups) {
+            if (group.getTier().equals(groupTier)) {
                 return group;
             }
         }
         return null;
     }
 
-    public Group getGroup(){
-        return PrimesCore.getInstance().getLuckPerms().getGroupManager().getGroup(this.getName());
-    }
-
-    public static SurvivalGroup fromTierId(int id){
+    public static SurvivalGroup fromTierId(int id) {
         SurvivalGroup[] groups = SurvivalGroup.values();
-        for(SurvivalGroup group : groups){
-            if(group.getTier().getId() == id){
+        for (SurvivalGroup group : groups) {
+            if (group.getTier().getId() == id) {
                 return group;
             }
         }
         return null;
     }
 
-    public static SurvivalGroup getHighestPriority(ArrayList<SurvivalGroup> groups){
+    public static SurvivalGroup getHighestPriority(ArrayList<SurvivalGroup> groups) {
         SurvivalGroup highestPriority = null;
         for (SurvivalGroup survivalGroup : groups) {
             if (highestPriority == null) {
                 highestPriority = survivalGroup;
-            }else {
+            } else {
                 if (highestPriority.getTier().getPriority() < survivalGroup.getTier().getPriority()) {
                     highestPriority = survivalGroup;
                 }
             }
         }
         return highestPriority;
+    }
+
+    public Group getGroup() {
+        return PrimesCore.getInstance().getLuckPerms().getGroupManager().getGroup(this.getName());
     }
 
 }

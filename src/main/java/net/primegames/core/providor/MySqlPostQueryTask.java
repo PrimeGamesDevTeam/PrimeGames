@@ -11,7 +11,10 @@ package net.primegames.core.providor;
 import net.primegames.core.PrimesCore;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public abstract class MySqlPostQueryTask extends BukkitRunnable {
 
@@ -20,14 +23,13 @@ public abstract class MySqlPostQueryTask extends BukkitRunnable {
         try {
             PreparedStatement statement = preparedStatement(PrimesCore.getInstance().getMySQLProvider().getConnection());
             int resultSet = statement.executeUpdate();
-            if(resultSet == 0){
+            if (resultSet == 0) {
                 throw new SQLException("Creating user failed, no rows affected.");
             }
-            try(ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                if(generatedKeys.next()){
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
                     onInsert(generatedKeys.getInt(1));
-                }
-                else{
+                } else {
                     throw new SQLException("User registration failed because ID was not obtained");
                 }
             } catch (SQLException e) {
@@ -39,13 +41,13 @@ public abstract class MySqlPostQueryTask extends BukkitRunnable {
     }
 
 
-
     protected abstract PreparedStatement preparedStatement(Connection connection) throws SQLException;
 
-    protected void onSuccess(int effectedRows){
+    protected void onSuccess(int effectedRows) {
 
     }
 
-    protected void onInsert(int Id){}
+    protected void onInsert(int Id) {
+    }
 
 }

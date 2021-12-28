@@ -7,13 +7,12 @@ import net.primegames.core.gamemode.GameMode;
 import net.primegames.core.gamemode.GameModeId;
 import net.primegames.core.listener.CorePlayerListener;
 import net.primegames.core.player.CorePlayerManager;
+import net.primegames.core.providor.MySqlProvider;
 import net.primegames.core.providor.task.MySQLInitialCoreTask;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
-
-import net.primegames.core.providor.MySqlProvider;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
@@ -22,14 +21,18 @@ import java.util.logging.Level;
 
 public final class PrimesCore extends JavaPlugin {
 
-    private MySqlProvider mySQLprovider;
     private static PrimesCore instance;
+    private MySqlProvider mySQLprovider;
     @Getter
     private GameMode gameMode;
     @Getter
     private LuckPerms luckPerms;
     @Getter
     private CorePlayerManager corePlayerManager;
+
+    public static PrimesCore getInstance() {
+        return instance;
+    }
 
     @Override
     public void onLoad() {
@@ -84,15 +87,11 @@ public final class PrimesCore extends JavaPlugin {
         }
     }
 
-    public MySqlProvider getMySQLProvider(){
+    public MySqlProvider getMySQLProvider() {
         return mySQLprovider;
     }
 
-    public static PrimesCore getInstance() {
-        return instance;
-    }
-
-    private void registerListeners(){
+    private void registerListeners() {
         @NotNull PluginManager manager = getServer().getPluginManager();
         manager.registerEvents(new CorePlayerListener(), this);
     }

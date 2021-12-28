@@ -7,5 +7,6 @@ public abstract class CoreEvent extends Event {
         super(async);
     }
 
-    public CoreEvent(){}
+    public CoreEvent() {
+    }
 }

@@ -11,7 +11,10 @@ package net.primegames.core.providor;
 import net.primegames.core.PrimesCore;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public abstract class MySqlFetchQueryTask extends BukkitRunnable {
 
@@ -23,13 +26,13 @@ public abstract class MySqlFetchQueryTask extends BukkitRunnable {
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
-        if(rs != null){
+        if (rs != null) {
             try {
                 handleResult(rs);
             } catch (SQLException exception) {
                 exception.printStackTrace();
             }
-        }else{
+        } else {
             throw new RuntimeException("Could not load player data from Database since resultSet returned null");
         }
     }

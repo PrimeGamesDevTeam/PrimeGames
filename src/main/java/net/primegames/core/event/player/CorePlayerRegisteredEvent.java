@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
-public class CorePlayerRegisteredEvent extends CorePlayerEvent{
+public class CorePlayerRegisteredEvent extends CorePlayerEvent {
 
     private final HandlerList handlerList;
 

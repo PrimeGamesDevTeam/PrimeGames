@@ -17,7 +17,7 @@ import java.sql.Statement;
 final public class MySQLInitialCoreTask extends MySqlTask {
 
     public void doOperations(Statement statement) throws SQLException {
-        LoggerUtils.info("Initializing Core database tables" );
+        LoggerUtils.info("Initializing Core database tables");
         statement.executeUpdate(
                 "CREATE TABLE IF NOT EXISTS users(" +
                         "id BIGINT(20) UNSIGNED PRIMARY KEY NOT NULL AUTO_INCREMENT," +
@@ -43,21 +43,21 @@ final public class MySQLInitialCoreTask extends MySqlTask {
 
                         "last_connection DATETIME DEFAULT CURRENT_TIMESTAMP," +
                         "registered_at DATETIME DEFAULT CURRENT_TIMESTAMP" +
-                        ") ENGINE=INNODB" );
+                        ") ENGINE=INNODB");
 
         statement.executeUpdate("CREATE TABLE IF NOT EXISTS user_ips( " +
                 "id BIGINT(20) UNSIGNED PRIMARY KEY NOT NULL AUTO_INCREMENT, " +
                 "ip VARCHAR(16) DEFAULT '0.0.0.0', " +
                 "username VARCHAR(16), " +
                 "is_banned BOOLEAN DEFAULT false" +
-                ") ENGINE=INNODB" );
+                ") ENGINE=INNODB");
 
         statement.executeUpdate("CREATE TABLE IF NOT EXISTS user_groups( " +
                 "user_id BIGINT(20) UNSIGNED NOT NULL, " +
                 "group_id TINYINT UNSIGNED NOT NULL, " +
                 "assigned_at DATETIME DEFAULT CURRENT_TIMESTAMP , " +
                 "FOREIGN KEY (user_id) REFERENCES users(id)" +
-                ") ENGINE=INNODB" );
+                ") ENGINE=INNODB");
 
         statement.executeUpdate("CREATE TABLE IF NOT EXISTS sentences( " +
                 "id BIGINT(20) UNSIGNED PRIMARY KEY NOT NULL AUTO_INCREMENT, " +
@@ -70,12 +70,12 @@ final public class MySQLInitialCoreTask extends MySqlTask {
 
                 "expires_at DATETIME, " +
                 "issued_at DATETIME DEFAULT CURRENT_TIMESTAMP" +
-                ") ENGINE=INNODB" );
+                ") ENGINE=INNODB");
 
         statement.executeUpdate("CREATE TABLE IF NOT EXISTS command_queue( " +
                 "target VARCHAR(17), " +
                 "command VARCHAR(200)" +
-                ") ENGINE=INNODB" );
+                ") ENGINE=INNODB");
 
         statement.executeUpdate("CREATE TABLE IF NOT EXISTS servers( " +
                 "identifier VARCHAR(7) PRIMARY KEY, " +
@@ -87,6 +87,6 @@ final public class MySQLInitialCoreTask extends MySqlTask {
                 "software VARCHAR(20), " +
                 "image TEXT, " +
                 "lastupdate BIGINT" +
-                ") ENGINE=INNODB" );
+                ") ENGINE=INNODB");
     }
 }

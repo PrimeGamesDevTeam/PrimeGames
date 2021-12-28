@@ -22,7 +22,7 @@ public class PrimesSurvival extends GameMode {
 
     }
 
-    public void registerEvents(){
+    public void registerEvents() {
         PluginManager manager = PrimesCore.getInstance().getServer().getPluginManager();
         manager.registerEvents(new SurvivalGroupListener(), PrimesCore.getInstance());
     }

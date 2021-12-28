@@ -17,7 +17,7 @@ public class MySqlProvider {
 
     private final Connection connection;
 
-    public MySqlProvider(){
+    public MySqlProvider() {
         connection = (new MySqlConnectionBuilder()).getConnection();
     }
 
@@ -25,7 +25,7 @@ public class MySqlProvider {
         mySqlTask.runTaskAsynchronously(PrimesCore.getInstance());
     }
 
-    public Connection getConnection(){
+    public Connection getConnection() {
         return connection;
     }
 }

@@ -44,7 +44,7 @@ public class CorePlayer {
     private final String locale;
     private ArrayList<@NonNull GroupTier> groupTiers = new ArrayList<>();
 
-    public CorePlayer(int internalId, UUID originalUuid, UUID serverUuid, String username, String lastIp, String currentIp, String countryCode, String continentCode, int reputation, int warnings, long timePlayed, long lastSessionDuration, Date registeredAt, int voteKeys, int commonKeys, int rareKeys, int legendaryKeys, String locale){
+    public CorePlayer(int internalId, UUID originalUuid, UUID serverUuid, String username, String lastIp, String currentIp, String countryCode, String continentCode, int reputation, int warnings, long timePlayed, long lastSessionDuration, Date registeredAt, int voteKeys, int commonKeys, int rareKeys, int legendaryKeys, String locale) {
         this.originalUUID = originalUuid;
         this.serverUUID = serverUuid;
         this.lastSession = System.currentTimeMillis();
@@ -66,34 +66,34 @@ public class CorePlayer {
         this.currentIp = currentIp;
     }
 
-    public void addGroupTier(GroupTier groupTier){
+    public void addGroupTier(GroupTier groupTier) {
         groupTiers.add(groupTier);
     }
 
-    public void addGroups(List<Integer> groups){
-        for (int group : groups){
+    public void addGroups(List<Integer> groups) {
+        for (int group : groups) {
             AddGroupTierFromId(group);
         }
     }
 
     public void AddGroupTierFromId(int id) {
         GroupTier groupTier = GroupTier.fromId(id);
-        if (groupTier != null){
+        if (groupTier != null) {
             groupTiers.add(groupTier);
-        }else {
+        } else {
             LoggerUtils.error("GroupTier with id " + id + " not found!");
         }
     }
 
-    public void removeGroupTier(GroupTier groupTier){
+    public void removeGroupTier(GroupTier groupTier) {
         groupTiers.remove(groupTier);
     }
 
-    public Player getPlayer(){
+    public Player getPlayer() {
         return org.bukkit.Bukkit.getPlayer(serverUUID);
     }
 
-    public boolean isOnline(){
+    public boolean isOnline() {
         return getPlayer() != null && getPlayer().isOnline();
     }
 

@@ -21,7 +21,7 @@ public abstract class MySqlTask extends BukkitRunnable {
         }
     }
 
-    public Connection getConnection(){
+    public Connection getConnection() {
         return PrimesCore.getInstance().getMySQLProvider().getConnection();
     }
 

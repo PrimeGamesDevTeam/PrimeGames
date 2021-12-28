@@ -9,9 +9,11 @@
 package net.primegames.core.providor.task.player.punishment;
 
 import net.primegames.core.providor.MySqlFetchQueryTask;
-import net.primegames.core.utils.LoggerUtils;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 
 final public class MySQLCheckPlayerPunishmentTask extends MySqlFetchQueryTask {

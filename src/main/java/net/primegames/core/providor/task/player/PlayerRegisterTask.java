@@ -30,7 +30,7 @@ final public class PlayerRegisterTask extends MySqlPostQueryTask {
     private final String userName;
     private String address = "0.0.0.0";
 
-    public PlayerRegisterTask(UUID uuid, Player player){
+    public PlayerRegisterTask(UUID uuid, Player player) {
         this.originalUuid = uuid;
         this.serverUuid = player.getUniqueId();
         userName = player.getName();
@@ -51,7 +51,7 @@ final public class PlayerRegisterTask extends MySqlPostQueryTask {
     @Override
     protected void onInsert(int id) {
         Player player = PrimesCore.getInstance().getServer().getPlayer(serverUuid);
-        if(player != null) {
+        if (player != null) {
             String address = (player.getAddress() != null) ? player.getAddress().getHostName() : "0.0.0.0";
             CorePlayerManager.getInstance().addPlayer(new CorePlayer(
                     id,
@@ -72,11 +72,11 @@ final public class PlayerRegisterTask extends MySqlPostQueryTask {
                     0,
                     0,
                     "??"
-                    ));
+            ));
             (new CorePlayerRegisteredEvent(player)).callEvent();
             LoggerUtils.debug("new registration successful for " + player.getName());
         } else {
-            LoggerUtils.debug( userName + " logged out before their registration could be completed");
+            LoggerUtils.debug(userName + " logged out before their registration could be completed");
         }
     }
 }
