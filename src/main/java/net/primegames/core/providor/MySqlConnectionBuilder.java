@@ -10,7 +10,7 @@ package net.primegames.core.providor;
 
 
 import net.primegames.core.PrimesCore;
-import net.primegames.core.utils.LoggerUtils;
+import net.primegames.core.utils.CoreLogger;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.sql.Connection;
@@ -31,12 +31,12 @@ public class MySqlConnectionBuilder {
             String connectionUri = "jdbc:mysql://" + config.getString("mysql.host") + ":" + config.getString("mysql.port", "3306") + "/" + config.getString("mysql.database") + "?autoReconnect=true&useGmtMillisForDatetimes=true&serverTimezone=GMT";
             connection = DriverManager.getConnection(connectionUri, config.getString("mysql.username"), config.getString("mysql.password"));
             connection.setAutoCommit(true);
-            LoggerUtils.info("Mysql Connection to Core Database successfully established");
+            CoreLogger.info("Mysql Connection to Core Database successfully established");
         } catch (SQLException ex) {
-            LoggerUtils.warn("Could not Establish connection with MySQL database");
+            CoreLogger.warn("Could not Establish connection with MySQL database");
             ex.printStackTrace();
         } catch (ClassNotFoundException ex) {
-            LoggerUtils.error("MySQL Driver is missing.. Needs dblib");
+            CoreLogger.error("MySQL Driver is missing.. Needs dblib");
             ex.printStackTrace();
         }
     }

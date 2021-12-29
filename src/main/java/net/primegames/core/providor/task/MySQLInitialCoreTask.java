@@ -9,7 +9,7 @@
 package net.primegames.core.providor.task;
 
 import net.primegames.core.providor.MySqlTask;
-import net.primegames.core.utils.LoggerUtils;
+import net.primegames.core.utils.CoreLogger;
 
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -17,7 +17,7 @@ import java.sql.Statement;
 final public class MySQLInitialCoreTask extends MySqlTask {
 
     public void doOperations(Statement statement) throws SQLException {
-        LoggerUtils.info("Initializing Core database tables");
+        CoreLogger.info("Initializing Core database tables");
         statement.executeUpdate(
                 "CREATE TABLE IF NOT EXISTS users(" +
                         "id BIGINT(20) UNSIGNED PRIMARY KEY NOT NULL AUTO_INCREMENT," +

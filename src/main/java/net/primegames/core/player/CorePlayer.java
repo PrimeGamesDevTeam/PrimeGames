@@ -10,7 +10,7 @@ package net.primegames.core.player;
 
 import lombok.Data;
 import net.primegames.core.groups.GroupTier;
-import net.primegames.core.utils.LoggerUtils;
+import net.primegames.core.utils.CoreLogger;
 import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
@@ -81,7 +81,7 @@ public class CorePlayer {
         if (groupTier != null) {
             groupTiers.add(groupTier);
         } else {
-            LoggerUtils.error("GroupTier with id " + id + " not found!");
+            CoreLogger.error("GroupTier with id " + id + " not found!");
         }
     }
 

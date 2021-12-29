@@ -13,7 +13,7 @@ import net.primegames.core.event.player.CorePlayerLoadedEvent;
 import net.primegames.core.player.CorePlayer;
 import net.primegames.core.player.CorePlayerManager;
 import net.primegames.core.providor.MySqlFetchQueryTask;
-import net.primegames.core.utils.LoggerUtils;
+import net.primegames.core.utils.CoreLogger;
 import org.bukkit.entity.Player;
 
 import java.sql.Connection;
@@ -30,7 +30,7 @@ final public class PlayerLoadTask extends MySqlFetchQueryTask {
     private final String name;
 
     public PlayerLoadTask(UUID uuid, Player player) {
-        LoggerUtils.debug("Initiating data load task for " + player.getName() + " with uuid: " + uuid + "from MySQL");
+        CoreLogger.debug("Initiating data load task for " + player.getName() + " with uuid: " + uuid + "from MySQL");
         this.originalUuid = uuid;
         this.serverUuid = player.getUniqueId();
         this.name = player.getName();
@@ -38,7 +38,7 @@ final public class PlayerLoadTask extends MySqlFetchQueryTask {
 
     @Override
     protected PreparedStatement prepareStatement(Connection connection) throws SQLException {
-        LoggerUtils.debug("preparing stmt load task for " + name);
+        CoreLogger.debug("preparing stmt load task for " + name);
         PreparedStatement statement = connection.prepareStatement("SELECT users.*, GROUP_CONCAT(user_groups.group_id) AS all_groups FROM users " +
                 "LEFT JOIN user_groups ON user_groups.user_id = users.id" +
                 " WHERE uuid = UUID_TO_BIN(?) " +
@@ -83,16 +83,16 @@ final public class PlayerLoadTask extends MySqlFetchQueryTask {
                     }
                     corePlayer.addGroups(groupIdList);
                     (new CorePlayerLoadedEvent(player, corePlayer)).callEvent();
-                    LoggerUtils.info("Core Player: " + player.getName() + " successfully loaded for with Core UUID: " + originalUuid);
+                    CoreLogger.info("Core Player: " + player.getName() + " successfully loaded for with Core UUID: " + originalUuid);
                 } catch (SQLException exception) {
                     exception.printStackTrace();
                 }
             } else {
-                LoggerUtils.info("Data was not found for " + player.getName() + " Initiating new registration");
+                CoreLogger.info("Data was not found for " + player.getName() + " Initiating new registration");
                 PrimesCore.getInstance().getMySQLProvider().scheduleTask(new PlayerRegisterTask(originalUuid, player));
             }
         } else {
-            LoggerUtils.warn("Player disconnected while data was being loaded");
+            CoreLogger.warn("Player disconnected while data was being loaded");
         }
         resultSet.close();
     }

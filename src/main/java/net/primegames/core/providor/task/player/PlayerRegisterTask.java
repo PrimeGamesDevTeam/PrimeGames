@@ -13,7 +13,7 @@ import net.primegames.core.event.player.CorePlayerRegisteredEvent;
 import net.primegames.core.player.CorePlayer;
 import net.primegames.core.player.CorePlayerManager;
 import net.primegames.core.providor.MySqlPostQueryTask;
-import net.primegames.core.utils.LoggerUtils;
+import net.primegames.core.utils.CoreLogger;
 import org.bukkit.entity.Player;
 
 import java.sql.Connection;
@@ -74,9 +74,9 @@ final public class PlayerRegisterTask extends MySqlPostQueryTask {
                     "??"
             ));
             (new CorePlayerRegisteredEvent(player)).callEvent();
-            LoggerUtils.debug("new registration successful for " + player.getName());
+            CoreLogger.debug("new registration successful for " + player.getName());
         } else {
-            LoggerUtils.debug(userName + " logged out before their registration could be completed");
+            CoreLogger.debug(userName + " logged out before their registration could be completed");
         }
     }
 }

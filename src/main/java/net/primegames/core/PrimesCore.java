@@ -9,6 +9,7 @@ import net.primegames.core.listener.CorePlayerListener;
 import net.primegames.core.player.CorePlayerManager;
 import net.primegames.core.providor.MySqlProvider;
 import net.primegames.core.providor.task.MySQLInitialCoreTask;
+import net.primegames.core.utils.CoreLogger;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -17,7 +18,6 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.logging.Level;
 
 public final class PrimesCore extends JavaPlugin {
 
@@ -58,10 +58,10 @@ public final class PrimesCore extends JavaPlugin {
             e.printStackTrace();
         } finally {
             if (gameMode != null) {
-                getLogger().log(Level.INFO, ChatColor.BOLD + "" + ChatColor.GREEN + "GameMode loaded: " + ChatColor.YELLOW + gameMode.getId().getIdentifier());
+                CoreLogger.info(ChatColor.BOLD + "" + ChatColor.GREEN + "GameMode loaded: " + ChatColor.YELLOW + gameMode.getId().getIdentifier());
                 gameMode.enable();
             } else {
-                getLogger().log(Level.SEVERE, "Failed to load game mode. Shutting down server.");
+                CoreLogger.error("Failed to load game mode. Shutting down server.");
                 getServer().shutdown();
             }
         }
@@ -102,10 +102,11 @@ public final class PrimesCore extends JavaPlugin {
         try {
             gamemodeId = GameModeId.getGameModeId(gamemodeName);
         } catch (IllegalArgumentException e) {
-            getLogger().log(Level.SEVERE, "Invalid gamemode name provided in config file: " + gamemodeName + ". Possible values: " + Arrays.toString(GameModeId.values()));
-            e.printStackTrace();
+            CoreLogger.error("Invalid gamemode name provided in config file: " + gamemodeName + ". Possible values: " + Arrays.toString(GameModeId.values()), e);
         }
         assert gamemodeId != null;
         this.gameMode = gamemodeId.getGameModeClass().getDeclaredConstructor().newInstance();
     }
+
+
 }
