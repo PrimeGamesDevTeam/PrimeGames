@@ -6,7 +6,7 @@
 
     <groupId>net.primegames</groupId>
     <artifactId>PrimesCore</artifactId>
-    <version>3.0.4</version>
+    <version>3.0.41</version>
     <packaging>jar</packaging>
 
     <name>PrimesCore</name>
