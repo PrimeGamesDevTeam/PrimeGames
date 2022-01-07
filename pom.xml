@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.primegames</groupId>
-    <artifactId>primescore</artifactId>
-    <version>3.0.42</version>
+    <artifactId>javacore</artifactId>
+    <version>3.0.5</version>
     <packaging>jar</packaging>
     <name>PrimesCore</name>
     <description>PrimeGames Core Plugin for Paper Spigot</description>
@@ -54,7 +54,7 @@
     <distributionManagement>
         <repository>
             <id>github</id>
-            <name>GitHub OWNER Apache Maven Packages</name>
+            <name>GitHub PrimeGamesDevTeam Apache Maven Packages</name>
             <url>https://maven.pkg.github.com/PrimeGamesDevTeam/PrimesCore</url>
         </repository>
     </distributionManagement>
@@ -97,19 +97,6 @@
             <artifactId>geyser-api</artifactId>
             <version>2.0.0-SNAPSHOT</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.luckperms</groupId>
-            <artifactId>api</artifactId>
-            <version>5.3</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>de.flo56958.minetinker</groupId>
-            <artifactId>MineTinker</artifactId>
-            <version>1.7.2</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/libs/MineTinker.jar</systemPath>
         </dependency>
     </dependencies>
 </project>
