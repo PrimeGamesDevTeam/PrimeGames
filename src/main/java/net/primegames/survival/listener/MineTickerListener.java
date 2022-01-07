@@ -6,7 +6,6 @@ import de.flo56958.minetinker.events.ToolUpgradeEvent;
 import de.flo56958.minetinker.modifiers.ModManager;
 import de.flo56958.minetinker.modifiers.Modifier;
 import de.flo56958.minetinker.utils.datatypes.Pair;
-import net.primegames.core.utils.CoreLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
