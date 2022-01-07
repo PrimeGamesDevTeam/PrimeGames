@@ -17,11 +17,15 @@ public class ChunkSpawnerListener implements Listener {
             return;
         }
         Chunk chunk = event.getBlock().getChunk();
+        int count = 0;
         for (BlockState block : chunk.getTileEntities()) {
             if(block.getType().equals(Material.SPAWNER)) {
-                event.setCancelled(true);
-                event.getPlayer().sendMessage("You can't place more than 1 spawner in a chunk!");
-                break;
+                if (count >= 1) {
+                    event.setCancelled(true);
+                    event.getPlayer().sendMessage("You can't place more than 1 spawner in a chunk!");
+                    break;
+                }
+                count++;
             }
         }
     }
