@@ -103,7 +103,7 @@
             <artifactId>MineTinker</artifactId>
             <version>1.7.2</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/libs/MineTinker.jar</systemPath>
+            <systemPath>${project.basedir}/src/main/resources/libs/MineTinker.jar</systemPath>
         </dependency>
     </dependencies>
 </project>
