@@ -1,7 +1,7 @@
 package net.primegames.providor;
 
 import net.primegames.JavaCore;
-import net.primegames.utils.CoreLogger;
+import net.primegames.utils.LoggerUtils;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.Connection;
@@ -16,7 +16,7 @@ public abstract class MySqlTask extends BukkitRunnable {
             statement = getConnection().createStatement();
             doOperations(statement);
         } catch (SQLException exception) {
-            CoreLogger.error("Failed to initialize database tables");
+            LoggerUtils.error("Failed to initialize database tables");
             exception.getStackTrace();
         }
     }

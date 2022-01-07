@@ -4,7 +4,7 @@ import lombok.Getter;
 import net.primegames.JavaCore;
 import net.primegames.providor.task.player.PlayerLoadTask;
 import net.primegames.utils.Callback;
-import net.primegames.utils.CoreLogger;
+import net.primegames.utils.LoggerUtils;
 import org.bukkit.entity.Player;
 import org.geysermc.api.Geyser;
 import org.geysermc.api.session.Connection;
@@ -52,10 +52,10 @@ public class CorePlayerManager {
                 //todo check if bedrock player has a linked java account and if yes then save it to database: (javaUuid, bedrockUuid, xboxUuid)
                 //todo and if player is not liked then try to delete store from database
             } else {
-                CoreLogger.error("Could not get Geyser Connection for floodgate/bedrock player: " + player.getName());
+                LoggerUtils.error("Could not get Geyser Connection for floodgate/bedrock player: " + player.getName());
             }
         } else {
-            CoreLogger.info(player.getName() + "is not a floodgate/bedrock player");
+            LoggerUtils.info(player.getName() + "is not a floodgate/bedrock player");
             //todo check if java player is a linked player, if yes then extract bedrockUuid and xboxUuid from Database
         }
     }

@@ -10,7 +10,7 @@ package net.primegames.providor;
 
 
 import net.primegames.JavaCore;
-import net.primegames.utils.CoreLogger;
+import net.primegames.utils.LoggerUtils;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -66,12 +66,12 @@ public class MySqlConnectionBuilder {
             String connectionUri = "jdbc:mysql://" + credentials.getHost() + ":" + credentials.getPort() + "/" + credentials.getDatabase() + "?autoReconnect=true&useGmtMillisForDatetimes=true&serverTimezone=GMT";
             connection = DriverManager.getConnection(connectionUri, credentials.getUsername(), credentials.getPassword());
             connection.setAutoCommit(true);
-            CoreLogger.info("Mysql Connection to Core Database successfully established");
+            LoggerUtils.info("Mysql Connection to Core Database successfully established");
         } catch (SQLException ex) {
-            CoreLogger.warn("Could not Establish connection with MySQL database");
+            LoggerUtils.warn("Could not Establish connection with MySQL database");
             ex.printStackTrace();
         } catch (ClassNotFoundException ex) {
-            CoreLogger.error("MySQL Driver is missing.. Needs dblib");
+            LoggerUtils.error("MySQL Driver is missing.. Needs dblib");
             ex.printStackTrace();
         }
     }

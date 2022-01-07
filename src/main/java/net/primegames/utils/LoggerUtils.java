@@ -5,7 +5,7 @@ import org.bukkit.Bukkit;
 
 import java.util.logging.Level;
 
-public class CoreLogger {
+public class LoggerUtils {
 
     private static final String PREFIX = "&7[&l&aPrimes&2&lCore&r&7] ";
     private static final String PREFIX_ERROR = "&7[&l&aPrimes&2&lCore &4ERROR&r&7] ";
