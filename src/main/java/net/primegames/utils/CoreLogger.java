@@ -48,7 +48,7 @@ public class CoreLogger {
     }
 
     static public void debug(String msg) {
-        JavaCore.getInstance().getLogger().log(Level.CONFIG, msg);
+        JavaCore.getInstance().getPlugin().getLogger().log(Level.CONFIG, msg);
     }
 
 }

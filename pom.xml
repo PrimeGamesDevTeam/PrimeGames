@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.primegames</groupId>
     <artifactId>javacore</artifactId>
-    <version>3.0.5</version>
+    <version>3.0.51</version>
     <packaging>jar</packaging>
     <name>JavaCore</name>
     <description>PrimeGames Core Plugin for Paper Spigot</description>
@@ -14,7 +14,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <url>https://primegames.net</url>
-
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
@@ -55,7 +54,7 @@
         <repository>
             <id>github</id>
             <name>GitHub PrimeGamesDevTeam Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/PrimeGamesDevTeam/PrimesCore</url>
+            <url>https://maven.pkg.github.com/PrimeGamesDevTeam/JavaCore</url>
         </repository>
     </distributionManagement>
     <repositories>

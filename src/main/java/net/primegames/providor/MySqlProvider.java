@@ -18,11 +18,11 @@ public class MySqlProvider {
     private final Connection connection;
 
     public MySqlProvider() {
-        connection = (new MySqlConnectionBuilder()).getConnection();
+        connection = MySqlConnectionBuilder.build(JavaCore.getInstance()).getConnection();
     }
 
     public void scheduleTask(BukkitRunnable mySqlTask) {
-        mySqlTask.runTaskAsynchronously(JavaCore.getInstance());
+        mySqlTask.runTaskAsynchronously(JavaCore.getInstance().getPlugin());
     }
 
     public Connection getConnection() {

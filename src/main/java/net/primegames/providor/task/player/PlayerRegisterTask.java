@@ -23,6 +23,8 @@ import java.sql.Statement;
 import java.util.Date;
 import java.util.UUID;
 
+import static org.bukkit.Bukkit.getServer;
+
 final public class PlayerRegisterTask extends MySqlPostQueryTask {
 
     private final UUID originalUuid;
@@ -50,7 +52,7 @@ final public class PlayerRegisterTask extends MySqlPostQueryTask {
 
     @Override
     protected void onInsert(int id) {
-        Player player = JavaCore.getInstance().getServer().getPlayer(serverUuid);
+        Player player = getServer().getPlayer(serverUuid);
         if (player != null) {
             String address = (player.getAddress() != null) ? player.getAddress().getHostName() : "0.0.0.0";
             CorePlayerManager.getInstance().addPlayer(new CorePlayer(

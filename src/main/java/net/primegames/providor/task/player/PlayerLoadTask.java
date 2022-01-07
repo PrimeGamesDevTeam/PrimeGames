@@ -23,6 +23,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import static org.bukkit.Bukkit.getServer;
+
 final public class PlayerLoadTask extends MySqlFetchQueryTask {
 
     private final UUID originalUuid;
@@ -50,7 +52,7 @@ final public class PlayerLoadTask extends MySqlFetchQueryTask {
 
     @Override
     protected void handleResult(ResultSet resultSet) throws SQLException {
-        Player player = JavaCore.getInstance().getServer().getPlayer(serverUuid);
+        Player player = getServer().getPlayer(serverUuid);
         if (player != null) {
             //todo do rank setups etc here as per the plugin
             if (resultSet.next()) {
@@ -89,7 +91,7 @@ final public class PlayerLoadTask extends MySqlFetchQueryTask {
                 }
             } else {
                 CoreLogger.info("Data was not found for " + player.getName() + " Initiating new registration");
-                JavaCore.getInstance().getMySQLProvider().scheduleTask(new PlayerRegisterTask(originalUuid, player));
+                JavaCore.getInstance().getMySQLprovider().scheduleTask(new PlayerRegisterTask(originalUuid, player));
             }
         } else {
             CoreLogger.warn("Player disconnected while data was being loaded");

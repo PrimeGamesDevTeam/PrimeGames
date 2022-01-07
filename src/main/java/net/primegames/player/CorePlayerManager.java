@@ -48,7 +48,7 @@ public class CorePlayerManager {
         if (floodgatePlayer != null) {
             Connection connection = Geyser.api().connectionByXuid(floodgatePlayer.getXuid());
             if (connection != null) {
-                JavaCore.getInstance().getMySQLProvider().scheduleTask(new PlayerLoadTask(connection.uuid(), player));
+                JavaCore.getInstance().getMySQLprovider().scheduleTask(new PlayerLoadTask(connection.uuid(), player));
                 //todo check if bedrock player has a linked java account and if yes then save it to database: (javaUuid, bedrockUuid, xboxUuid)
                 //todo and if player is not liked then try to delete store from database
             } else {
