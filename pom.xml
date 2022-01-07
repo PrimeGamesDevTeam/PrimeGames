@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.primegames</groupId>
     <artifactId>javacore</artifactId>
-    <version>1.1.01-SNAPSHOT</version>
+    <version>1.1.02-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>JavaCore</name>
     <description>PrimeGames Core Plugin for Paper Spigot</description>

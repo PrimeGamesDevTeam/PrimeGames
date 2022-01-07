@@ -11,12 +11,9 @@ package net.primegames.providor;
 
 import net.primegames.JavaCore;
 import net.primegames.utils.LoggerUtils;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -25,39 +22,10 @@ public class MySqlConnectionBuilder {
 
     private Connection connection;
 
-    private static int tries = 0;
-
     public static MySqlConnectionBuilder build(JavaCore core) {
         JavaPlugin plugin = core.getPlugin();
-        File configFile = new File(plugin.getDataFolder(), "mysql.yml");
-        MySqlConnectionBuilder builder;
-        if (configFile.exists()) {
-            YamlConfiguration config = new YamlConfiguration();
-            try {
-                config.load(configFile);
-            } catch (IOException | InvalidConfigurationException e) {
-                e.printStackTrace();
-            }
-            return new MySqlConnectionBuilder(getCredentials(config));
-        } else {
-            configFile.getParentFile().mkdirs();
-            plugin.saveResource("mysql.yml", false);
-            YamlConfiguration config = new YamlConfiguration();
-            try {
-                config.load(configFile);
-                setDefaults(config);
-                config.save(configFile);
-            } catch (InvalidConfigurationException | IOException e) {
-                e.printStackTrace();
-            }
-            if (tries < 10) {
-                build(core);
-                tries++;
-            } else {
-                throw new RuntimeException("Could not create mysql.yml");
-            }
-        }
-       throw new RuntimeException("Could not create mysql.yml");
+        plugin.saveDefaultConfig();
+        return new MySqlConnectionBuilder(getCredentials(plugin.getConfig(), plugin));
     }
 
     private MySqlConnectionBuilder(MysqlCredentials credentials) {
@@ -84,21 +52,25 @@ public class MySqlConnectionBuilder {
         return connection;
     }
 
-    private static MysqlCredentials getCredentials(YamlConfiguration config) {
-        String host = config.getString("host", "127.0.0.1");
-        int port = config.getInt("port", 3306);
-        String database = config.getString("database", "core");
-        String username = config.getString("username", "root");
-        String password = config.getString("password", "password");
+    private static MysqlCredentials getCredentials(FileConfiguration config, JavaPlugin plugin) {
+        if (config.getString("mysql.host") == null || config.getString("mysql.port") == null || config.getString("mysql.database") == null || config.getString("mysql.username") == null || config.getString("mysql.password") == null) {
+            setDefaults(config);
+            plugin.saveDefaultConfig();
+        }
+        String host = config.getString("mysql.host");
+        int port = config.getInt("mysql.port");
+        String database = config.getString("mysql.database");
+        String username = config.getString("mysql.username");
+        String password = config.getString("mysql.password");
         return new MysqlCredentials(host, username, password, database, port);
     }
 
-    private static void setDefaults(YamlConfiguration config) {
-        config.set("host", "172.0.0.1");
-        config.set("port", 3306);
-        config.set("database", "database");
-        config.set("username", "username");
-        config.set("password", "password");
+    private static void setDefaults(FileConfiguration config) {
+        config.set("mysql.host", "172.0.0.1");
+        config.set("mysql.port", 3306);
+        config.set("mysql.database", "core");
+        config.set("mysql.username", "root");
+        config.set("mysql.password", "password");
     }
 
 }
