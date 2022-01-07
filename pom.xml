@@ -51,7 +51,13 @@
             </resource>
         </resources>
     </build>
-
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub OWNER Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/PrimeGamesDevTeam/PrimesCore</url>
+        </repository>
+    </distributionManagement>
     <repositories>
         <repository>
             <id>opencollab-snapshot</id>
