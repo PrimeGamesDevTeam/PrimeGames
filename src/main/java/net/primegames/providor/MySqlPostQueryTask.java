@@ -21,7 +21,7 @@ public abstract class MySqlPostQueryTask extends BukkitRunnable {
     @Override
     public void run() {
         try {
-            PreparedStatement statement = preparedStatement(JavaCore.getInstance().getMySQLProvider().getConnection());
+            PreparedStatement statement = preparedStatement(JavaCore.getInstance().getMySQLprovider().getConnection());
             int resultSet = statement.executeUpdate();
             if (resultSet == 0) {
                 throw new SQLException("Creating user failed, no rows affected.");

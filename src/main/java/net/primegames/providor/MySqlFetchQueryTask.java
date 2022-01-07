@@ -22,7 +22,7 @@ public abstract class MySqlFetchQueryTask extends BukkitRunnable {
     public void run() {
         ResultSet rs = null;
         try {
-            rs = prepareStatement(JavaCore.getInstance().getMySQLProvider().getConnection()).executeQuery();
+            rs = prepareStatement(JavaCore.getInstance().getMySQLprovider().getConnection()).executeQuery();
         } catch (SQLException exception) {
             exception.printStackTrace();
         }

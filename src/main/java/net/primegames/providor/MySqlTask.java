@@ -22,7 +22,7 @@ public abstract class MySqlTask extends BukkitRunnable {
     }
 
     public Connection getConnection() {
-        return JavaCore.getInstance().getMySQLProvider().getConnection();
+        return JavaCore.getInstance().getMySQLprovider().getConnection();
     }
 
     protected abstract void doOperations(Statement statement) throws SQLException;
