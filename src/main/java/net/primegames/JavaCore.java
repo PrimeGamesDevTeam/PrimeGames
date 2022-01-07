@@ -1,6 +1,7 @@
 package net.primegames;
 
 import lombok.Getter;
+import net.primegames.listener.ChunkSpawnerListener;
 import net.primegames.listener.CorePlayerListener;
 import net.primegames.player.CorePlayerManager;
 import net.primegames.providor.MySqlProvider;
@@ -47,6 +48,7 @@ public final class JavaCore {
     private void registerListeners() {
         @NotNull PluginManager manager = getServer().getPluginManager();
         manager.registerEvents(new CorePlayerListener(), plugin);
+        manager.registerEvents(new ChunkSpawnerListener(), plugin);
     }
 
 }
