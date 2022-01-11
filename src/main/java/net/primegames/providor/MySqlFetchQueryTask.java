@@ -8,21 +8,20 @@
 
 package net.primegames.providor;
 
-import net.primegames.JavaCore;
-import org.bukkit.scheduler.BukkitRunnable;
+import net.primegames.PrimeGames;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public abstract class MySqlFetchQueryTask extends BukkitRunnable {
+public abstract class MySqlFetchQueryTask extends ProviderRunnable {
 
     @Override
     public void run() {
         ResultSet rs = null;
         try {
-            rs = prepareStatement(JavaCore.getInstance().getMySQLprovider().getConnection()).executeQuery();
+            rs = prepareStatement(PrimeGames.getInstance().getMySQLprovider().getConnection()).executeQuery();
         } catch (SQLException exception) {
             exception.printStackTrace();
         }

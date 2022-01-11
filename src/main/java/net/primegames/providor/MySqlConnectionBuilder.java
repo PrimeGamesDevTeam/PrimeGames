@@ -9,7 +9,7 @@
 package net.primegames.providor;
 
 
-import net.primegames.JavaCore;
+import net.primegames.PrimeGames;
 import net.primegames.utils.LoggerUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -22,7 +22,7 @@ public class MySqlConnectionBuilder {
 
     private Connection connection;
 
-    public static MySqlConnectionBuilder build(JavaCore core) {
+    public static MySqlConnectionBuilder build(PrimeGames core) {
         JavaPlugin plugin = core.getPlugin();
         plugin.saveDefaultConfig();
         return new MySqlConnectionBuilder(getCredentials(plugin.getConfig(), plugin));

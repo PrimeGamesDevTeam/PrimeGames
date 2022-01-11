@@ -1,6 +1,6 @@
 package net.primegames.listener;
 
-import net.primegames.JavaCore;
+import net.primegames.PrimeGames;
 import net.primegames.player.CorePlayerManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -12,7 +12,7 @@ public class CorePlayerListener implements Listener {
 
     @EventHandler
     public void onLogin(PlayerJoinEvent event) {
-        JavaCore.getInstance().getCorePlayerManager().initPlayer(event.getPlayer());
+        PrimeGames.getInstance().getCorePlayerManager().initPlayer(event.getPlayer());
     }
 
     @EventHandler(priority = EventPriority.LOWEST)

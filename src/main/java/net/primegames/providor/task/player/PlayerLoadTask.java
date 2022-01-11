@@ -8,7 +8,7 @@
 
 package net.primegames.providor.task.player;
 
-import net.primegames.JavaCore;
+import net.primegames.PrimeGames;
 import net.primegames.event.player.CorePlayerLoadedEvent;
 import net.primegames.player.CorePlayer;
 import net.primegames.player.CorePlayerManager;
@@ -91,7 +91,7 @@ final public class PlayerLoadTask extends MySqlFetchQueryTask {
                 }
             } else {
                 LoggerUtils.info("Data was not found for " + player.getName() + " Initiating new registration");
-                JavaCore.getInstance().getMySQLprovider().scheduleTask(new PlayerRegisterTask(originalUuid, player));
+                PrimeGames.getInstance().getMySQLprovider().scheduleTask(new PlayerRegisterTask(originalUuid, player));
             }
         } else {
             LoggerUtils.warn("Player disconnected while data was being loaded");

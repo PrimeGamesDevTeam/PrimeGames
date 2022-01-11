@@ -8,7 +8,7 @@
 
 package net.primegames.providor;
 
-import net.primegames.JavaCore;
+import net.primegames.PrimeGames;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.Connection;
@@ -18,14 +18,15 @@ public class MySqlProvider {
     private final Connection connection;
 
     public MySqlProvider() {
-        connection = MySqlConnectionBuilder.build(JavaCore.getInstance()).getConnection();
+        connection = MySqlConnectionBuilder.build(PrimeGames.getInstance()).getConnection();
     }
 
     public void scheduleTask(BukkitRunnable mySqlTask) {
-        mySqlTask.runTaskAsynchronously(JavaCore.getInstance().getPlugin());
+        mySqlTask.runTaskAsynchronously(PrimeGames.getInstance().getPlugin());
     }
 
     public Connection getConnection() {
         return connection;
     }
+
 }

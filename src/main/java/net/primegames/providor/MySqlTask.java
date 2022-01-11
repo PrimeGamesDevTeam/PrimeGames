@@ -1,14 +1,13 @@
 package net.primegames.providor;
 
-import net.primegames.JavaCore;
+import net.primegames.PrimeGames;
 import net.primegames.utils.LoggerUtils;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public abstract class MySqlTask extends BukkitRunnable {
+public abstract class MySqlTask extends ProviderRunnable {
 
     public void run() {
         Statement statement;
@@ -22,7 +21,7 @@ public abstract class MySqlTask extends BukkitRunnable {
     }
 
     public Connection getConnection() {
-        return JavaCore.getInstance().getMySQLprovider().getConnection();
+        return PrimeGames.getInstance().getMySQLprovider().getConnection();
     }
 
     protected abstract void doOperations(Statement statement) throws SQLException;

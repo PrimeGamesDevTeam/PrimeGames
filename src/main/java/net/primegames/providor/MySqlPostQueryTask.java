@@ -8,20 +8,19 @@
 
 package net.primegames.providor;
 
-import net.primegames.JavaCore;
-import org.bukkit.scheduler.BukkitRunnable;
+import net.primegames.PrimeGames;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public abstract class MySqlPostQueryTask extends BukkitRunnable {
+public abstract class MySqlPostQueryTask extends ProviderRunnable {
 
     @Override
     public void run() {
         try {
-            PreparedStatement statement = preparedStatement(JavaCore.getInstance().getMySQLprovider().getConnection());
+            PreparedStatement statement = preparedStatement(PrimeGames.getInstance().getMySQLprovider().getConnection());
             int resultSet = statement.executeUpdate();
             if (resultSet == 0) {
                 throw new SQLException("Creating user failed, no rows affected.");

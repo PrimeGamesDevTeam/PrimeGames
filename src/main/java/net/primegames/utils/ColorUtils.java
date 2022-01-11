@@ -1,7 +1,7 @@
 package net.primegames.utils;
 
 import net.md_5.bungee.api.ChatColor;
-import net.primegames.JavaCore;
+import net.primegames.PrimeGames;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -12,7 +12,7 @@ public class ColorUtils {
 
     public static String getColString(String string) {
         Matcher matcher = HEX_PATTERN.matcher(string);
-        if (JavaCore.getInstance().getPlugin().isEnabled()) {
+        if (PrimeGames.getInstance().getPlugin().isEnabled()) {
             while (matcher.find()) {
                 final ChatColor hexColor = ChatColor.of(matcher.group().substring(1, matcher.group().length() - 1));
                 final String before = string.substring(0, matcher.start());

@@ -4,10 +4,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.primegames</groupId>
-    <artifactId>javacore</artifactId>
-    <version>1.1.04-SNAPSHOT</version>
+    <artifactId>primegames</artifactId>
+    <version>1.2.0-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>JavaCore</name>
+    <name>PrimeGames</name>
     <description>PrimeGames Core Plugin for Paper Spigot</description>
     <properties>
         <java.version>1.16</java.version>
@@ -54,7 +54,7 @@
         <repository>
             <id>github</id>
             <name>GitHub PrimeGamesDevTeam Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/PrimeGamesDevTeam/JavaCore</url>
+            <url>https://maven.pkg.github.com/PrimeGamesDevTeam/PrimeGames</url>
         </repository>
     </distributionManagement>
     <repositories>
@@ -70,6 +70,10 @@
             <id>sonatype</id>
             <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/groups/public/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -83,6 +87,12 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.22</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.jitse</groupId>
+            <artifactId>npclib-api</artifactId>
+            <version>2.11.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

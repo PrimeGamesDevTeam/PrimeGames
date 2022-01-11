@@ -1,6 +1,6 @@
 package net.primegames.utils;
 
-import net.primegames.JavaCore;
+import net.primegames.PrimeGames;
 import org.bukkit.Bukkit;
 
 import java.util.logging.Level;
@@ -48,7 +48,7 @@ public class LoggerUtils {
     }
 
     static public void debug(String msg) {
-        JavaCore.getInstance().getPlugin().getLogger().log(Level.CONFIG, msg);
+        PrimeGames.getInstance().getPlugin().getLogger().log(Level.CONFIG, msg);
     }
 
 }
