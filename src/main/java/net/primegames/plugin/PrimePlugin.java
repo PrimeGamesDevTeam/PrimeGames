@@ -27,6 +27,11 @@ abstract public class PrimePlugin extends JavaPlugin {
     }
 
     @Override
+    final public void onLoad() {
+       this.load();
+    }
+
+    @Override
     final public void onEnable() {
         enabling = true;
         primeGames.onEnable();
@@ -53,5 +58,6 @@ abstract public class PrimePlugin extends JavaPlugin {
     public abstract GameServerSettings getServerSettings();
     protected abstract void disable();
     protected abstract void enable();
+    protected abstract void load();
 
 }
