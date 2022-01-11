@@ -2,6 +2,7 @@ package net.primegames.plugin;
 
 import lombok.Getter;
 import net.primegames.PrimeGames;
+import net.primegames.server.GameServerSettings;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -15,10 +16,8 @@ abstract public class PgPlugin extends JavaPlugin {
 
     private final ArrayList<Runnable> disableHooks = new ArrayList<>();
 
-    public abstract PrimeGames getJavaCore();
-
     @Override
-    public void onEnable() {
+    final public void onEnable() {
         enabling = true;
         getJavaCore().onEnable();
         enable();
@@ -26,7 +25,7 @@ abstract public class PgPlugin extends JavaPlugin {
     }
 
     @Override
-    public void onDisable() {
+    final public void onDisable() {
         this.disabling = true;
         //run onDisable Hooks
         for (Runnable runnable : disableHooks) {
@@ -37,14 +36,13 @@ abstract public class PgPlugin extends JavaPlugin {
         disabling = false;
     }
 
-    protected void disable() {
-    }
-
-    private void enable() {
-    }
-
     public void onDisableHook(Runnable runnable) {
         disableHooks.add(runnable);
     }
+
+    public abstract PrimeGames getJavaCore();
+    public abstract GameServerSettings getServerSettings();
+    protected abstract void disable();
+    protected abstract void enable();
 
 }

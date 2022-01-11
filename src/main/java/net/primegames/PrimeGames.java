@@ -37,13 +37,13 @@ public final class PrimeGames {
     @Getter
     private final GameServerSettings gameServerSettings;
 
-    public PrimeGames(PgPlugin plugin, GameServerSettings settings) {
+    public PrimeGames(PgPlugin plugin) {
         this.plugin =  plugin;
         instance = this;
         this.mySQLprovider = new MySqlProvider();
         this.corePlayerManager = new CorePlayerManager();
         this.npcLib = new NPCLib(plugin);
-        this.gameServerSettings = settings;
+        this.gameServerSettings = plugin.getServerSettings();
     }
 
     public void onEnable() {
