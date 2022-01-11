@@ -6,7 +6,7 @@ import net.jitse.npclib.NPCLib;
 import net.primegames.listener.ChunkSpawnerListener;
 import net.primegames.listener.CorePlayerListener;
 import net.primegames.player.CorePlayerManager;
-import net.primegames.plugin.PgPlugin;
+import net.primegames.plugin.PrimePlugin;
 import net.primegames.providor.MySqlProvider;
 import net.primegames.providor.task.MySQLInitialCoreTask;
 import net.primegames.server.GameServer;
@@ -27,7 +27,7 @@ public final class PrimeGames {
     @Getter
     private final CorePlayerManager corePlayerManager;
     @Getter
-    private final PgPlugin plugin;
+    private final PrimePlugin plugin;
     @Getter
     private final NPCLib npcLib;
     @Getter @Setter
@@ -37,7 +37,7 @@ public final class PrimeGames {
     @Getter
     private final GameServerSettings gameServerSettings;
 
-    public PrimeGames(PgPlugin plugin) {
+    public PrimeGames(PrimePlugin plugin) {
         this.plugin =  plugin;
         instance = this;
         this.mySQLprovider = new MySqlProvider();
