@@ -46,7 +46,7 @@ public final class PrimeGames {
         this.gameServerSettings = plugin.getServerSettings();
     }
 
-    public void onEnable() {
+    public void onInternalEnable() {
         mySQLprovider.scheduleTask(new MySQLInitialCoreTask());
         registerListeners();
         gameServerManager = new GameServerManager(gameServerSettings);

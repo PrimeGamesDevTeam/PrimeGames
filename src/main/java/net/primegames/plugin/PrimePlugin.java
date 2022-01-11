@@ -18,7 +18,7 @@ abstract public class PrimePlugin extends JavaPlugin {
     @Getter
     private boolean enabling = false;
     @Getter
-    private final PrimeGames primeGames;
+    private PrimeGames primeGames;
     private final ArrayList<Runnable> disableHooks = new ArrayList<>();
 
     public PrimePlugin(@NotNull final JavaPluginLoader loader, @NotNull final PluginDescriptionFile description, @NotNull final File dataFolder, @NotNull final File file){
@@ -26,16 +26,19 @@ abstract public class PrimePlugin extends JavaPlugin {
         this.primeGames = new PrimeGames(this);
     }
 
+    public PrimePlugin(){
+    }
+
     @Override
     final public void onLoad() {
-       this.load();
+       this.onInternalLoad();
     }
 
     @Override
     final public void onEnable() {
         enabling = true;
-        primeGames.onEnable();
-        enable();
+        primeGames.onInternalEnable();
+        onInternalEnable();
         enabling = false;
     }
 
@@ -46,7 +49,7 @@ abstract public class PrimePlugin extends JavaPlugin {
         for (Runnable runnable : disableHooks) {
             runnable.run();
         }
-        disable();
+        onInternalDisable();
         primeGames.onDisable();
         disabling = false;
     }
@@ -56,8 +59,8 @@ abstract public class PrimePlugin extends JavaPlugin {
     }
 
     public abstract GameServerSettings getServerSettings();
-    protected abstract void disable();
-    protected abstract void enable();
-    protected abstract void load();
+    protected void onInternalDisable(){}
+    protected void onInternalEnable(){}
+    protected void onInternalLoad(){}
 
 }
