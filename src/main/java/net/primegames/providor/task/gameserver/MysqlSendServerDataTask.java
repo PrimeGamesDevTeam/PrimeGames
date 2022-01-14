@@ -3,6 +3,7 @@ package net.primegames.providor.task.gameserver;
 import net.primegames.PrimeGames;
 import net.primegames.providor.MySqlPostQueryTask;
 import net.primegames.server.GameServerSettings;
+import net.primegames.utils.LoggerUtils;
 import org.bukkit.Server;
 
 import java.sql.Connection;
@@ -58,9 +59,8 @@ public class MysqlSendServerDataTask extends MySqlPostQueryTask {
         statement.setInt(5, playerAmount);
         statement.setInt(6, capacity);
         statement.setString(7, software);
-        statement.setInt(8, (int) (System.currentTimeMillis() / 1000L));
-        statement.setString(9, imageURL);
-        statement.setInt(10, status);
+        statement.setString(8, imageURL);
+        statement.setInt(9, status);
 
         return statement;
     }

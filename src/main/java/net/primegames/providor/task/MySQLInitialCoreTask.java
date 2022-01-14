@@ -78,14 +78,15 @@ final public class MySQLInitialCoreTask extends MySqlTask {
                 ") ENGINE=INNODB");
 
         statement.executeUpdate("CREATE TABLE IF NOT EXISTS servers( " +
-                "identifier VARCHAR(7) PRIMARY KEY, " +
+                "identifier VARCHAR(20) PRIMARY KEY, " +
                 "address VARCHAR(20), " +
                 "port SMALLINT UNSIGNED, " +
                 "game VARCHAR(20), " +
-                "playeramount TINYINT, " +
-                "capacity TINYINT, " +
+                "playeramount INT, " +
+                "capacity INT, " +
                 "software VARCHAR(20), " +
                 "image TEXT, " +
+                "status TINYINT, " +
                 "lastupdate BIGINT" +
                 ") ENGINE=INNODB");
     }

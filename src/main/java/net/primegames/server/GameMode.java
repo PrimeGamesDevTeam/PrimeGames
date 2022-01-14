@@ -8,7 +8,10 @@ public enum GameMode {
     SKYBLOCK(),
     SURVIVAL(),
     FACTIONS(),
-    PRISON()
+    PRISON();
 
+    public static String getGameModeList() {
+        return "Lobby, Skyblock, Survival, Factions, Prison";
+    }
 }
 

@@ -7,13 +7,14 @@ import java.util.logging.Level;
 
 public class LoggerUtils {
 
-    private static final String PREFIX = "&7[&l&aPrimes&2&lCore&r&7] ";
-    private static final String PREFIX_ERROR = "&7[&l&aPrimes&2&lCore &4ERROR&r&7] ";
-    private static final String PREFIX_WARN = "&7[&l&aPrimes&2&lCore &eWarning&r&7] ";
-    private static final String PREFIX_SUCCESS = "&7[&l&aPrimes&2&lCore&r&7 &aSUCCESS] ";
+    private static String PREFIX = "&l&aPrimes&2&lCore&r";
+    private static final String PREFIX_INFO = "&7[" + PREFIX +  " &rInfo] ";
+    private static final String PREFIX_ERROR = "&7[" + PREFIX +  " &4ERROR&r&7] ";
+    private static final String PREFIX_WARN = "&7[" + PREFIX +  " &eWarning&r&7] ";
+    private static final String PREFIX_SUCCESS = "&7[" + PREFIX +  " &7 &aSUCCESS] ";
 
     static public void info(String msg) {
-        Bukkit.getConsoleSender().sendMessage(ColorUtils.getColString(PREFIX + msg));
+        Bukkit.getConsoleSender().sendMessage(ColorUtils.getColString(PREFIX_INFO + msg));
     }
 
     static public void success(String msg) {
@@ -49,6 +50,10 @@ public class LoggerUtils {
 
     static public void debug(String msg) {
         PrimeGames.getInstance().getPlugin().getLogger().log(Level.CONFIG, msg);
+    }
+
+    public static void setPrefix(String s) {
+        PREFIX = s;
     }
 
 }

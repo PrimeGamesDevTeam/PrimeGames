@@ -34,8 +34,6 @@ public final class PrimeGames {
     private GameServer gameServer;
     @Getter
     private GameServerManager gameServerManager;
-    @Getter
-    private final GameServerSettings gameServerSettings;
 
     public PrimeGames(PrimePlugin plugin) {
         this.plugin =  plugin;
@@ -43,13 +41,12 @@ public final class PrimeGames {
         this.mySQLprovider = new MySqlProvider();
         this.corePlayerManager = new CorePlayerManager();
         this.npcLib = new NPCLib(plugin);
-        this.gameServerSettings = plugin.getServerSettings();
     }
 
     public void enable() {
         mySQLprovider.scheduleTask(new MySQLInitialCoreTask());
         registerListeners();
-        gameServerManager = new GameServerManager(gameServerSettings);
+        gameServerManager = new GameServerManager(plugin);
     }
 
     public void disable() {

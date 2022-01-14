@@ -26,5 +26,8 @@ public enum GameServerStatus {
         return null;
     }
 
+    public static String getGameServerStatusList() {
+        return "0: ALPHA, 1: BETA, 2: PRODUCTION, 3: COMING_SOON, 4: WHITELIST, 5: OFFLINE";
+    }
 }
 

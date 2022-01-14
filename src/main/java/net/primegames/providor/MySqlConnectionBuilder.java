@@ -25,10 +25,11 @@ public class MySqlConnectionBuilder {
     public static MySqlConnectionBuilder build(PrimeGames core) {
         JavaPlugin plugin = core.getPlugin();
         plugin.saveDefaultConfig();
-        return new MySqlConnectionBuilder(getCredentials(plugin.getConfig(), plugin));
+        return new MySqlConnectionBuilder(getCredentials(plugin));
     }
 
     private MySqlConnectionBuilder(MysqlCredentials credentials) {
+        LoggerUtils.info("Connecting to MySQL...");
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             String connectionUri = "jdbc:mysql://" + credentials.getHost() + ":" + credentials.getPort() + "/" + credentials.getDatabase() + "?autoReconnect=true&useGmtMillisForDatetimes=true&serverTimezone=GMT";
@@ -53,25 +54,28 @@ public class MySqlConnectionBuilder {
         return connection;
     }
 
-    private static MysqlCredentials getCredentials(FileConfiguration config, JavaPlugin plugin) {
-        if (config.getString("mysql.host") == null || config.getString("mysql.port") == null || config.getString("mysql.database") == null || config.getString("mysql.username") == null || config.getString("mysql.password") == null) {
+    private static MysqlCredentials getCredentials(JavaPlugin plugin) {
+        FileConfiguration config = plugin.getConfig();
+        if (config.getString("core.mysql.host") == null || config.getString("core.mysql.port") == null || config.getString("core.mysql.database") == null || config.getString("core.mysql.username") == null || config.getString("core.mysql.password") == null) {
+            LoggerUtils.warn("MySQL Credentials are missing in config.yml" + " of " + plugin.getName() + " plugin. Setting defaults...");
             setDefaults(config);
-            plugin.saveDefaultConfig();
+            plugin.saveConfig();
+            LoggerUtils.warn("MySQL Credentials are set to defaults, Make sure to set them correctly in config.yml of " + plugin.getName() + " plugin.");
         }
-        String host = config.getString("mysql.host");
-        int port = config.getInt("mysql.port");
-        String database = config.getString("mysql.database");
-        String username = config.getString("mysql.username");
-        String password = config.getString("mysql.password");
+        String host = config.getString("core.mysql.host");
+        int port = config.getInt("core.mysql.port");
+        String database = config.getString("core.mysql.database");
+        String username = config.getString("core.mysql.username");
+        String password = config.getString("core.mysql.password");
         return new MysqlCredentials(host, username, password, database, port);
     }
 
     private static void setDefaults(FileConfiguration config) {
-        config.set("mysql.host", "172.0.0.1");
-        config.set("mysql.port", 3306);
-        config.set("mysql.database", "core");
-        config.set("mysql.username", "root");
-        config.set("mysql.password", "password");
+        config.set("core.mysql.host", "127.0.0.1");
+        config.set("core.mysql.port", 3306);
+        config.set("core.mysql.database", "core");
+        config.set("core.mysql.username", "root");
+        config.set("core.mysql.password", "password");
     }
 
 }

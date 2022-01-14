@@ -55,11 +55,10 @@ abstract public class PrimePlugin extends JavaPlugin {
         disabling = false;
     }
 
-    public void onDisableHook(Runnable runnable) {
+    public final void onDisableHook(Runnable runnable) {
         disableHooks.add(runnable);
     }
 
-    public abstract GameServerSettings getServerSettings();
     protected void onInternalDisable(){}
     protected void onInternalEnable(){}
     protected void onInternalLoad(){}

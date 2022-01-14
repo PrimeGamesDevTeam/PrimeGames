@@ -26,10 +26,8 @@ public abstract class MySqlPostQueryTask extends ProviderRunnable {
                 throw new SQLException("Creating user failed, no rows affected.");
             }
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
+                while (generatedKeys.next()) {
                     onInsert(generatedKeys.getInt(1));
-                } else {
-                    throw new SQLException("User registration failed because ID was not obtained");
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
