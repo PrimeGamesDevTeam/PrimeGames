@@ -9,6 +9,9 @@ public class GameServerSettings {
     private final GameMode gameMode;
     private final String address;
     private final String icon;
+    /**
+     * Current game server identifier
+     */
     private String identifier;
     private GameServerStatus status;
 

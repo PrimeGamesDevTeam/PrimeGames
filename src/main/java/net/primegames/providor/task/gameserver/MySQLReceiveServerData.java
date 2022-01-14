@@ -18,7 +18,6 @@ public class MySQLReceiveServerData extends MySqlFetchQueryTask {
     @Override
     protected void handleResult(ResultSet resultSet) throws SQLException {
         this.verifyPluginEnabled(PrimeGames.getInstance().getPlugin());
-
         while (resultSet.next()) {
             PrimeGames.getInstance().getGameServerManager().addServer(resultSet.getString("identifier"), resultSet.getString("game"), resultSet.getString("address"), resultSet.getInt("port"), resultSet.getInt("playeramount"), resultSet.getInt("capacity"), resultSet.getString("software"), resultSet.getString("image"), resultSet.getInt("status"));
         }

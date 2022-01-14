@@ -4,6 +4,7 @@ import lombok.Getter;
 import net.primegames.PrimeGames;
 import net.primegames.providor.MySqlProvider;
 import net.primegames.providor.task.gameserver.MySQLCleanDeadServerData;
+import net.primegames.providor.task.gameserver.MySQLReceiveServerData;
 import net.primegames.providor.task.gameserver.MysqlDeleteServerData;
 import net.primegames.providor.task.gameserver.MysqlSendServerDataTask;
 import org.bukkit.scheduler.BukkitScheduler;
@@ -28,7 +29,8 @@ public class GameServerManager {
         BukkitScheduler scheduler = PrimeGames.getInstance().getPlugin().getServer().getScheduler();
         //send server data to database
         scheduler.scheduleSyncRepeatingTask(PrimeGames.getInstance().getPlugin(), () -> provider.scheduleTask(new MysqlSendServerDataTask(this.getSettings())), 0, 200);
-        //get Server Data
+        //get servers Data
+        scheduler.scheduleSyncRepeatingTask(PrimeGames.getInstance().getPlugin(), () -> provider.scheduleTask(new MySQLReceiveServerData()), 0, 200);
 
         //delete garbage data
         scheduler.scheduleSyncRepeatingTask(PrimeGames.getInstance().getPlugin(), () -> provider.scheduleTask(new MySQLCleanDeadServerData()), 0, 1200);
