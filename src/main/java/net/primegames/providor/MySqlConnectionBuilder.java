@@ -32,6 +32,7 @@ public class MySqlConnectionBuilder {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             String connectionUri = "jdbc:mysql://" + credentials.getHost() + ":" + credentials.getPort() + "/" + credentials.getDatabase() + "?autoReconnect=true&useGmtMillisForDatetimes=true&serverTimezone=GMT";
+            DriverManager.setLoginTimeout(5);
             connection = DriverManager.getConnection(connectionUri, credentials.getUsername(), credentials.getPassword());
             connection.setAutoCommit(true);
             LoggerUtils.info("Mysql Connection to Core Database successfully established");
