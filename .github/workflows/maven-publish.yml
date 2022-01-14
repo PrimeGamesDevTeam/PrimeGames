@@ -32,3 +32,8 @@ jobs:
       run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml
       env:
         GITHUB_TOKEN: ${{ github.token }}
+    - uses: actions/delete-package-versions@v2
+      with: 
+        package-name: 'test-packae'
+        min-versions-to-keep: 3
+        ignore-versions: '^(0|[1-9]\\d*)\\.0\\.0$'    
