@@ -1,6 +1,7 @@
 package net.primegames.server.settings;
 
 import lombok.Getter;
+import lombok.NonNull;
 import net.primegames.plugin.PrimePlugin;
 import net.primegames.server.GameServerSettings;
 import org.bukkit.*;
@@ -16,18 +17,19 @@ public abstract class ServerSettings {
     private final PrimePlugin plugin;
 
 
-    public ServerSettings(PrimePlugin plugin){
+    public ServerSettings(@NonNull PrimePlugin plugin){
         this.plugin = plugin;
         this.lobby = loadAndGet(getLobbyWorldName(), getLobbySpawn());
     }
 
-    protected World loadAndGet(String worldName, Vector defaultSpawn) {
+    protected World loadAndGet(@NonNull String worldName, @NonNull Vector defaultSpawn) {
         World world = loadAndGet(worldName);
         world.setSpawnLocation(new Location(world, defaultSpawn.getX(), defaultSpawn.getY(), defaultSpawn.getZ()));
         return world;
     }
 
-    protected World loadAndGet(String worldName){
+    @NonNull
+    protected World loadAndGet(@NonNull String worldName){
         World world = plugin.getServer().getWorld(worldName);
         if (world == null) {
             String worldPath = Bukkit.getWorldContainer().getPath() + "/" + worldName;
@@ -39,11 +41,15 @@ public abstract class ServerSettings {
                 world = new WorldCreator(worldName).createWorld();
             }
         }
+        assert world != null;
         return world;
     }
 
+    @NonNull
     public abstract GameServerSettings getServerSettings();
+    @NonNull
     public abstract String getLobbyWorldName();
+    @NonNull
     public abstract Vector getLobbySpawn();
 
 }
