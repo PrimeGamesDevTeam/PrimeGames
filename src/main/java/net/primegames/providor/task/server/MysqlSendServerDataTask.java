@@ -1,14 +1,14 @@
-package net.primegames.providor.task.gameserver;
+package net.primegames.providor.task.server;
 
 import net.primegames.PrimeGames;
 import net.primegames.providor.MySqlPostQueryTask;
 import net.primegames.server.GameServerSettings;
-import net.primegames.utils.LoggerUtils;
 import org.bukkit.Server;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class MysqlSendServerDataTask extends MySqlPostQueryTask {
 
@@ -27,12 +27,12 @@ public class MysqlSendServerDataTask extends MySqlPostQueryTask {
         Server server = PrimeGames.getInstance().getPlugin().getServer();
         this.identifier = settings.getIdentifier();
         this.gameMode = settings.getGameMode().name();
-        this.port = server.getPort();
+        this.port = settings.getPort();
         this.playerAmount = server.getOnlinePlayers().size();
         this.capacity = server.getMaxPlayers();
         this.software = server.getName();
         this.imageURL = settings.getIcon();
-        this.host = server.getIp();
+        this.host = settings.getAddress();
         this.status = settings.getStatus().getId();
     }
 
@@ -50,7 +50,7 @@ public class MysqlSendServerDataTask extends MySqlPostQueryTask {
                           lastupdate,
                           image,
                           status
-                        ) VALUES (?, ?, ?, ?, ?, ?, ?, UNIX_TIMESTAMP(), ?, ?)""");
+                        ) VALUES (?, ?, ?, ?, ?, ?, ?, UNIX_TIMESTAMP(), ?, ?)""", Statement.RETURN_GENERATED_KEYS);
 
         statement.setString(1, identifier);
         statement.setString(2, host);

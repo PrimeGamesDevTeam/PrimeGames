@@ -8,7 +8,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
-public class ChunkSpawnerListener implements Listener {
+public class ChunkSpawnerLimitListener implements Listener {
 
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)

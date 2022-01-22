@@ -2,8 +2,7 @@ package net.primegames;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.jitse.npclib.NPCLib;
-import net.primegames.listener.ChunkSpawnerListener;
+import net.primegames.listener.ChunkSpawnerLimitListener;
 import net.primegames.listener.CorePlayerListener;
 import net.primegames.player.CorePlayerManager;
 import net.primegames.plugin.PrimePlugin;
@@ -11,8 +10,8 @@ import net.primegames.providor.MySqlProvider;
 import net.primegames.providor.task.MySQLInitialCoreTask;
 import net.primegames.server.GameServer;
 import net.primegames.server.GameServerManager;
-import net.primegames.server.GameServerSettings;
 import org.bukkit.plugin.PluginManager;
+import org.geysermc.floodgate.api.FloodgateApi;
 import org.jetbrains.annotations.NotNull;
 import java.sql.SQLException;
 
@@ -28,19 +27,20 @@ public final class PrimeGames {
     private final CorePlayerManager corePlayerManager;
     @Getter
     private final PrimePlugin plugin;
-    @Getter
-    private final NPCLib npcLib;
+
     @Getter @Setter
     private GameServer gameServer;
     @Getter
     private GameServerManager gameServerManager;
+    @Getter
+    private final FloodgateApi floodgateApi;
 
     public PrimeGames(PrimePlugin plugin) {
         this.plugin =  plugin;
         instance = this;
         this.mySQLprovider = new MySqlProvider();
         this.corePlayerManager = new CorePlayerManager();
-        this.npcLib = new NPCLib(plugin);
+        this.floodgateApi = FloodgateApi.getInstance();
     }
 
     public void enable() {
@@ -61,7 +61,7 @@ public final class PrimeGames {
     private void registerListeners() {
         @NotNull PluginManager manager = getServer().getPluginManager();
         manager.registerEvents(new CorePlayerListener(), plugin);
-        manager.registerEvents(new ChunkSpawnerListener(), plugin);
+        manager.registerEvents(new ChunkSpawnerLimitListener(), plugin);
     }
 
 }

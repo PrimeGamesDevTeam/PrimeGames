@@ -3,6 +3,7 @@ package net.primegames.plugin;
 import lombok.Getter;
 import net.primegames.PrimeGames;
 import net.primegames.server.GameServerSettings;
+import net.primegames.server.settings.ServerSettings;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.JavaPluginLoader;
@@ -62,5 +63,6 @@ abstract public class PrimePlugin extends JavaPlugin {
     protected void onInternalDisable(){}
     protected void onInternalEnable(){}
     protected void onInternalLoad(){}
+    public abstract ServerSettings getSettings();
 
 }

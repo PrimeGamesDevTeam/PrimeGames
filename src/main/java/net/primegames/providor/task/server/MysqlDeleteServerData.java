@@ -1,4 +1,4 @@
-package net.primegames.providor.task.gameserver;
+package net.primegames.providor.task.server;
 
 import net.primegames.providor.MySqlPostQueryTask;
 
@@ -13,9 +13,10 @@ public class MysqlDeleteServerData extends MySqlPostQueryTask {
     public MysqlDeleteServerData(String serverId) {
         this.serverId = serverId;
     }
+
     @Override
     protected PreparedStatement preparedStatement(Connection connection) throws SQLException {
-       PreparedStatement statement = connection.prepareStatement("DELETE FROM `servers` WHERE `server_id` = ?");
+       PreparedStatement statement = connection.prepareStatement("DELETE FROM `servers` WHERE `identifier` = ?");
        statement.setString(1, serverId);
        return statement;
     }

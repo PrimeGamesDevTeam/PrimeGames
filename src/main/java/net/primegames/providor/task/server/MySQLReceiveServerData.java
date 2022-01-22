@@ -1,4 +1,4 @@
-package net.primegames.providor.task.gameserver;
+package net.primegames.providor.task.server;
 
 import net.primegames.PrimeGames;
 import net.primegames.providor.MySqlFetchQueryTask;
