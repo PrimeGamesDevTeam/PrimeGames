@@ -63,6 +63,6 @@ abstract public class PrimePlugin extends JavaPlugin {
     protected void onInternalDisable(){}
     protected void onInternalEnable(){}
     protected void onInternalLoad(){}
-    public abstract ServerSettings getSettings();
+    public abstract <T extends ServerSettings> T getSettings();
 
 }
