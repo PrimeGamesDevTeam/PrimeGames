@@ -1,8 +1,6 @@
 package net.primegames.plugin;
 
 import lombok.Getter;
-import net.luckperms.api.LuckPerms;
-import net.luckperms.api.LuckPermsProvider;
 import net.primegames.PrimeGames;
 import net.primegames.server.settings.ServerSettings;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -24,18 +22,14 @@ abstract public class PrimePlugin extends JavaPlugin {
     private final ArrayList<Runnable> disableHooks = new ArrayList<>();
     @Getter
     private ServerSettings serverSettings;
-    @Getter
-    private final LuckPerms luckPerms;
 
     public PrimePlugin(@NotNull final JavaPluginLoader loader, @NotNull final PluginDescriptionFile description, @NotNull final File dataFolder, @NotNull final File file){
         super(loader, description, dataFolder, file);
         this.primeGames = new PrimeGames(this);
-        luckPerms = LuckPermsProvider.get();
     }
 
     public PrimePlugin(){
         this.primeGames = new PrimeGames(this);
-        luckPerms = LuckPermsProvider.get();
     }
 
     @Override

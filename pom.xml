@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.primegames</groupId>
     <artifactId>primegames</artifactId>
-    <version>1.2.56</version>
+    <version>1.2.55</version>
     <packaging>jar</packaging>
     <name>PrimeGames</name>
     <description>PrimeGames Core Plugin for Paper Spigot</description>
@@ -116,12 +116,6 @@
             <groupId>com.sk89q.worldguard</groupId>
             <artifactId>worldguard-bukkit</artifactId>
             <version>7.0.5</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.luckperms</groupId>
-            <artifactId>api</artifactId>
-            <version>5.3</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
