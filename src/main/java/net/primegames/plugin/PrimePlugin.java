@@ -21,6 +21,8 @@ abstract public class PrimePlugin extends JavaPlugin {
     @Getter
     private final PrimeGames primeGames;
     private final ArrayList<Runnable> disableHooks = new ArrayList<>();
+    @Getter
+    private ServerSettings settings;
 
     public PrimePlugin(@NotNull final JavaPluginLoader loader, @NotNull final PluginDescriptionFile description, @NotNull final File dataFolder, @NotNull final File file){
         super(loader, description, dataFolder, file);
@@ -63,6 +65,8 @@ abstract public class PrimePlugin extends JavaPlugin {
     protected void onInternalDisable(){}
     protected void onInternalEnable(){}
     protected void onInternalLoad(){}
-    public abstract <T extends ServerSettings> T getSettings();
 
+    public <T extends ServerSettings> void setSettings(T settings) {
+        this.settings = settings;
+    }
 }
