@@ -2,7 +2,6 @@ package net.primegames.plugin;
 
 import lombok.Getter;
 import net.primegames.PrimeGames;
-import net.primegames.server.GameServerSettings;
 import net.primegames.server.settings.ServerSettings;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -22,7 +21,7 @@ abstract public class PrimePlugin extends JavaPlugin {
     private final PrimeGames primeGames;
     private final ArrayList<Runnable> disableHooks = new ArrayList<>();
     @Getter
-    private ServerSettings settings;
+    private ServerSettings serverSettings;
 
     public PrimePlugin(@NotNull final JavaPluginLoader loader, @NotNull final PluginDescriptionFile description, @NotNull final File dataFolder, @NotNull final File file){
         super(loader, description, dataFolder, file);
@@ -66,7 +65,7 @@ abstract public class PrimePlugin extends JavaPlugin {
     protected void onInternalEnable(){}
     protected void onInternalLoad(){}
 
-    public <T extends ServerSettings> void setSettings(T settings) {
-        this.settings = settings;
+    public <T extends ServerSettings> void setServerSettings(T serverSettings) {
+        this.serverSettings = serverSettings;
     }
 }

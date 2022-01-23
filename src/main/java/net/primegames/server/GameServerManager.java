@@ -8,11 +8,9 @@ import net.primegames.providor.task.server.MySQLCleanDeadServerData;
 import net.primegames.providor.task.server.MySQLReceiveServerData;
 import net.primegames.providor.task.server.MysqlSendServerDataTask;
 import net.primegames.utils.LoggerUtils;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import java.util.HashMap;
-import java.util.Objects;
 
 public class GameServerManager {
 
@@ -22,7 +20,7 @@ public class GameServerManager {
     private final HashMap<String, GameServer> servers = new HashMap<>();
 
     public GameServerManager(PrimePlugin plugin) {
-        settings = plugin.getSettings().getServerSettings();
+        settings = plugin.getServerSettings().getServerSettings();
         initSchedulers(PrimeGames.getInstance().getMySQLprovider());
     }
 
