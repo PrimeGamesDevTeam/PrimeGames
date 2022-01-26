@@ -66,10 +66,6 @@ public class CorePlayer {
         this.currentIp = currentIp;
     }
 
-    public static boolean isBedrock(Player player) {
-        return CorePlayerManager.getInstance().getFloodGatePlayer(player) != null;
-    }
-
     public void addGroupTier(GroupTier groupTier) {
         groupTiers.add(groupTier);
     }

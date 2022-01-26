@@ -4,6 +4,7 @@ import lombok.Getter;
 import net.primegames.PrimeGames;
 import net.primegames.server.settings.ServerSettings;
 import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.JavaPluginLoader;
 import org.jetbrains.annotations.NotNull;
@@ -42,6 +43,7 @@ abstract public class PrimePlugin extends JavaPlugin {
         enabling = true;
         primeGames.enable();
         onInternalEnable();
+        registerListeners(getServer().getPluginManager());
         enabling = false;
     }
 
@@ -55,6 +57,9 @@ abstract public class PrimePlugin extends JavaPlugin {
         onInternalDisable();
         primeGames.disable();
         disabling = false;
+    }
+
+    protected void registerListeners(PluginManager pluginManager) {
     }
 
     public final void onDisableHook(Runnable runnable) {

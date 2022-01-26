@@ -3,7 +3,7 @@ package net.primegames.player;
 import lombok.Getter;
 import net.primegames.PrimeGames;
 import net.primegames.providor.task.player.PlayerLoadTask;
-import net.primegames.utils.Callback;
+import net.primegames.utils.FloodgatePlayerCallback;
 import net.primegames.utils.LoggerUtils;
 import org.bukkit.entity.Player;
 import org.geysermc.api.Geyser;
@@ -42,6 +42,10 @@ public class CorePlayerManager {
         players.remove(player.getUniqueId());
     }
 
+    public boolean isFloodGatePlayer(Player player) {
+        return getFloodGatePlayer(player) != null;
+    }
+
 
     public void initPlayer(Player player) {
         FloodgatePlayer floodgatePlayer = getFloodGatePlayer(player);
@@ -61,11 +65,11 @@ public class CorePlayerManager {
     }
 
     //Check if the player is a linked player in floodgate
-    private void initLinkedPlayer(Player player, Callback callback) {
+    private void initLinkedPlayer(Player player, FloodgatePlayerCallback callback) {
         FloodgateApi api = FloodgateApi.getInstance();
         api.getPlayerLink().isLinkedPlayer(player.getUniqueId()).thenAcceptAsync(isLinked -> {
             if (isLinked) {
-                callback.call(player);
+                //callback.call(player);
             } else {
                 //todo
             }

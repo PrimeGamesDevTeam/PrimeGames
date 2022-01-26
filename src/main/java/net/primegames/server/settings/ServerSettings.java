@@ -11,15 +11,15 @@ import java.io.File;
 
 public abstract class ServerSettings {
 
-    @Getter
-    private final World lobby;
+//    @Getter
+//    private final World lobby;
     @Getter
     private final PrimePlugin plugin;
 
 
     public ServerSettings(@NonNull PrimePlugin plugin){
         this.plugin = plugin;
-        this.lobby = loadAndGet(getLobbyWorldName(), getLobbySpawn());
+        //this.lobby = loadAndGet(getLobbyWorldName(), getLobbySpawn());
     }
 
     protected World loadAndGet(@NonNull String worldName, @NonNull Vector defaultSpawn) {
