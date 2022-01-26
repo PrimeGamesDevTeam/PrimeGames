@@ -83,15 +83,19 @@ public class ShopForm {
             nameIdMap.put(itemName, count[0]);
             count[0]++;
         });
+        form.button("Back");
         form.responseHandler((simpleForm, response) -> {
             SimpleFormResponse formResponse = simpleForm.parseResponse(response);
             ButtonComponent clickedButton = formResponse.getClickedButton();
-            if (clickedButton == null) {
-                return;
+            if (clickedButton != null) {
+                if (clickedButton.getText().equals("Back")) {
+                    openMainMenu();
+                } else {
+                    ShopItem shopItem = shop.getShopItem(String.valueOf(nameIdMap.get(clickedButton.getText())));
+                    assert shopItem != null;
+                    openBuyForm(shopItem);
+                }
             }
-            ShopItem shopItem = shop.getShopItem(String.valueOf(nameIdMap.get(clickedButton.getText())));
-            assert shopItem != null;
-            openBuyForm(shopItem);
         });
         api.sendForm(player.getUniqueId(), form.build());
     }
