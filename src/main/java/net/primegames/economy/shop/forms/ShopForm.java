@@ -5,6 +5,7 @@ import net.brcdev.shopgui.ShopGuiPlusApi;
 import net.brcdev.shopgui.shop.Shop;
 import net.brcdev.shopgui.shop.ShopItem;
 import net.ess3.api.IUser;
+import net.kyori.adventure.text.format.TextFormat;
 import net.milkbowl.vault.economy.Economy;
 import net.primegames.PrimeGames;
 import net.primegames.utils.LoggerUtils;
@@ -77,6 +78,7 @@ public class ShopForm {
         form.content("Your Balance: " + ChatColor.RED + economy.getBalance(player));
         shop.getShopItems().forEach(item -> {
             String itemName = niceName(item.getItem());
+            itemName = itemName + "\n" + ChatColor.RED + "Price: " + ChatColor.GREEN + item.getSellPrice() + " " + economy.currencyNamePlural();
             form.button(itemName);
             nameIdMap.put(itemName, count[0]);
             count[0]++;
@@ -96,7 +98,7 @@ public class ShopForm {
 
     private void openBuyForm(@NonNull ShopItem item){
         CustomForm.Builder form = CustomForm.builder().title("Buy Item");
-        form.slider("Amount", 1, item.getItem().getMaxStackSize(), 1);
+        form.slider(item.getSellPriceForAmount(1) + economy.currencyNamePlural() + "/" + niceName(item.getItem()), 1, item.getItem().getMaxStackSize(), 1);
         form.responseHandler((customForm, response) -> {
             CustomFormResponse formResponse = customForm.parseResponse(response);
             int amount = (int) formResponse.getSlider(0);
