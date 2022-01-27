@@ -4,13 +4,10 @@ import lombok.NonNull;
 import net.brcdev.shopgui.ShopGuiPlusApi;
 import net.brcdev.shopgui.shop.Shop;
 import net.brcdev.shopgui.shop.ShopItem;
-import net.ess3.api.IUser;
-import net.kyori.adventure.text.format.TextFormat;
 import net.milkbowl.vault.economy.Economy;
 import net.primegames.PrimeGames;
 import net.primegames.utils.LoggerUtils;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.geysermc.cumulus.CustomForm;
@@ -20,17 +17,14 @@ import org.geysermc.cumulus.response.CustomFormResponse;
 import org.geysermc.cumulus.response.SimpleFormResponse;
 import org.geysermc.floodgate.api.FloodgateApi;
 import org.geysermc.floodgate.api.player.FloodgatePlayer;
-import scala.Int;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 
 public class ShopForm {
 
-    public static void init(Player player, FloodgatePlayer fPlayer) {
-        new ShopForm(player, fPlayer);
+    public static void init(Player player) {
+        new ShopForm(player);
     }
 
     private final Player player;
@@ -39,10 +33,7 @@ public class ShopForm {
     private final FloodgateApi api = FloodgateApi.getInstance();
     private final Economy economy;
 
-    public ShopForm(Player player, FloodgatePlayer fPlayer){
-        if (!player.getUniqueId().equals(fPlayer.getJavaUniqueId())) {
-            throw new IllegalArgumentException("Player is not the same as FloodgatePlayer");
-        }
+    public ShopForm(Player player){
         this.player = player;
         for (String id : shopIds) {
             Shop shop = ShopGuiPlusApi.getShop(id);

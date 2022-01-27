@@ -3,7 +3,7 @@ package net.primegames.player;
 import lombok.Getter;
 import net.primegames.PrimeGames;
 import net.primegames.providor.task.player.PlayerLoadTask;
-import net.primegames.utils.FloodgatePlayerCallback;
+import net.primegames.utils.BedrockPlayerCallback;
 import net.primegames.utils.LoggerUtils;
 import org.bukkit.entity.Player;
 import org.geysermc.api.Geyser;
@@ -65,7 +65,7 @@ public class CorePlayerManager {
     }
 
     //Check if the player is a linked player in floodgate
-    private void initLinkedPlayer(Player player, FloodgatePlayerCallback callback) {
+    private void initLinkedPlayer(Player player, BedrockPlayerCallback callback) {
         FloodgateApi api = FloodgateApi.getInstance();
         api.getPlayerLink().isLinkedPlayer(player.getUniqueId()).thenAcceptAsync(isLinked -> {
             if (isLinked) {
