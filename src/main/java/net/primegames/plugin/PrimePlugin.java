@@ -3,6 +3,8 @@ package net.primegames.plugin;
 import lombok.Getter;
 import net.primegames.PrimeGames;
 import net.primegames.server.settings.ServerSettings;
+import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -57,6 +59,26 @@ abstract public class PrimePlugin extends JavaPlugin {
         onInternalDisable();
         primeGames.disable();
         disabling = false;
+    }
+
+    protected void registerCommand(Command command, boolean force){
+        if (!force){
+            Command rCommand = Bukkit.getCommandMap().getCommand(command.getName());
+            if(rCommand != null){
+                rCommand.unregister(Bukkit.getCommandMap());
+            }
+            for (String alias : command.getAliases()) {
+                Command rAlias = Bukkit.getCommandMap().getCommand(alias);
+                if(rAlias != null){
+                    rAlias.unregister(Bukkit.getCommandMap());
+                }
+            }
+        }
+        registerCommand(command);
+    }
+
+    private void registerCommand(Command command){
+        Bukkit.getCommandMap().register(command.getName(), command);
     }
 
     protected void registerListeners(PluginManager pluginManager) {
