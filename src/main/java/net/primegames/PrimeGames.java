@@ -6,6 +6,7 @@ import lombok.Setter;
 import net.brcdev.shopgui.ShopGuiPlusApi;
 import net.milkbowl.vault.economy.Economy;
 import net.primegames.commands.BedrockPlayerCommandHandler;
+import net.primegames.leaderboard.LeaderboardManager;
 import net.primegames.listener.ChunkSpawnerLimitListener;
 import net.primegames.listener.CorePlayerListener;
 import net.primegames.player.CorePlayerManager;
@@ -64,6 +65,7 @@ public final class PrimeGames {
     }
 
     public void enable() {
+        LeaderboardManager.init();
         this.floodgateApi = FloodgateApi.getInstance();
         Essentials essentials = (Essentials) plugin.getServer().getPluginManager().getPlugin("Essentials");
         if (essentials != null) {
