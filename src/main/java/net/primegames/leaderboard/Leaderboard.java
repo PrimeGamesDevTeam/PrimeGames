@@ -56,7 +56,7 @@ public abstract class Leaderboard {
     }
 
     private String getLbText(int ranking, String name, int value){
-        return "§7" + ranking + ". §e" + name + " §7- §a" + value;
+        return "§7" + ranking + ". §e" + name + "§7: §a" + value;
     }
 
     protected Map<Integer, String> shortScores(Map<Integer, String> scores){
