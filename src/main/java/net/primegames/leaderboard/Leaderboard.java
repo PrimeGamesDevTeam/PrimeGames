@@ -20,7 +20,7 @@ public abstract class Leaderboard {
 
     public Leaderboard(String name, Location location, int rows){
         hologram = HologramsAPI.createHologram(PrimeGames.getInstance().getPlugin(), location);
-        hologram.insertTextLine(1, name);
+        hologram.insertTextLine(1, "[&b&l" + name + " &cLeaderboard$r]");
         this.rows = rows;
     }
 
