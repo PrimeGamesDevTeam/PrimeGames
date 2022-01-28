@@ -5,29 +5,31 @@ import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import lombok.Getter;
 import lombok.NonNull;
 import net.primegames.PrimeGames;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 
 import javax.annotation.Nullable;
+import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class Leaderboard {
 
-    private final Hologram hologram;
+    private Hologram hologram;
     private final int rows;
     @Getter
-    private String name;
+    private final String name;
+    private Location location;
 
     public Leaderboard(String name, Location location, int rows){
-        hologram = HologramsAPI.createHologram(PrimeGames.getInstance().getPlugin(), location);
-        hologram.insertTextLine(1, "[&b&l" + name + " &cLeaderboard$r]");
         this.rows = rows;
+        this.name = name;
     }
 
     public Leaderboard(String name, Location location){
-        hologram = HologramsAPI.createHologram(PrimeGames.getInstance().getPlugin(), location);
-        hologram.insertTextLine(1, name);
+        this.location = location;
+        this.name = name;
         this.rows = 10;
     }
 
@@ -36,12 +38,18 @@ public abstract class Leaderboard {
     }
 
     public void updateValues(Map<@NonNull Integer, @NonNull String> values, @Nullable String suffix){
+        if (hologram != null){
+            hologram.delete();
+            hologram = null;
+        }
+        hologram = HologramsAPI.createHologram(PrimeGames.getInstance().getPlugin(), location);
+        hologram.appendTextLine("[" + ChatColor.GREEN + ChatColor.BOLD + name + ChatColor.RED + " Leaderboard"+ ChatColor.RED +"]");
         AtomicInteger maxRows = new AtomicInteger(rows);
         AtomicInteger ranking = new AtomicInteger(1);
         Map<Integer, String> shortedValues = shortScores(values);
         shortedValues.forEach((value, name) -> {
             if (maxRows.get() <= 0) return;
-            hologram.insertTextLine(ranking.get() + 1, getLbText(ranking.get(), name, value) + (suffix == null ? "" : suffix));
+            hologram.appendTextLine(getLbText(ranking.get(), name, value) + (suffix == null ? "" : suffix));
             ranking.getAndIncrement();
             maxRows.getAndDecrement();
         });
@@ -52,7 +60,9 @@ public abstract class Leaderboard {
     }
 
     protected Map<Integer, String> shortScores(Map<Integer, String> scores){
-        return new TreeMap<>(scores);
+        Map<Integer, String> shortedScores = new TreeMap<>(Collections.reverseOrder());
+        shortedScores.putAll(scores);
+        return shortedScores;
     }
 
 

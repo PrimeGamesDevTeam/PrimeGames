@@ -3,7 +3,6 @@ package net.primegames;
 import com.earth2me.essentials.Essentials;
 import lombok.Getter;
 import lombok.Setter;
-import net.brcdev.shopgui.ShopGuiPlusApi;
 import net.milkbowl.vault.economy.Economy;
 import net.primegames.commands.BedrockPlayerCommandHandler;
 import net.primegames.leaderboard.LeaderboardManager;
@@ -15,6 +14,7 @@ import net.primegames.providor.MySqlProvider;
 import net.primegames.providor.task.MySQLInitialCoreTask;
 import net.primegames.server.GameServer;
 import net.primegames.server.GameServerManager;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.geysermc.floodgate.api.FloodgateApi;
@@ -64,7 +64,12 @@ public final class PrimeGames {
         return true;
     }
 
-    public void enable() {
+    public boolean attemptEnable() {
+        if (!Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
+            getLogger().severe("*** HolographicDisplays is not installed or not enabled. ***");
+            getLogger().severe("*** This plugin will be disabled. ***");
+            return false;
+        }
         LeaderboardManager.init();
         this.floodgateApi = FloodgateApi.getInstance();
         Essentials essentials = (Essentials) plugin.getServer().getPluginManager().getPlugin("Essentials");
@@ -80,6 +85,7 @@ public final class PrimeGames {
         mySQLprovider.scheduleTask(new MySQLInitialCoreTask());
         registerCoreListeners();
         gameServerManager = new GameServerManager(plugin);
+        return true;
     }
 
     public void disable() {

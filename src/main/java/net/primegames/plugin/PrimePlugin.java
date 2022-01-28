@@ -43,7 +43,7 @@ abstract public class PrimePlugin extends JavaPlugin {
     @Override
     final public void onEnable() {
         enabling = true;
-        primeGames.enable();
+        setEnabled(primeGames.attemptEnable());
         onInternalEnable();
         registerListeners(getServer().getPluginManager());
         enabling = false;
