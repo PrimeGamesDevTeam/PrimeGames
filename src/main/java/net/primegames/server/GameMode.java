@@ -1,7 +1,5 @@
 package net.primegames.server;
 
-import lombok.Getter;
-
 public enum GameMode {
 
     LOBBY(),

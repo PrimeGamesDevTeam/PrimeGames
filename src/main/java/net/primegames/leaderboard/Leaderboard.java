@@ -43,7 +43,7 @@ public abstract class Leaderboard {
             hologram = null;
         }
         hologram = HologramsAPI.createHologram(PrimeGames.getInstance().getPlugin(), location);
-        hologram.appendTextLine("[" + ChatColor.GREEN + ChatColor.BOLD + name + ChatColor.RED + " Leaderboard"+ ChatColor.RED +"]");
+        hologram.appendTextLine(name);
         AtomicInteger maxRows = new AtomicInteger(rows);
         AtomicInteger ranking = new AtomicInteger(1);
         Map<Integer, String> shortedValues = shortScores(values);
