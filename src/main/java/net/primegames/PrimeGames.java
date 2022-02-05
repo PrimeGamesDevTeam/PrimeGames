@@ -1,6 +1,5 @@
 package net.primegames;
 
-import com.earth2me.essentials.Essentials;
 import lombok.Getter;
 import lombok.Setter;
 import net.milkbowl.vault.economy.Economy;
@@ -41,8 +40,6 @@ public final class PrimeGames {
     private GameServerManager gameServerManager;
     @Getter
     private FloodgateApi floodgateApi;
-    @Getter
-    private Essentials essentials;
     @Getter private Economy economy;
 
     public PrimeGames(PrimePlugin plugin) {
@@ -72,12 +69,6 @@ public final class PrimeGames {
         }
         LeaderboardManager.init();
         this.floodgateApi = FloodgateApi.getInstance();
-        Essentials essentials = (Essentials) plugin.getServer().getPluginManager().getPlugin("Essentials");
-        if (essentials != null) {
-            this.essentials = essentials;
-        } else {
-            throw new RuntimeException("Essentials plugin was not found!");
-        }
         if (!setupEconomy() ) {
             getLogger().severe(String.format("[%s] - Disabled due to no Vault dependency found!", plugin.getDescription().getName()));
             getServer().getPluginManager().disablePlugin(plugin);
