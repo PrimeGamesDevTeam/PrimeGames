@@ -5,7 +5,6 @@ import lombok.Setter;
 import net.milkbowl.vault.economy.Economy;
 import net.primegames.commands.BedrockPlayerCommandHandler;
 import net.primegames.leaderboard.LeaderboardManager;
-import net.primegames.listener.ChunkSpawnerLimitListener;
 import net.primegames.listener.CorePlayerListener;
 import net.primegames.player.CorePlayerManager;
 import net.primegames.plugin.PrimePlugin;
@@ -91,7 +90,6 @@ public final class PrimeGames {
     private void registerCoreListeners() {
         @NotNull PluginManager manager = getServer().getPluginManager();
         manager.registerEvents(new CorePlayerListener(), plugin);
-        manager.registerEvents(new ChunkSpawnerLimitListener(), plugin);
         manager.registerEvents(new BedrockPlayerCommandHandler(), plugin);
     }
 
