@@ -6,7 +6,7 @@ import net.milkbowl.vault.economy.Economy;
 import net.primegames.commands.BedrockPlayerCommandHandler;
 import net.primegames.leaderboard.LeaderboardManager;
 import net.primegames.listener.CorePlayerListener;
-import net.primegames.player.CorePlayerManager;
+import net.primegames.player.BedrockPlayerManager;
 import net.primegames.plugin.PrimePlugin;
 import net.primegames.providor.MySqlProvider;
 import net.primegames.providor.task.MySQLInitialCoreTask;
@@ -29,7 +29,7 @@ public final class PrimeGames {
     @Getter
     private final MySqlProvider mySQLprovider;
     @Getter
-    private final CorePlayerManager corePlayerManager;
+    private final BedrockPlayerManager corePlayerManager;
     @Getter
     private final PrimePlugin plugin;
 
@@ -45,7 +45,7 @@ public final class PrimeGames {
         this.plugin =  plugin;
         instance = this;
         this.mySQLprovider = new MySqlProvider();
-        this.corePlayerManager = new CorePlayerManager();
+        this.corePlayerManager = new BedrockPlayerManager();
     }
 
     private boolean setupEconomy() {

@@ -1,7 +1,7 @@
 package net.primegames.commands;
 
 import net.primegames.economy.shop.forms.ShopForm;
-import net.primegames.player.CorePlayerManager;
+import net.primegames.player.BedrockPlayerManager;
 import net.primegames.utils.BedrockPlayerCallback;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -40,7 +40,7 @@ public class BedrockPlayerCommandHandler implements Listener {
     @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
-        FloodgatePlayer fPlayer = CorePlayerManager.getInstance().getFloodGatePlayer(player);
+        FloodgatePlayer fPlayer = BedrockPlayerManager.getInstance().getFloodGatePlayer(player);
         if (fPlayer != null && !fPlayer.getDeviceOs().equals(DeviceOs.UWP)) {
             Command command = Bukkit.getCommandMap().getCommand(event.getMessage().split(" ")[0].replace("/", ""));
             if (command != null) {

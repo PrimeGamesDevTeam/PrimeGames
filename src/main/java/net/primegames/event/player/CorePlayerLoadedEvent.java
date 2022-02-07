@@ -1,7 +1,7 @@
 package net.primegames.event.player;
 
 import lombok.Getter;
-import net.primegames.player.CorePlayer;
+import net.primegames.player.BedrockPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -13,9 +13,9 @@ public class CorePlayerLoadedEvent extends Event {
     @Getter
     private final Player player;
     @Getter
-    private final CorePlayer playerData;
+    private final BedrockPlayer playerData;
 
-    public CorePlayerLoadedEvent(Player player, CorePlayer playerData) {
+    public CorePlayerLoadedEvent(Player player, BedrockPlayer playerData) {
         super(true);
         this.player = player;
         this.playerData = playerData;

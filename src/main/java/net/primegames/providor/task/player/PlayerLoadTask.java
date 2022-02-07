@@ -10,8 +10,8 @@ package net.primegames.providor.task.player;
 
 import net.primegames.PrimeGames;
 import net.primegames.event.player.CorePlayerLoadedEvent;
-import net.primegames.player.CorePlayer;
-import net.primegames.player.CorePlayerManager;
+import net.primegames.player.BedrockPlayer;
+import net.primegames.player.BedrockPlayerManager;
 import net.primegames.providor.MySqlFetchQueryTask;
 import net.primegames.utils.LoggerUtils;
 import org.bukkit.entity.Player;
@@ -27,15 +27,15 @@ import static org.bukkit.Bukkit.getServer;
 
 final public class PlayerLoadTask extends MySqlFetchQueryTask {
 
-    private final UUID originalUuid;
+    private final UUID bedrockUuid;
     private final UUID serverUuid;
     private final String name;
 
-    public PlayerLoadTask(UUID uuid, Player player) {
+    public PlayerLoadTask(UUID uuid, Player player, String username) {
         LoggerUtils.debug("Initiating data load task for " + player.getName() + " with uuid: " + uuid + "from MySQL");
-        this.originalUuid = uuid;
+        this.bedrockUuid = uuid;
         this.serverUuid = player.getUniqueId();
-        this.name = player.getName();
+        this.name = (username != null) ? username : player.getName();
     }
 
     @Override
@@ -46,7 +46,7 @@ final public class PlayerLoadTask extends MySqlFetchQueryTask {
                 " WHERE uuid = UUID_TO_BIN(?) " +
                 "GROUP BY users.id " +
                 "LIMIT 1");
-        statement.setString(1, originalUuid.toString());
+        statement.setString(1, bedrockUuid.toString());
         return statement;
     }
 
@@ -57,11 +57,11 @@ final public class PlayerLoadTask extends MySqlFetchQueryTask {
             //todo do rank setups etc here as per the plugin
             if (resultSet.next()) {
                 try {
-                    CorePlayer corePlayer = new CorePlayer(
+                    BedrockPlayer corePlayer = new BedrockPlayer(
                             resultSet.getInt("id"),
-                            originalUuid,
+                            bedrockUuid,
                             serverUuid,
-                            player.getName(),
+                            this.name,
                             resultSet.getString("last_ip"),
                             (player.getAddress() != null) ? player.getAddress().getHostName() : resultSet.getString("last_ip"),
                             resultSet.getString("country_code"),
@@ -77,7 +77,7 @@ final public class PlayerLoadTask extends MySqlFetchQueryTask {
                             resultSet.getInt("legendary_keys"),
                             player.locale().toString()
                     );
-                    CorePlayerManager.getInstance().addPlayer(corePlayer);
+                    BedrockPlayerManager.getInstance().addPlayer(corePlayer);
                     String[] groupIds = resultSet.getString("all_groups").split(",");
                     ArrayList<Integer> groupIdList = new ArrayList<>();
                     for (String groupdId : groupIds) {
@@ -85,13 +85,13 @@ final public class PlayerLoadTask extends MySqlFetchQueryTask {
                     }
                     corePlayer.addGroups(groupIdList);
                     (new CorePlayerLoadedEvent(player, corePlayer)).callEvent();
-                    LoggerUtils.info("Core Player: " + player.getName() + " successfully loaded for with Core UUID: " + originalUuid);
+                    LoggerUtils.info("Bedrock Player: " + name + " successfully loaded for with Core UUID: " + bedrockUuid);
                 } catch (SQLException exception) {
                     exception.printStackTrace();
                 }
             } else {
-                LoggerUtils.info("Data was not found for " + player.getName() + " Initiating new registration");
-                PrimeGames.getInstance().getMySQLprovider().scheduleTask(new PlayerRegisterTask(originalUuid, player));
+                LoggerUtils.info("Data was not found for " + name + " Initiating new registration");
+                PrimeGames.getInstance().getMySQLprovider().scheduleTask(new PlayerRegisterTask(bedrockUuid, player));
             }
         } else {
             LoggerUtils.warn("Player disconnected while data was being loaded");

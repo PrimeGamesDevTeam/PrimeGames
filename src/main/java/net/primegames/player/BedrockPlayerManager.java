@@ -11,30 +11,34 @@ import org.geysermc.api.session.Connection;
 import org.geysermc.floodgate.api.FloodgateApi;
 import org.geysermc.floodgate.api.player.FloodgatePlayer;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class CorePlayerManager {
+public class BedrockPlayerManager {
 
     @Getter
-    private static CorePlayerManager instance;
+    private static BedrockPlayerManager instance;
 
     /**
      * Key: UUID provided by spigot
      * Example: players.put(Player.getUniqueId(), CorePlayer)
      */
-    private final Map<UUID, CorePlayer> players = new HashMap<>();
+    private final Map<UUID, BedrockPlayer> players = new HashMap<>();
 
-    public CorePlayerManager() {
+    public BedrockPlayerManager() {
         instance = this;
     }
 
-    public void addPlayer(CorePlayer player) {
+    public void addPlayer(BedrockPlayer player) {
         players.put(player.getPlayer().getUniqueId(), player);
     }
 
-    public CorePlayer getPlayer(Player player) {
+    public BedrockPlayer getPlayer(Player player) {
+        if (!isFloodGatePlayer(player)) {
+            return null;
+        }
         return players.get(player.getUniqueId());
     }
 
@@ -46,13 +50,12 @@ public class CorePlayerManager {
         return getFloodGatePlayer(player) != null;
     }
 
-
     public void initPlayer(Player player) {
         FloodgatePlayer floodgatePlayer = getFloodGatePlayer(player);
         if (floodgatePlayer != null) {
             Connection connection = Geyser.api().connectionByXuid(floodgatePlayer.getXuid());
             if (connection != null) {
-                PrimeGames.getInstance().getMySQLprovider().scheduleTask(new PlayerLoadTask(connection.uuid(), player));
+                PrimeGames.getInstance().getMySQLprovider().scheduleTask(new PlayerLoadTask(connection.uuid(), player, connection.name()));
                 //todo check if bedrock player has a linked java account and if yes then save it to database: (javaUuid, bedrockUuid, xboxUuid)
                 //todo and if player is not liked then try to delete store from database
             } else {

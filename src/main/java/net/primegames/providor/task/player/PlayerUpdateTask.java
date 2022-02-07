@@ -8,7 +8,7 @@
 
 package net.primegames.providor.task.player;
 
-import net.primegames.player.CorePlayer;
+import net.primegames.player.BedrockPlayer;
 import net.primegames.providor.MySqlPostQueryTask;
 
 import java.sql.Connection;
@@ -17,9 +17,9 @@ import java.sql.SQLException;
 
 final public class PlayerUpdateTask extends MySqlPostQueryTask {
 
-    private final CorePlayer corePlayer;
+    private final BedrockPlayer corePlayer;
 
-    public PlayerUpdateTask(CorePlayer player) {
+    public PlayerUpdateTask(BedrockPlayer player) {
         this.corePlayer = player;
     }
 
@@ -48,7 +48,7 @@ final public class PlayerUpdateTask extends MySqlPostQueryTask {
 
                 "last_connection = CURRENT_TIMESTAMP" +
                 "WHERE id = ?");
-        statement.setString(1, corePlayer.getOriginalUUID().toString());
+        statement.setString(1, corePlayer.getBedrockUUID().toString());
         statement.setString(2, corePlayer.getUsername());
         statement.setString(3, corePlayer.getCurrentIp());
         statement.setInt(4, corePlayer.getReputation());

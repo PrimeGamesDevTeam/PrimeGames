@@ -20,9 +20,9 @@ import java.util.List;
 import java.util.UUID;
 
 @Data
-public class CorePlayer {
+public class BedrockPlayer {
 
-    private final UUID originalUUID;
+    private final UUID bedrockUUID;
     private final UUID serverUUID;
     private final String username;
     private final long lastSession;
@@ -44,8 +44,8 @@ public class CorePlayer {
     private final String locale;
     private ArrayList<@NonNull GroupTier> groupTiers = new ArrayList<>();
 
-    public CorePlayer(int internalId, UUID originalUuid, UUID serverUuid, String username, String lastIp, String currentIp, String countryCode, String continentCode, int reputation, int warnings, long timePlayed, long lastSessionDuration, Date registeredAt, int voteKeys, int commonKeys, int rareKeys, int legendaryKeys, String locale) {
-        this.originalUUID = originalUuid;
+    public BedrockPlayer(int internalId, UUID bedrockUuid, UUID serverUuid, String username, String lastIp, String currentIp, String countryCode, String continentCode, int reputation, int warnings, long timePlayed, long lastSessionDuration, Date registeredAt, int voteKeys, int commonKeys, int rareKeys, int legendaryKeys, String locale) {
+        this.bedrockUUID = bedrockUuid;
         this.serverUUID = serverUuid;
         this.lastSession = System.currentTimeMillis();
         this.internalId = internalId;

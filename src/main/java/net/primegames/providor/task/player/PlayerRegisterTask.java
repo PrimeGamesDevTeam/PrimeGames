@@ -9,8 +9,8 @@
 package net.primegames.providor.task.player;
 
 import net.primegames.event.player.CorePlayerRegisteredEvent;
-import net.primegames.player.CorePlayer;
-import net.primegames.player.CorePlayerManager;
+import net.primegames.player.BedrockPlayer;
+import net.primegames.player.BedrockPlayerManager;
 import net.primegames.providor.MySqlPostQueryTask;
 import net.primegames.utils.LoggerUtils;
 import org.bukkit.entity.Player;
@@ -26,13 +26,13 @@ import static org.bukkit.Bukkit.getServer;
 
 final public class PlayerRegisterTask extends MySqlPostQueryTask {
 
-    private final UUID originalUuid;
+    private final UUID bedrockUuid;
     private final UUID serverUuid;
     private final String userName;
     private String address = "0.0.0.0";
 
-    public PlayerRegisterTask(UUID uuid, Player player) {
-        this.originalUuid = uuid;
+    public PlayerRegisterTask(UUID bedrockUuid, Player player) {
+        this.bedrockUuid = bedrockUuid;
         this.serverUuid = player.getUniqueId();
         userName = player.getName();
         if (player.getAddress() != null) {
@@ -43,7 +43,7 @@ final public class PlayerRegisterTask extends MySqlPostQueryTask {
     @Override
     protected PreparedStatement preparedStatement(Connection connection) throws SQLException {
         PreparedStatement statement = connection.prepareStatement("INSERT INTO users (uuid, username, last_ip) VALUES (UUID_TO_BIN(?), ?, ?)", Statement.RETURN_GENERATED_KEYS);
-        statement.setString(1, originalUuid.toString());
+        statement.setString(1, bedrockUuid.toString());
         statement.setString(2, userName);
         statement.setString(3, address);
         return statement;
@@ -54,9 +54,9 @@ final public class PlayerRegisterTask extends MySqlPostQueryTask {
         Player player = getServer().getPlayer(serverUuid);
         if (player != null) {
             String address = (player.getAddress() != null) ? player.getAddress().getHostName() : "0.0.0.0";
-            CorePlayerManager.getInstance().addPlayer(new CorePlayer(
+            BedrockPlayerManager.getInstance().addPlayer(new BedrockPlayer(
                     id,
-                    originalUuid,
+                    bedrockUuid,
                     serverUuid,
                     player.getName(),
                     address,

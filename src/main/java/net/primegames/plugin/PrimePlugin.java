@@ -2,6 +2,8 @@ package net.primegames.plugin;
 
 import lombok.Getter;
 import net.primegames.PrimeGames;
+import net.primegames.components.ComponentManager;
+import net.primegames.components.vote.VoteComponent;
 import net.primegames.server.settings.ServerSettings;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -12,6 +14,7 @@ import org.bukkit.plugin.java.JavaPluginLoader;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 abstract public class PrimePlugin extends JavaPlugin {
@@ -46,6 +49,11 @@ abstract public class PrimePlugin extends JavaPlugin {
         setEnabled(primeGames.attemptEnable());
         onInternalEnable();
         registerListeners(getServer().getPluginManager());
+        try {
+            ComponentManager.getInstance().register(new VoteComponent(this, serverSettings));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         enabling = false;
     }
 
