@@ -36,8 +36,8 @@ public class SendClaimedVoteTask extends VoteTask {
         Gson gson = new Gson();
         VoteTaskResponse checkResponse = gson.fromJson(response, VoteTaskResponse.class);
         if (checkResponse.claimed) {
-            new VoteClaimSuccessEvent(uuid, site).callEvent();
-            Bukkit.broadcastMessage(VoteComponent.getInstance().getPrefix() + "&b" + username + "§r has claimed a vote on §c" + site.getVote());
+            Bukkit.getPluginManager().callEvent(new VoteClaimSuccessEvent(uuid, site));
+            Bukkit.broadcastMessage(VoteComponent.getInstance().getPrefix() + "§b" + username + "§r has claimed a vote on §c" + site.getVote());
         } else {
             LoggerUtils.info("Vote claim failed for " + username + " on " + site.getVote());
         }

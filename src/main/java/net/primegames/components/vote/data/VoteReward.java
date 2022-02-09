@@ -4,5 +4,5 @@ import org.bukkit.entity.Player;
 
 public interface VoteReward {
 
-    boolean onVoteClaimed(Player event);
+    boolean onVoteClaim(Player event, VoteSite site);
 }

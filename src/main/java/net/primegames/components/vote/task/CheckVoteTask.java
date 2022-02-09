@@ -1,6 +1,7 @@
 package net.primegames.components.vote.task;
 
 import com.google.gson.Gson;
+import net.primegames.PrimeGames;
 import net.primegames.components.vote.data.VoteTaskResponse;
 import net.primegames.components.vote.data.VoteSite;
 import org.apache.http.client.methods.HttpGet;
@@ -30,20 +31,22 @@ public class CheckVoteTask extends VoteTask {
     @Override
     protected void onResponse(String response, int lineNumber) {
         terminateReader();
-        Player player = Bukkit.getPlayer(uuid);
-        if (player == null) return;
-        Gson gson = new Gson();
-        VoteTaskResponse responseObject = gson.fromJson(response, VoteTaskResponse.class);
-        if (responseObject.voted) {
-            if (responseObject.claimed) {
-                if (sendResult){
-                    player.sendMessage("§rYou have already claimed your vote on " + site.getVote() + ". Thank you for your support!");
+        Bukkit.getScheduler().runTask(PrimeGames.getInstance().getPlugin(), () -> {
+            Player player = Bukkit.getPlayer(uuid);
+            if (player == null) return;
+            Gson gson = new Gson();
+            VoteTaskResponse responseObject = gson.fromJson(response, VoteTaskResponse.class);
+            if (responseObject.voted) {
+                if (responseObject.claimed) {
+                    if (sendResult){
+                        player.sendMessage("§rYou have already claimed your vote on " + site.getVote() + ". Thank you for your support!");
+                    }
+                } else {
+                    site.claimVote(player);
                 }
             } else {
-                site.claimVote(player);
+                player.sendMessage("§cYou have not voted on " + site.getVote() + ".");
             }
-        } else {
-            player.sendMessage("§cYou have not voted on " + site.getVote() + ".");
-        }
+        });
     }
 }

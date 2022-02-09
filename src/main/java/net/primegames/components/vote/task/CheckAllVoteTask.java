@@ -2,6 +2,7 @@ package net.primegames.components.vote.task;
 
 import com.google.common.net.HttpHeaders;
 import com.google.gson.Gson;
+import net.primegames.PrimeGames;
 import net.primegames.components.vote.data.VoteTaskResponse;
 import net.primegames.components.vote.data.VoteSite;
 import net.primegames.utils.LoggerUtils;
@@ -63,29 +64,30 @@ public class CheckAllVoteTask implements Runnable {
     }
 
     private void handleResponses(HashMap<VoteSite, String> responses) {
-        Player player = Bukkit.getPlayer(uuid);
-        if (player == null) {
-            LoggerUtils.debug("player: " + name + " logged out while checking vote sites.");
-            return;
-        }
-        if (responses.isEmpty()) {
-            player.sendMessage("§cNo vote sites found.");
-        }
-        responses.forEach((site, response) -> {
-            Gson gson = new Gson();
-            VoteTaskResponse responseObject = gson.fromJson(response, VoteTaskResponse.class);
-            if (responseObject.voted) {
-                if (responseObject.claimed) {
-                    if (sendResponse) {
+        Bukkit.getScheduler().runTask(PrimeGames.getInstance().getPlugin(), () -> {
+            Player player = Bukkit.getPlayer(uuid);
+            if (player == null) {
+                LoggerUtils.debug("player: " + name + " logged out while checking vote sites.");
+                return;
+            }
+            if (responses.isEmpty()) {
+                player.sendMessage("§cNo vote sites found.");
+            }
+            responses.forEach((site, response) -> {
+                Gson gson = new Gson();
+                VoteTaskResponse responseObject = gson.fromJson(response, VoteTaskResponse.class);
+                if (responseObject.voted) {
+                    if (!responseObject.claimed) {
+                        LoggerUtils.info("claiming vote for " + name + " on " + site.getVote());
+                        site.claimVote(player);
+                        LoggerUtils.info("claimed vote for " + name + " on " + site.getVote());
+                    } else if (sendResponse) {
                         player.sendMessage("§rYou have already claimed your vote on " + site.getVote() + ". Thank you for your support!");
                     }
                 } else {
-                    LoggerUtils.info("claiming vote for " + name + " on " + site.getVote());
-                    site.claimVote(player);
+                    player.sendMessage("§cYou have not voted on " + site.getVote() + ".");
                 }
-            } else {
-                player.sendMessage("§cYou have not voted on " + site.getVote() + ".");
-            }
+            });
         });
     }
 }

@@ -2,6 +2,7 @@ package net.primegames.components.vote.event;
 
 import lombok.Getter;
 import net.primegames.components.vote.data.VoteSite;
+import net.primegames.utils.LoggerUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;

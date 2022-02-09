@@ -6,9 +6,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class PrimeVoteCommand extends Command {
+public class VoteCommand extends Command {
 
-    public PrimeVoteCommand() {
+    public VoteCommand() {
         super("vote");
     }
 

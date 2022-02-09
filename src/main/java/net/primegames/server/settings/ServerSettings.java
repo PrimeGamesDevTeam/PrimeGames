@@ -13,7 +13,7 @@ import org.bukkit.util.Vector;
 
 import java.io.File;
 
-public abstract class ServerSettings {
+public abstract class ServerSettings implements VoteReward{
 
     @Getter
     private final PrimePlugin plugin;

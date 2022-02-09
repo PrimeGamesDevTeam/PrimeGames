@@ -3,8 +3,7 @@ package net.primegames.components.vote;
 import com.google.gson.Gson;
 import lombok.Getter;
 import net.primegames.components.Component;
-import net.primegames.components.vote.commands.PrimeVoteCommand;
-import net.primegames.components.vote.data.VoteReward;
+import net.primegames.components.vote.commands.VoteCommand;
 import net.primegames.components.vote.data.VoteSite;
 import net.primegames.components.vote.listener.VoteListener;
 import net.primegames.components.vote.task.CheckAllVoteTask;
@@ -33,7 +32,7 @@ public final class VoteComponent implements Component {
         instance = this;
         this.plugin = plugin;
         Bukkit.getPluginManager().registerEvents(new VoteListener(), plugin);
-        Bukkit.getCommandMap().register("primevote", new PrimeVoteCommand());
+        Bukkit.getCommandMap().register("primevote", new VoteCommand());
         loadVoteSites();
     }
 
