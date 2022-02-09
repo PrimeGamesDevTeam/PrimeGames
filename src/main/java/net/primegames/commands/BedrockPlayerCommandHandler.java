@@ -18,11 +18,7 @@ public class BedrockPlayerCommandHandler implements Listener {
 
     private static HashMap<String, BedrockPlayerCallback> commands = new HashMap<>();
 
-    public static void handle(String command, BedrockPlayerCallback callback) {
-        commands.put(command, callback);
-    }
-
-    public BedrockPlayerCommandHandler(){
+    public BedrockPlayerCommandHandler() {
         handle("/shop", new BedrockPlayerCallback() {
             @Override
             public void call(Player player) {
@@ -32,6 +28,9 @@ public class BedrockPlayerCommandHandler implements Listener {
         });
     }
 
+    public static void handle(String command, BedrockPlayerCallback callback) {
+        commands.put(command, callback);
+    }
 
     public static void setCommands(HashMap<String, BedrockPlayerCallback> commands) {
         BedrockPlayerCommandHandler.commands = commands;
@@ -44,7 +43,7 @@ public class BedrockPlayerCommandHandler implements Listener {
         if (fPlayer != null && !fPlayer.getDeviceOs().equals(DeviceOs.UWP)) {
             Command command = Bukkit.getCommandMap().getCommand(event.getMessage().split(" ")[0].replace("/", ""));
             if (command != null) {
-                if (command.getPermission() == null || player.hasPermission(command.getPermission())){
+                if (command.getPermission() == null || player.hasPermission(command.getPermission())) {
                     String commandStr = event.getMessage().split(" ")[0];
                     if (commands.containsKey(commandStr) && !commands.get(commandStr).shouldIgnore(fPlayer.getDeviceOs())) {
                         commands.get(commandStr).call(event.getPlayer());

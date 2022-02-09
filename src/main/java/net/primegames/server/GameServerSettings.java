@@ -16,7 +16,7 @@ public class GameServerSettings {
     private String identifier;
     private GameServerStatus status;
 
-    public GameServerSettings(String $identifier, GameMode gameMode, GameServerStatus status, String address, int port, String icon){
+    public GameServerSettings(String $identifier, GameMode gameMode, GameServerStatus status, String address, int port, String icon) {
         this.identifier = $identifier;
         this.gameMode = gameMode;
         this.status = status;

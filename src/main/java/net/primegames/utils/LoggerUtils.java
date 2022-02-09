@@ -8,10 +8,10 @@ import java.util.logging.Level;
 public class LoggerUtils {
 
     private static String PREFIX = "&l&aPrimes&2&lCore&r";
-    private static final String PREFIX_INFO = "&7[" + PREFIX +  " &rInfo] ";
-    private static final String PREFIX_ERROR = "&7[" + PREFIX +  " &4ERROR&r&7] &4";
-    private static final String PREFIX_WARN = "&7[" + PREFIX +  " &eWarning&r&7] &c";
-    private static final String PREFIX_SUCCESS = "&7[" + PREFIX +  " &7 &aSUCCESS] ";
+    private static final String PREFIX_INFO = "&7[" + PREFIX + " &rInfo] ";
+    private static final String PREFIX_ERROR = "&7[" + PREFIX + " &4ERROR&r&7] &4";
+    private static final String PREFIX_WARN = "&7[" + PREFIX + " &eWarning&r&7] &c";
+    private static final String PREFIX_SUCCESS = "&7[" + PREFIX + " &7 &aSUCCESS] ";
 
     static public void info(String msg) {
         Bukkit.getConsoleSender().sendMessage(ColorUtils.getColString(PREFIX_INFO + msg));

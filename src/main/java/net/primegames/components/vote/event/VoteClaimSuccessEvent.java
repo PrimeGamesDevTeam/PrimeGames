@@ -6,29 +6,31 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.UUID;
+
 /**
  * called when a vote is successfully claimed on server list <@link VoteSite>>
  */
-public class VoteClaimedEvent extends Event {
+public class VoteClaimSuccessEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();
     @Getter
-    private final String player;
+    private final UUID player;
     @Getter
     private final VoteSite voteSite;
 
-    public VoteClaimedEvent(String player, VoteSite site) {
+    public VoteClaimSuccessEvent(UUID player, VoteSite site) {
         super(true);
         this.player = player;
         this.voteSite = site;
     }
-    @Override
-    public @NotNull HandlerList getHandlers() {
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 
-
-    public static HandlerList getHandlerList() {
+    @Override
+    public @NotNull HandlerList getHandlers() {
         return handlers;
     }
 }

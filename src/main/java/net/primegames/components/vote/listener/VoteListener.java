@@ -9,7 +9,7 @@ public class VoteListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        VoteComponent.getInstance().checkVotes(event.getPlayer());
+        VoteComponent.getInstance().checkVotes(event.getPlayer(), false);
     }
 
 }

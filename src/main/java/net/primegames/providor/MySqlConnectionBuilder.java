@@ -22,12 +22,6 @@ public class MySqlConnectionBuilder {
 
     private Connection connection;
 
-    public static MySqlConnectionBuilder build(PrimeGames core) {
-        JavaPlugin plugin = core.getPlugin();
-        plugin.saveDefaultConfig();
-        return new MySqlConnectionBuilder(getCredentials(plugin));
-    }
-
     private MySqlConnectionBuilder(MysqlCredentials credentials) {
         LoggerUtils.info("Connecting to MySQL...");
         try {
@@ -46,12 +40,10 @@ public class MySqlConnectionBuilder {
         }
     }
 
-    public void close() throws SQLException {
-        connection.close();
-    }
-
-    public Connection getConnection() {
-        return connection;
+    public static MySqlConnectionBuilder build(PrimeGames core) {
+        JavaPlugin plugin = core.getPlugin();
+        plugin.saveDefaultConfig();
+        return new MySqlConnectionBuilder(getCredentials(plugin));
     }
 
     private static MysqlCredentials getCredentials(JavaPlugin plugin) {
@@ -76,6 +68,14 @@ public class MySqlConnectionBuilder {
         config.set("core.mysql.database", "core");
         config.set("core.mysql.username", "root");
         config.set("core.mysql.password", "password");
+    }
+
+    public void close() throws SQLException {
+        connection.close();
+    }
+
+    public Connection getConnection() {
+        return connection;
     }
 
 }

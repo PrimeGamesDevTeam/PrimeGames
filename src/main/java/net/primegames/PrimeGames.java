@@ -17,6 +17,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.geysermc.floodgate.api.FloodgateApi;
 import org.jetbrains.annotations.NotNull;
+
 import java.sql.SQLException;
 
 import static org.bukkit.Bukkit.getLogger;
@@ -33,16 +34,18 @@ public final class PrimeGames {
     @Getter
     private final PrimePlugin plugin;
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private GameServer gameServer;
     @Getter
     private GameServerManager gameServerManager;
     @Getter
     private FloodgateApi floodgateApi;
-    @Getter private Economy economy;
+    @Getter
+    private Economy economy;
 
     public PrimeGames(PrimePlugin plugin) {
-        this.plugin =  plugin;
+        this.plugin = plugin;
         instance = this;
         this.mySQLprovider = new MySqlProvider();
         this.corePlayerManager = new BedrockPlayerManager();
@@ -68,7 +71,7 @@ public final class PrimeGames {
         }
         LeaderboardManager.init();
         this.floodgateApi = FloodgateApi.getInstance();
-        if (!setupEconomy() ) {
+        if (!setupEconomy()) {
             getLogger().severe(String.format("[%s] - Disabled due to no Vault dependency found!", plugin.getDescription().getName()));
             getServer().getPluginManager().disablePlugin(plugin);
         }

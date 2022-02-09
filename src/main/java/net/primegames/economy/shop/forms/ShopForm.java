@@ -16,24 +16,18 @@ import org.geysermc.cumulus.component.ButtonComponent;
 import org.geysermc.cumulus.response.CustomFormResponse;
 import org.geysermc.cumulus.response.SimpleFormResponse;
 import org.geysermc.floodgate.api.FloodgateApi;
-import org.geysermc.floodgate.api.player.FloodgatePlayer;
 
 import java.util.HashMap;
 import java.util.Locale;
 
 public class ShopForm {
 
-    public static void init(Player player) {
-        new ShopForm(player);
-    }
-
     private final Player player;
     private final HashMap<String, Shop> shops = new HashMap<>();
-    String[] shopIds = {"armor", "blocks", "drops", "dyes", "dyes", "farming", "food", "miscellaneous", "ores", "tools"};
     private final FloodgateApi api = FloodgateApi.getInstance();
     private final Economy economy;
-
-    public ShopForm(Player player){
+    String[] shopIds = {"armor", "blocks", "drops", "dyes", "dyes", "farming", "food", "miscellaneous", "ores", "tools"};
+    public ShopForm(Player player) {
         this.player = player;
         for (String id : shopIds) {
             Shop shop = ShopGuiPlusApi.getShop(id);
@@ -47,7 +41,11 @@ public class ShopForm {
         openMainMenu();
     }
 
-    private void openMainMenu(){
+    public static void init(Player player) {
+        new ShopForm(player);
+    }
+
+    private void openMainMenu() {
         SimpleForm.Builder form = SimpleForm.builder().title("Shop GUI");
         form.content("Welcome to the Shop GUI!\nYour Balance: " + ChatColor.RED + economy.getBalance(player));
         shops.forEach((id, shop) -> form.button(id));
@@ -62,7 +60,7 @@ public class ShopForm {
         api.sendForm(player.getUniqueId(), form.build());
     }
 
-    private void openShop(Shop shop){
+    private void openShop(Shop shop) {
         HashMap<String, Integer> nameIdMap = new HashMap<>();
         final int[] count = {1};
         SimpleForm.Builder form = SimpleForm.builder().title(shop.getId());
@@ -91,7 +89,7 @@ public class ShopForm {
         api.sendForm(player.getUniqueId(), form.build());
     }
 
-    private void openBuyForm(@NonNull ShopItem item){
+    private void openBuyForm(@NonNull ShopItem item) {
         CustomForm.Builder form = CustomForm.builder().title("Buy Item");
         form.slider(item.getSellPriceForAmount(1) + economy.currencyNamePlural() + "/" + niceName(item.getItem()), 1, item.getItem().getMaxStackSize(), 1);
         form.responseHandler((customForm, response) -> {
@@ -103,11 +101,11 @@ public class ShopForm {
     }
 
 
-    private String niceName(ItemStack item){
+    private String niceName(ItemStack item) {
         return item.getType().name().toLowerCase(Locale.ROOT).replace("_", " ");
     }
 
-    private void purchase(@NonNull ShopItem item, int amount){
+    private void purchase(@NonNull ShopItem item, int amount) {
         double cost = item.getBuyPriceForAmount(amount);
         if (economy.getBalance(player) < cost) {
             player.sendMessage(ChatColor.GRAY + "You don't have enough money, you need " + ChatColor.RED + cost + ChatColor.GRAY + " to buy " + amount + " " + niceName(item.getItem()));
@@ -121,7 +119,7 @@ public class ShopForm {
             for (ItemStack stack : remaining.values()) {
                 count += stack.getAmount();
             }
-            if (count == itemStack.getAmount()){
+            if (count == itemStack.getAmount()) {
                 player.sendMessage(ChatColor.RED + "You don't have enough space in your inventory");
             } else {
                 int addedCount = itemStack.getAmount() - count;
@@ -130,7 +128,7 @@ public class ShopForm {
                 player.sendMessage(ChatColor.YELLOW + "You bought " + addedCount + " " + niceName(item.getItem()) + " for " + cost + economy.currencyNamePlural());
                 LoggerUtils.info("Player " + player.getName() + " bought " + addedCount + " " + niceName(item.getItem()) + " for " + cost + economy.currencyNamePlural());
             }
-        }else {
+        } else {
             economy.withdrawPlayer(player, item.getBuyPriceForAmount(amount));
             player.sendMessage(ChatColor.GREEN + "You bought " + amount + " " + niceName(item.getItem()) + " for " + cost);
             LoggerUtils.info(player.getName() + " bought " + amount + " " + niceName(item.getItem()) + " for " + cost + economy.currencyNamePlural());

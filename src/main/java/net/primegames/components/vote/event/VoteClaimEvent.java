@@ -1,25 +1,20 @@
 package net.primegames.components.vote.event;
 
 import lombok.Getter;
-import net.primegames.components.vote.data.ClaimStatus;
 import net.primegames.components.vote.data.VoteSite;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * Called when a player is claiming vote
- */
-public class VoteClaimEvent extends Event {
-
+public class VoteClaimEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     @Getter
     private final Player player;
     @Getter
     private final VoteSite site;
-    @Getter
-    private ClaimStatus status = ClaimStatus.AVAILABLE;
+    private boolean canceled = false;
 
     public VoteClaimEvent(Player player, VoteSite site) {
         this.player = player;
@@ -31,11 +26,19 @@ public class VoteClaimEvent extends Event {
         return handlers;
     }
 
+    @Override
+    public boolean isCancelled() {
+        return canceled;
+    }
+
+    @Override
+    public void setCancelled(boolean cancel) {
+        canceled = cancel;
+    }
+
     public static HandlerList getHandlerList() {
         return handlers;
     }
 
-    public void setStatus(ClaimStatus status) {
-        this.status = status;
-    }
+
 }

@@ -36,7 +36,7 @@ public class GameServerManager {
         scheduler.scheduleSyncRepeatingTask(PrimeGames.getInstance().getPlugin(), () -> provider.scheduleTask(new MySQLCleanDeadServerData()), 0, 1200);
     }
 
-    public void addServer(String identifier, String gameModeId, String address, int port, int playerAmount, int capacity, String software,  String imageUrl, int statusCode) {
+    public void addServer(String identifier, String gameModeId, String address, int port, int playerAmount, int capacity, String software, String imageUrl, int statusCode) {
         GameServer server = new GameServer(identifier, GameMode.valueOf(gameModeId.toUpperCase()), address, port, playerAmount, capacity, software, imageUrl, GameServerStatus.getById(statusCode));
         servers.put(identifier, server);
     }

@@ -1,7 +1,8 @@
 package net.primegames.components.vote.task;
 
 import com.google.common.net.HttpHeaders;
-import net.primegames.components.vote.data.ClaimStatus;
+import com.google.gson.Gson;
+import net.primegames.components.vote.data.VoteTaskResponse;
 import net.primegames.components.vote.data.VoteSite;
 import net.primegames.utils.LoggerUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -10,7 +11,6 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.io.BufferedReader;
@@ -25,11 +25,13 @@ public class CheckAllVoteTask implements Runnable {
     private final ArrayList<VoteSite> sites = new ArrayList<>();
     private final UUID uuid;
     private final String name;
+    private final boolean sendResponse;
 
-    public  CheckAllVoteTask(HashMap<String, VoteSite> sites, Player player){
+    public CheckAllVoteTask(HashMap<String, VoteSite> sites, Player player, boolean sendResponse) {
         this.uuid = player.getUniqueId();
         sites.forEach((key, value) -> this.sites.add(value));
         this.name = player.getName();
+        this.sendResponse = sendResponse;
         LoggerUtils.debug("Checking votes for " + this.name + " on " + this.sites.size() + " sites.");
     }
 
@@ -39,9 +41,9 @@ public class CheckAllVoteTask implements Runnable {
         try {
             final CloseableHttpClient httpClient = HttpClients.createDefault();
             for (VoteSite site : sites) {
-                String checkUrl = site.getCheckUrl(uuid);
-                if (checkUrl == null){
-                    LoggerUtils.debug("Player " +  this.name +" logged out while checking vote sites.");
+                String checkUrl = site.getCheckUrlFor(uuid);
+                if (checkUrl == null) {
+                    LoggerUtils.debug("Player " + this.name + " logged out while checking vote sites.");
                     continue;
                 }
                 HttpUriRequest request = new HttpGet(checkUrl);
@@ -49,7 +51,7 @@ public class CheckAllVoteTask implements Runnable {
                 CloseableHttpResponse response = httpClient.execute(request);
                 BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
                 responses.put(site, reader.readLine());
-                LoggerUtils.debug("Response from " + site.getVoteLink() + ": " + responses.get(site));
+                LoggerUtils.debug("Response from " + site.getVote() + ": " + responses.get(site));
             }
             LoggerUtils.debug("Finished checking votes for " + this.name);
             handleResponses(responses);
@@ -60,34 +62,30 @@ public class CheckAllVoteTask implements Runnable {
         }
     }
 
-    private void handleResponses(HashMap<VoteSite, String> responses){
+    private void handleResponses(HashMap<VoteSite, String> responses) {
         Player player = Bukkit.getPlayer(uuid);
-        if (player == null){
+        if (player == null) {
             LoggerUtils.debug("player: " + name + " logged out while checking vote sites.");
             return;
         }
-        ArrayList<VoteSite> unclaimed = new ArrayList<>();
-        ArrayList<VoteSite> notVoted = new ArrayList<>();
-        if (responses.isEmpty()){
+        if (responses.isEmpty()) {
             player.sendMessage("§cNo vote sites found.");
         }
         responses.forEach((site, response) -> {
-            ClaimStatus status = site.handleFetchResponse(response, player.getUniqueId());
-            switch (status) {
-                case AVAILABLE -> unclaimed.add(site);
-                case NOT_VOTED -> notVoted.add(site);
-                default -> LoggerUtils.error("Unknown vote check status: " + status);
+            Gson gson = new Gson();
+            VoteTaskResponse responseObject = gson.fromJson(response, VoteTaskResponse.class);
+            if (responseObject.voted) {
+                if (responseObject.claimed) {
+                    if (sendResponse) {
+                        player.sendMessage("§rYou have already claimed your vote on " + site.getVote() + ". Thank you for your support!");
+                    }
+                } else {
+                    LoggerUtils.info("claiming vote for " + name + " on " + site.getVote());
+                    site.claimVote(player);
+                }
+            } else {
+                player.sendMessage("§cYou have not voted on " + site.getVote() + ".");
             }
         });
-        if (!unclaimed.isEmpty()) {
-            for (VoteSite site : unclaimed) {
-                site.claimVote(player);
-            }
-        }
-        if (!notVoted.isEmpty()){
-            for (VoteSite site : notVoted){
-                player.sendMessage(ChatColor.YELLOW + "You have not voted on "+ ChatColor.RED + site.getVoteLink() + ChatColor.YELLOW +" yet.");
-            }
-        }
     }
 }

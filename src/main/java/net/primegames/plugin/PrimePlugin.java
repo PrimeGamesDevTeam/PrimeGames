@@ -20,27 +20,27 @@ import java.util.ArrayList;
 abstract public class PrimePlugin extends JavaPlugin {
 
     @Getter
+    private final PrimeGames primeGames;
+    private final ArrayList<Runnable> disableHooks = new ArrayList<>();
+    @Getter
     private boolean disabling = false;
     @Getter
     private boolean enabling = false;
     @Getter
-    private final PrimeGames primeGames;
-    private final ArrayList<Runnable> disableHooks = new ArrayList<>();
-    @Getter
     private ServerSettings serverSettings;
 
-    public PrimePlugin(@NotNull final JavaPluginLoader loader, @NotNull final PluginDescriptionFile description, @NotNull final File dataFolder, @NotNull final File file){
+    public PrimePlugin(@NotNull final JavaPluginLoader loader, @NotNull final PluginDescriptionFile description, @NotNull final File dataFolder, @NotNull final File file) {
         super(loader, description, dataFolder, file);
         this.primeGames = new PrimeGames(this);
     }
 
-    public PrimePlugin(){
+    public PrimePlugin() {
         this.primeGames = new PrimeGames(this);
     }
 
     @Override
     final public void onLoad() {
-       this.onInternalLoad();
+        this.onInternalLoad();
     }
 
     @Override
@@ -50,7 +50,7 @@ abstract public class PrimePlugin extends JavaPlugin {
         onInternalEnable();
         registerListeners(getServer().getPluginManager());
         try {
-            ComponentManager.getInstance().register(new VoteComponent(this, serverSettings));
+            ComponentManager.getInstance().register(new VoteComponent(this));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -69,15 +69,15 @@ abstract public class PrimePlugin extends JavaPlugin {
         disabling = false;
     }
 
-    protected void registerCommand(Command command, boolean force){
-        if (!force){
+    protected void registerCommand(Command command, boolean force) {
+        if (!force) {
             Command rCommand = Bukkit.getCommandMap().getCommand(command.getName());
-            if(rCommand != null){
+            if (rCommand != null) {
                 rCommand.unregister(Bukkit.getCommandMap());
             }
             for (String alias : command.getAliases()) {
                 Command rAlias = Bukkit.getCommandMap().getCommand(alias);
-                if(rAlias != null){
+                if (rAlias != null) {
                     rAlias.unregister(Bukkit.getCommandMap());
                 }
             }
@@ -85,7 +85,7 @@ abstract public class PrimePlugin extends JavaPlugin {
         registerCommand(command);
     }
 
-    private void registerCommand(Command command){
+    private void registerCommand(Command command) {
         Bukkit.getCommandMap().register(command.getName(), command);
     }
 
@@ -96,9 +96,14 @@ abstract public class PrimePlugin extends JavaPlugin {
         disableHooks.add(runnable);
     }
 
-    protected void onInternalDisable(){}
-    protected void onInternalEnable(){}
-    protected void onInternalLoad(){}
+    protected void onInternalDisable() {
+    }
+
+    protected void onInternalEnable() {
+    }
+
+    protected void onInternalLoad() {
+    }
 
     public <T extends ServerSettings> void setServerSettings(T serverSettings) {
         this.serverSettings = serverSettings;

@@ -15,14 +15,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public final class VoteComponent implements Component {
 
@@ -32,126 +28,66 @@ public final class VoteComponent implements Component {
     private final JavaPlugin plugin;
     @Getter
     private final HashMap<String, VoteSite> voteSites = new HashMap<>();
-    @Getter
-    private final VoteReward reward;
 
-    public VoteComponent(JavaPlugin plugin, VoteReward reward) throws IOException {
+    public VoteComponent(JavaPlugin plugin) throws IOException {
         instance = this;
         this.plugin = plugin;
-        this.reward = reward;
         Bukkit.getPluginManager().registerEvents(new VoteListener(), plugin);
         Bukkit.getCommandMap().register("primevote", new PrimeVoteCommand());
         loadVoteSites();
     }
 
-    public void registerVoteSite(VoteSite ...voteSite) {
-        for (VoteSite site : voteSite) {
-            voteSites.put(site.getName(), site);
-        }
-    }
-
-    public void registerVoteSite(List<VoteSite> voteSite) {
-        for (VoteSite site : voteSite) {
-            voteSites.put(site.getName(), site);
-        }
-    }
-
-    public void attemptClaimAllVotes(Player player) {
-        AtomicInteger claimed = new AtomicInteger();
-        voteSites.forEach((key, value) -> {
-            if (value.claimVote(player)){
-                claimed.getAndIncrement();
-            }
-        });
-        if (claimed.get() < 1) {
-            player.sendMessage(ChatColor.RED + "You have no unclaimed votes! Type " + ChatColor.YELLOW + "/vote check " + ChatColor.RED + " after voting.");
-        }
-    }
-
-    public void checkVotes(Player player) {
-        if (voteSites.isEmpty()){
+    public void checkVotes(Player player, boolean sendResponse) {
+        if (voteSites.isEmpty()) {
             player.sendMessage(ChatColor.RED + "There are no vote sites registered!");
         } else {
-            CompletableFuture.runAsync(new CheckAllVoteTask(voteSites, player));
+            CompletableFuture.runAsync(new CheckAllVoteTask(voteSites, player, sendResponse));
         }
-    }
-
-    public void listVotesSites(Player player) {
-        StringBuilder builder = new StringBuilder();
-        AtomicInteger i = new AtomicInteger();
-        i.set(1);
-        voteSites.forEach((key, value) -> builder.append(ChatColor.RESET).append(i.getAndIncrement()).append(": ").append(ChatColor.YELLOW).append(value.getVoteLink()).append(" \n"));
-        player.sendMessage(builder.toString());
-    }
-
-    public boolean hasUnclaimedVotes(Player player) {
-        for (VoteSite site : voteSites.values()) {
-            if (site.canClaim(player.getUniqueId())) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private void loadVoteSites() throws IOException {
         File file = new File(plugin.getDataFolder(), "votes");
         if (!file.exists()) {
-            if(file.mkdir()){
-                LoggerUtils.info("Created vote directory");
-                this.createDefaultConfig();
+            if (file.mkdir()) {
+                LoggerUtils.warn("Created vote directory, Download vote vrc files and drop in the vote directory!");
             }
         } else {
             File[] files = file.listFiles();
+            ArrayList<File> voteFiles = new ArrayList<>();
             if (files != null && files.length > 0) {
                 for (File f : files) {
-                    if (f.getName().endsWith(".json")) {
-                        if (f.getName().equals("default.json")) {
-                            LoggerUtils.info("Data file found, skipping...");
-                            continue;
-                        }
-                        Gson gson = new Gson();
-                        VoteSite site = gson.fromJson(new FileReader(f), VoteSite.class);
-                        voteSites.put(site.getName(), site);
-                        LoggerUtils.success("Loaded vote site: " + site.getName());
+                    if (f.getName().endsWith(".vrc")) {
+                        voteFiles.add(f);
                     } else {
                         LoggerUtils.info("Found invalid file in vote directory: " + f.getName());
                     }
                 }
+                if (voteFiles.size() == 0){
+                    LoggerUtils.warn("No valid vote files found in vote directory, Download vote vrc files and drop in the vote directory!");
+                } else {
+                    for (File f : voteFiles) {
+                        loadVoteFromFile(f);
+                    }
+                }
             } else {
-                this.createDefaultConfig();
-                LoggerUtils.error("No vote sites found, creating default vote site");
+                LoggerUtils.warn("No vote sites found, creating default vote site, Download vote vrc files and drop in the vote directory!");
             }
         }
     }
 
-    private void createDefaultConfig() throws IOException {
-        String path = plugin.getDataFolder() + File.separator + "votes" + File.separator + "default.json";
-        File file = new File(path);
-        if (!file.exists()) {
-            if (file.createNewFile()) {
-                LoggerUtils.info("Created default vote site");
-            } else {
-                LoggerUtils.error("Failed to create default vote site");
-            }
-        }
-        VoteSite site = VoteSite.Builder.create().
-                name("VoteSite").
-                voteLink("https://www.example.com/vote").
-                claimUrl("https://www.example.com/claim").
-                checkTopUrl("https://www.example.com/check").
-                checkUrl("https://www.example.com/check").
-                apiKey("apiKey").
-                build();
+    private void loadVoteFromFile(File file) throws FileNotFoundException {
         Gson gson = new Gson();
-        String json = gson.toJson(site);
-        FileWriter writer = new FileWriter(file);
-        writer.write(json);
-        writer.close();
-        LoggerUtils.info("Created default vote site");
+        VoteSite site = gson.fromJson(new FileReader(file), VoteSite.class);
+        voteSites.put(site.getName(), site);
+        LoggerUtils.success("Loaded vote site: " + site.getName());
     }
 
     @Override
     public @NotNull String getIdentifier() {
         return "vote.component";
+    }
+
+    public String getPrefix() {
+        return "§7[§bVote§7]§r ";
     }
 }

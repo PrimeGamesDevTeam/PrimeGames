@@ -16,9 +16,9 @@ public class MysqlDeleteServerData extends MySqlPostQueryTask {
 
     @Override
     protected PreparedStatement preparedStatement(Connection connection) throws SQLException {
-       PreparedStatement statement = connection.prepareStatement("DELETE FROM `servers` WHERE `identifier` = ?");
-       statement.setString(1, serverId);
-       return statement;
+        PreparedStatement statement = connection.prepareStatement("DELETE FROM `servers` WHERE `identifier` = ?");
+        statement.setString(1, serverId);
+        return statement;
     }
 
 }

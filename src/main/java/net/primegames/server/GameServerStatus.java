@@ -13,6 +13,7 @@ public enum GameServerStatus {
 
     @Getter
     private final int id;
+
     GameServerStatus(int id) {
         this.id = id;
     }

@@ -2,169 +2,75 @@ package net.primegames.components.vote.data;
 
 import lombok.Getter;
 import lombok.NonNull;
-import net.primegames.components.vote.VoteComponent;
 import net.primegames.components.vote.event.VoteClaimEvent;
 import net.primegames.components.vote.task.CheckVoteTask;
 import net.primegames.components.vote.task.SendClaimedVoteTask;
 import net.primegames.player.BedrockPlayer;
 import net.primegames.player.BedrockPlayerManager;
-import net.primegames.utils.LoggerUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 
-public class VoteSite {
-
-    public static class Builder{
-        private String name;
-        private String voteLink;
-        private String checkUrl;
-        private String claimUrl;
-        private String checkTopUrl;
-        private String apiKey;
-
-        private Builder(){}
-
-        public static Builder create(){
-            return new Builder();
-        }
-
-        public Builder name(@NonNull String name){
-            this.name = name;
-            return this;
-        }
-
-        public Builder voteLink(@NonNull String voteLink){
-            this.voteLink = voteLink;
-            return this;
-        }
-
-        public Builder checkUrl(@NonNull String checkUrl){
-            this.checkUrl = checkUrl;
-            return this;
-        }
-
-        public Builder claimUrl(@NonNull String claimUrl){
-            this.claimUrl = claimUrl;
-            return this;
-        }
-
-        public Builder checkTopUrl(@NonNull String checkTopUrl){
-            this.checkTopUrl = checkTopUrl;
-            return this;
-        }
-
-        public Builder apiKey(@NonNull String apiKey){
-            this.apiKey = apiKey;
-            return this;
-        }
-
-        public VoteSite build(){
-            if (name == null || voteLink == null || checkUrl == null || claimUrl == null || checkTopUrl == null || apiKey == null){
-                throw new IllegalArgumentException("All fields must be set!");
-            }
-            return new VoteSite(name, voteLink, checkUrl, claimUrl, checkTopUrl, apiKey);
-        }
-    }
+public class VoteSite{
 
     @Getter
     private final String name;
     @Getter
-    private final String voteLink;
-    private final String checkUrl;
-    private final String claimUrl;
-    private final String checkTopUrl;
-    private final ArrayList<UUID> availableClaims = new ArrayList<>();
-    @Getter
-    private final String apiKey;
+    private final String vote;
+    private final String check;
+    private final String claim;
 
-    public VoteSite(@NonNull String name,@NonNull String voteLink,@NonNull String checkUrl,@NonNull String claimUrl,@NonNull String checkTopUrl,@NonNull String apiKey) {
+    private VoteSite(String name, String vote, String check, String claim) {
         this.name = name;
-        this.voteLink = voteLink;
-        this.apiKey = apiKey;
-        this.checkUrl = checkUrl.replace("{ServerKey}", apiKey);
-        this.claimUrl = claimUrl.replace("{ServerKey}", apiKey);
-        this.checkTopUrl = checkTopUrl.replace("{ServerKey}", apiKey);
+        this.vote = vote;
+        this.check = check;
+        this.claim = claim;
     }
 
-    public String getClaimUrl(Player player) {
-        return claimUrl.replace("{Username}", correctUserName(player)).replace("{ServerKey}", apiKey);
-    }
-
-    public String getCheckUrl(@NonNull UUID uuid){
+    public String getCheckUrlFor(@NonNull UUID uuid) {
         Player player = Bukkit.getPlayer(uuid);
-        if (player == null){
+        if (player == null) {
             return null;
         }
-        return getCheckUrl(player);
+        return getCheckUrlFor(player);
     }
 
-    public String getCheckUrl(Player player) {
-        return checkUrl.replace("{Username}", correctUserName(player)).replace("{ServerKey}", apiKey);
+    public String getCheckUrlFor(@NonNull Player player) {
+        return check.replace("{USERNAME}", correctUserName(player));
     }
 
-    public String getCheckTopUrl(Period period) {
-        return checkTopUrl.replace("{Period}", period.toString()).replace("{ServerKey}", apiKey);
-    }
-
-    public boolean canClaim(UUID uuid) {
-        return availableClaims.contains(uuid);
-    }
-
-    public void addAvailableClaim(UUID uuid) {
-        availableClaims.add(uuid);
-    }
-
-    public boolean claimVote(Player player) {
-        if (availableClaims.contains(player.getUniqueId())) {
-            VoteClaimEvent event = new VoteClaimEvent(player, this);
-            event.callEvent();
-            if(VoteComponent.getInstance().getReward().onVoteClaimed(player)){
-                event.setStatus(ClaimStatus.CLAIMED);
-            }
-            if (event.getStatus().equals(ClaimStatus.CLAIMED)){
-                availableClaims.remove(player.getUniqueId());
-                CompletableFuture.runAsync(new SendClaimedVoteTask(this, player));
-            }
-            return true;
+    public String getClaimUrlFor(@NonNull UUID uuid) {
+        Player player = Bukkit.getPlayer(uuid);
+        if (player == null) {
+            return null;
         }
-        return false;
+        return getClaimUrlFor(player);
     }
 
-    public void checkVote(Player player) {
-        CompletableFuture.runAsync(new CheckVoteTask(this, player));
+    public String getClaimUrlFor(@NonNull Player player) {
+        return claim.replace("{USERNAME}", correctUserName(player));
     }
 
-    public ClaimStatus handleFetchResponse(String response, UUID serverUuid) {
-        switch (response) {
-            case "1" -> {
-                addAvailableClaim(serverUuid);
-                Player player = Bukkit.getPlayer(serverUuid);
-                if (player != null) {
-                    player.sendMessage("§aYou have an unclaimed vote from " + getVoteLink() + ".Type §c/vote claim §ato claim it.");
-                }
-                return ClaimStatus.AVAILABLE;
-            }
-            case "0" -> {
-                return ClaimStatus.NOT_VOTED;
-            }
-            case "2" -> {
-                return ClaimStatus.CLAIMED;
-            }
+    public void claimVote(@NonNull Player player) {
+        VoteClaimEvent event = new VoteClaimEvent(player, this);
+        event.callEvent();
+        if (!event.isCancelled()) {
+            CompletableFuture.runAsync(new SendClaimedVoteTask(this, player));
         }
-        return ClaimStatus.UNKNOWN;
     }
 
-    public String correctUserName(Player player){
+    public void checkVoteFor(@NonNull Player player, boolean sendResult) {
+        CompletableFuture.runAsync(new CheckVoteTask(this, player, sendResult));
+    }
+
+    public String correctUserName(Player player) {
         BedrockPlayer bedrockPlayer = BedrockPlayerManager.getInstance().getPlayer(player);
-        if (bedrockPlayer != null){
+        if (bedrockPlayer != null) {
             return bedrockPlayer.getUsername();
         }
         return player.getName();
     }
-
 }

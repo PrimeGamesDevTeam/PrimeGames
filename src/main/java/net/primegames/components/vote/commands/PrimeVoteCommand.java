@@ -14,9 +14,9 @@ public class PrimeVoteCommand extends Command {
 
     @Override
     public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
-        if (sender instanceof Player player){
+        if (sender instanceof Player player) {
             if (args.length == 0) {
-                VoteComponent.getInstance().checkVotes(player);
+                VoteComponent.getInstance().checkVotes(player, true);
             }
             return true;
         }

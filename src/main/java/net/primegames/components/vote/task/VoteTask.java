@@ -16,7 +16,7 @@ public abstract class VoteTask implements Runnable {
     protected VoteSite site;
     protected boolean terminateRead = false;
 
-    public VoteTask(VoteSite site){
+    public VoteTask(VoteSite site) {
         this.site = site;
     }
 
@@ -44,7 +44,7 @@ public abstract class VoteTask implements Runnable {
 
     protected abstract HttpUriRequest onRun();
 
-    protected void onResponse(String response, int lineNumber){
+    protected void onResponse(String response, int lineNumber) {
     }
 
     /**

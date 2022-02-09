@@ -1,7 +1,6 @@
 package net.primegames.utils;
 
 import org.bukkit.entity.Player;
-import org.geysermc.floodgate.api.player.FloodgatePlayer;
 import org.geysermc.floodgate.util.DeviceOs;
 
 import java.util.ArrayList;

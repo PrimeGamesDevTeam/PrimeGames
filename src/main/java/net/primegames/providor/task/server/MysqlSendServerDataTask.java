@@ -21,7 +21,7 @@ public class MysqlSendServerDataTask extends MySqlPostQueryTask {
     private final String imageURL;
     private final String host;
     private final int status;
-    
+
 
     public MysqlSendServerDataTask(GameServerSettings settings) {
         Server server = PrimeGames.getInstance().getPlugin().getServer();
