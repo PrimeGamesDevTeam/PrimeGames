@@ -49,11 +49,7 @@ abstract public class PrimePlugin extends JavaPlugin {
         setEnabled(primeGames.attemptEnable());
         onInternalEnable();
         registerListeners(getServer().getPluginManager());
-        try {
-            ComponentManager.getInstance().register(new VoteComponent(this));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        registerComponents(ComponentManager.getInstance());
         enabling = false;
     }
 
@@ -89,8 +85,9 @@ abstract public class PrimePlugin extends JavaPlugin {
         Bukkit.getCommandMap().register(command.getName(), command);
     }
 
-    protected void registerListeners(PluginManager pluginManager) {
-    }
+    protected abstract void registerListeners(PluginManager pluginManager);
+
+    protected abstract void registerComponents(ComponentManager componentManager);
 
     public final void onDisableHook(Runnable runnable) {
         disableHooks.add(runnable);
