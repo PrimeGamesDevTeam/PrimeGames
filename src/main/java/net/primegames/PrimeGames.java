@@ -5,7 +5,7 @@ import lombok.Setter;
 import net.milkbowl.vault.economy.Economy;
 import net.primegames.commands.BedrockPlayerCommandHandler;
 import net.primegames.leaderboard.LeaderboardManager;
-import net.primegames.listener.CorePlayerListener;
+import net.primegames.listener.BedrockPlayerListener;
 import net.primegames.player.BedrockPlayerManager;
 import net.primegames.plugin.PrimePlugin;
 import net.primegames.providor.MySqlProvider;
@@ -92,8 +92,14 @@ public final class PrimeGames {
 
     private void registerCoreListeners() {
         @NotNull PluginManager manager = getServer().getPluginManager();
-        manager.registerEvents(new CorePlayerListener(), plugin);
+        manager.registerEvents(new BedrockPlayerListener(), plugin);
         manager.registerEvents(new BedrockPlayerCommandHandler(), plugin);
     }
 
+    public static PrimePlugin plugin(){
+        if (!instance.getPlugin().isEnabled()){
+            throw new IllegalStateException("PrimePlugin is not enabled!");
+        }
+        return instance.getPlugin();
+    }
 }

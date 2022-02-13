@@ -8,7 +8,9 @@
 
 package net.primegames.providor;
 
+import lombok.NonNull;
 import net.primegames.PrimeGames;
+import org.bukkit.Bukkit;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -25,20 +27,31 @@ public abstract class MySqlPostQueryTask extends ProviderRunnable {
             if (resultSet == 0) {
                 throw new SQLException("Creating user failed, no rows affected.");
             }
-            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                while (generatedKeys.next()) {
-                    onInsert(generatedKeys.getInt(1));
+            ResultSet generatedKeys = statement.getGeneratedKeys();
+            Bukkit.getScheduler().getMainThreadExecutor(PrimeGames.plugin()).execute(() -> {
+                int effectRows = 0;
+                while (true) {
+                    try {
+                        if (!generatedKeys.next()) break;
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        effectRows++;
+                        onInsert(generatedKeys.getInt(1));
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
                 }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+                onSuccess(effectRows);
+            });
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
 
-    protected abstract PreparedStatement preparedStatement(Connection connection) throws SQLException;
+    protected abstract @NonNull PreparedStatement preparedStatement(Connection connection) throws SQLException;
 
     protected void onSuccess(int effectedRows) {
 

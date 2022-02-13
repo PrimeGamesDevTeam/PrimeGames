@@ -13,8 +13,10 @@ import net.primegames.event.player.CorePlayerLoadedEvent;
 import net.primegames.player.BedrockPlayer;
 import net.primegames.player.BedrockPlayerManager;
 import net.primegames.providor.MySqlFetchQueryTask;
+import net.primegames.providor.task.player.punishment.MySQLCheckPlayerPunishmentTask;
 import net.primegames.utils.LoggerUtils;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -39,7 +41,7 @@ final public class PlayerLoadTask extends MySqlFetchQueryTask {
     }
 
     @Override
-    protected PreparedStatement prepareStatement(Connection connection) throws SQLException {
+    protected @NotNull PreparedStatement preparedStatement(Connection connection) throws SQLException {
         LoggerUtils.debug("preparing stmt load task for " + name);
         PreparedStatement statement = connection.prepareStatement("SELECT users.*, GROUP_CONCAT(user_groups.group_id) AS all_groups FROM users " +
                 "LEFT JOIN user_groups ON user_groups.user_id = users.id" +
@@ -57,7 +59,7 @@ final public class PlayerLoadTask extends MySqlFetchQueryTask {
             //todo do rank setups etc here as per the plugin
             if (resultSet.next()) {
                 try {
-                    BedrockPlayer corePlayer = new BedrockPlayer(
+                    BedrockPlayer bedrockPlayer = new BedrockPlayer(
                             resultSet.getInt("id"),
                             bedrockUuid,
                             serverUuid,
@@ -77,14 +79,15 @@ final public class PlayerLoadTask extends MySqlFetchQueryTask {
                             resultSet.getInt("legendary_keys"),
                             player.locale().toString()
                     );
-                    BedrockPlayerManager.getInstance().addPlayer(corePlayer);
+                    BedrockPlayerManager.getInstance().addPlayer(bedrockPlayer);
                     String[] groupIds = resultSet.getString("all_groups").split(",");
                     ArrayList<Integer> groupIdList = new ArrayList<>();
                     for (String groupdId : groupIds) {
                         groupIdList.add(Integer.parseInt(groupdId));
                     }
-                    corePlayer.addGroups(groupIdList);
-                    (new CorePlayerLoadedEvent(player, corePlayer)).callEvent();
+                    bedrockPlayer.addGroups(groupIdList);
+                    (new CorePlayerLoadedEvent(player, bedrockPlayer)).callEvent();
+                    PrimeGames.getInstance().getMySQLprovider().scheduleTask(new MySQLCheckPlayerPunishmentTask(bedrockUuid, serverUuid));
                     LoggerUtils.info("Bedrock Player: " + name + " successfully loaded for with Core UUID: " + bedrockUuid);
                 } catch (SQLException exception) {
                     exception.printStackTrace();

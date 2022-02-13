@@ -9,13 +9,21 @@
 package net.primegames.providor.task.player.punishment;
 
 import net.primegames.providor.MySqlPostQueryTask;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.UUID;
 
 final public class MySQLPardonPlayerTask extends MySqlPostQueryTask {
+
+    public MySQLPardonPlayerTask(UUID bedrockUUID) {
+
+    }
+
     @Override
-    protected PreparedStatement preparedStatement(Connection connection) {
-        return null;
+    protected @NotNull PreparedStatement preparedStatement(Connection connection) throws SQLException {
+        return connection.prepareStatement("//todo");
     }
 }

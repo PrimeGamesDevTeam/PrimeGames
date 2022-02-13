@@ -8,68 +8,72 @@
 
 package net.primegames.providor.task.player.punishment;
 
+import net.primegames.player.BedrockPlayer;
+import net.primegames.player.BedrockPlayerManager;
 import net.primegames.providor.MySqlFetchQueryTask;
+import net.primegames.utils.LoggerUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.UUID;
 
 
 final public class MySQLCheckPlayerPunishmentTask extends MySqlFetchQueryTask {
+
+    private final UUID bedrockUUid;
+    private final UUID serverUuid;
+
+    public MySQLCheckPlayerPunishmentTask(UUID bedrockUuid, UUID serverUuid){
+        verifyPlayer(serverUuid, bedrockUuid);
+        this.serverUuid = serverUuid;
+        this.bedrockUUid = bedrockUuid;
+    }
+
     @Override
-    protected PreparedStatement prepareStatement(Connection connection) {
-        return null;
+    protected @NotNull PreparedStatement preparedStatement(Connection connection) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement("SELECT expires_at, issuer, reason, category FROM sentences WHERE (uuid = UUID_TO_BIN(?) AND expires_at IS NULL) OR (uuid = UUID_TO_BIN(?) AND expires_at > ?)");
+        statement.setString(1, bedrockUUid.toString());
+        statement.setString(2, bedrockUUid.toString());
+        statement.setDate(3, new Date(System.currentTimeMillis()));
+        return statement;
     }
 
     @Override
     protected void handleResult(ResultSet resultSet) throws SQLException {
-
+        Player player = Bukkit.getPlayer(serverUuid);
+        if(player != null){
+            BedrockPlayer bedrockPlayer = BedrockPlayerManager.getInstance().getPlayer(player);
+            while (resultSet.next()){
+                Date expiresAt = resultSet.getDate("expires_at");
+                if(expiresAt == null || (new Timestamp(new Date(System.currentTimeMillis()).getTime()).getTime() < new Timestamp(expiresAt.getTime()).getTime())){
+                    applySentence(player, bedrockPlayer, resultSet.getInt("category"), resultSet.getString("issuer"), resultSet.getString("reason"), expiresAt);
+                }
+            }
+        } else {
+            LoggerUtils.info("Player " + serverUuid + " is not online, skipping punishment check");
+        }
     }
 
-//    private UUID uuid;
-//
-//    private String username;
-//
-//    private Player player;
-//
-//    public MySQLCheckPlayerPunishmentTask(Player corePlayer){
-//        uuid = corePlayer.getUniqueId();
-//        username = corePlayer.getName();
-//        player = corePlayer;
-//    }
-//
-//    @Override
-//    protected PreparedStatement preparedStatement(Connection connection) throws SQLException {
-//        PreparedStatement statement = connection.prepareStatement("SELECT expires_at, issuer, reason, category FROM sentences WHERE (uuid = UUID_TO_BIN(?) AND expires_at IS NULL) OR (uuid = UUID_TO_BIN(?) AND expires_at > ?)");
-//        statement.setString(1, uuid.toString());
-//        statement.setString(2, uuid.toString());
-//        statement.setDate(3, new Date(System.currentTimeMillis()));
-//        return statement;
-//    }
-//
-//    @Override
-//    protected void handleResult(ResultSet resultSet) throws SQLException {
-//        if(verifyPlayer(uuid)){
-//            while (resultSet.next()){
-//                Date $expiresAt = resultSet.getDate("expires_at");
-//                if($expiresAt == null || (new Timestamp(new Date(System.currentTimeMillis()).getTime()).getTime() < new Timestamp($expiresAt.getTime()).getTime())){
-//                    applySentence(player, resultSet.getInt("category"), resultSet.getString("issuer"), resultSet.getString("reason"));
-//                }
-//            }
-//        }
-//    }
-//
-//    private void applySentence(Player player, int category, String effector, String reason){
-//        switch (category){
-//            case PunishmentCategory.BAN:
-//                player.kick(new Component(ChatColor.RED + "You have been banned on this server\nReason: " + reason + "\nBanned By: " + effector); //todo provide info if the player is perm bannned or temp and with date
-//                break;
-//            case PunishmentCategory.MUTE:
-//                player.
-//                break;
-//            default:
-//                LoggerUtils.error("Unhandled category on the sentence for "+ username +  "Category: " + category);
-//        }
-//    }
+    private void applySentence(Player player, BedrockPlayer bedrockPlayer, int category, String effector, String reason, Date expiresAt){
+            switch (category) {
+                case PunishmentCategory.BAN -> {
+                    if (expiresAt == null) {
+                        player.kickPlayer(ChatColor.RED + "You have been banned from this server.\n\n");
+                        return;
+                    }
+                    long timeLeft = new Timestamp(expiresAt.getTime()).getTime() - new Timestamp(new Date(System.currentTimeMillis()).getTime()).getTime();
+                    if (timeLeft > 0) {
+                        long days = timeLeft / (1000 * 60 * 60 * 24);
+                        long hours = (timeLeft - (days * 1000 * 60 * 60 * 24)) / (1000 * 60 * 60);
+                        long minutes = (timeLeft - (days * 1000 * 60 * 60 * 24) - (hours * 1000 * 60 * 60)) / (1000 * 60);
+                        player.kickPlayer(ChatColor.RED + "You have been banned by " + effector + " for " + reason + " (" + days + " days, " + hours + " hours, " + minutes + " minutes)");
+                    }
+                }
+                case PunishmentCategory.MUTE -> bedrockPlayer.mute(expiresAt);
+                default -> LoggerUtils.error("Unhandled category on the sentence for " + player.getName() + "Category: " + category);
+            }
+    }
 }

@@ -16,7 +16,6 @@ public class CorePlayerLoadedEvent extends Event {
     private final BedrockPlayer playerData;
 
     public CorePlayerLoadedEvent(Player player, BedrockPlayer playerData) {
-        super(true);
         this.player = player;
         this.playerData = playerData;
     }

@@ -14,6 +14,7 @@ import net.primegames.player.BedrockPlayerManager;
 import net.primegames.providor.MySqlPostQueryTask;
 import net.primegames.utils.LoggerUtils;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -41,7 +42,7 @@ final public class PlayerRegisterTask extends MySqlPostQueryTask {
     }
 
     @Override
-    protected PreparedStatement preparedStatement(Connection connection) throws SQLException {
+    protected @NotNull PreparedStatement preparedStatement(Connection connection) throws SQLException {
         PreparedStatement statement = connection.prepareStatement("INSERT INTO users (uuid, username, last_ip) VALUES (UUID_TO_BIN(?), ?, ?)", Statement.RETURN_GENERATED_KEYS);
         statement.setString(1, bedrockUuid.toString());
         statement.setString(2, userName);

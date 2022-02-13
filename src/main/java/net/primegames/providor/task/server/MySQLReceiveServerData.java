@@ -2,6 +2,7 @@ package net.primegames.providor.task.server;
 
 import net.primegames.PrimeGames;
 import net.primegames.providor.MySqlFetchQueryTask;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,7 +12,7 @@ import java.sql.SQLException;
 public class MySQLReceiveServerData extends MySqlFetchQueryTask {
 
     @Override
-    protected PreparedStatement prepareStatement(Connection connection) throws SQLException {
+    protected @NotNull PreparedStatement preparedStatement(Connection connection) throws SQLException {
         return connection.prepareStatement("SELECT * FROM `servers`");
     }
 

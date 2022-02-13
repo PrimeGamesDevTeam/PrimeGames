@@ -4,6 +4,7 @@ import net.primegames.PrimeGames;
 import net.primegames.providor.MySqlPostQueryTask;
 import net.primegames.server.GameServerSettings;
 import org.bukkit.Server;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -37,7 +38,7 @@ public class MysqlSendServerDataTask extends MySqlPostQueryTask {
     }
 
     @Override
-    protected PreparedStatement preparedStatement(Connection connection) throws SQLException {
+    protected @NotNull PreparedStatement preparedStatement(Connection connection) throws SQLException {
         PreparedStatement statement = connection.prepareStatement("""
                 REPLACE INTO servers (
                           identifier,

@@ -10,6 +10,7 @@ package net.primegames.providor.task.player;
 
 import net.primegames.player.BedrockPlayer;
 import net.primegames.providor.MySqlPostQueryTask;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -24,7 +25,7 @@ final public class PlayerUpdateTask extends MySqlPostQueryTask {
     }
 
     @Override
-    protected PreparedStatement preparedStatement(Connection connection) throws SQLException {
+    protected @NotNull PreparedStatement preparedStatement(Connection connection) throws SQLException {
         PreparedStatement statement = connection.prepareStatement("UPDATE users SET" +
                 "uuid = UUID_TO_BIN(?)," +
                 "username = ?," +

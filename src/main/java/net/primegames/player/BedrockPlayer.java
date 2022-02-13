@@ -9,10 +9,17 @@
 package net.primegames.player;
 
 import lombok.Data;
+import lombok.Setter;
 import net.primegames.groups.GroupTier;
+import net.primegames.player.sentence.MuteSentence;
 import net.primegames.utils.LoggerUtils;
 import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.geysermc.api.Geyser;
+import org.geysermc.api.session.Connection;
+import org.geysermc.floodgate.api.FloodgateApi;
+import org.geysermc.floodgate.api.player.FloodgatePlayer;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -42,6 +49,7 @@ public class BedrockPlayer {
     private final int commonKeys;
     private final PlayerStatus playerStatus = PlayerStatus.LOAD_PENDING;
     private final String locale;
+    private MuteSentence muted;
     private ArrayList<@NonNull GroupTier> groupTiers = new ArrayList<>();
 
     public BedrockPlayer(int internalId, UUID bedrockUuid, UUID serverUuid, String username, String lastIp, String currentIp, String countryCode, String continentCode, int reputation, int warnings, long timePlayed, long lastSessionDuration, Date registeredAt, int voteKeys, int commonKeys, int rareKeys, int legendaryKeys, String locale) {
@@ -93,8 +101,36 @@ public class BedrockPlayer {
         return org.bukkit.Bukkit.getPlayer(serverUUID);
     }
 
+    public FloodgatePlayer getFloodgatePlayer(){
+        return FloodgateApi.getInstance().getPlayer(serverUUID);
+    }
+
+    public Connection getGeyserConnection(){
+        return Geyser.api().connectionByXuid(getFloodgatePlayer().getXuid());
+    }
+
     public boolean isOnline() {
         return getPlayer() != null && getPlayer().isOnline();
     }
 
+    public void mute(@NotNull java.sql.Date date){
+        //check if time has passed if not then set mute
+        if (date.getTime() < System.currentTimeMillis()) {
+            muted = new MuteSentence(date);
+        } else {
+            LoggerUtils.error("Mute date is in the past!");
+        }
+    }
+
+    public MuteSentence isMuted() {
+        if (muted != null){
+            if (muted.isTimePassed()){
+                muted = null;
+                return null;
+            } else {
+                return muted;
+            }
+        }
+        return null;
+    }
 }

@@ -1,6 +1,7 @@
 package net.primegames.player;
 
 import lombok.Getter;
+import lombok.Setter;
 import net.primegames.PrimeGames;
 import net.primegames.providor.task.player.PlayerLoadTask;
 import net.primegames.utils.BedrockPlayerCallback;
@@ -26,6 +27,13 @@ public class BedrockPlayerManager {
      */
     private final Map<UUID, BedrockPlayer> players = new HashMap<>();
 
+    /**
+     * Key: UUID provided by spigot aka serverUUID
+     * Value: Bedrock UUID aka bedrockUUID
+     */
+    @Getter
+    private final Map<UUID, UUID> playerUUIDs = new HashMap<>();
+
     public BedrockPlayerManager() {
         instance = this;
     }
@@ -43,6 +51,7 @@ public class BedrockPlayerManager {
 
     public void remove(Player player) {
         players.remove(player.getUniqueId());
+        players.remove(player.getUniqueId());
     }
 
     public boolean isFloodGatePlayer(Player player) {
@@ -54,6 +63,7 @@ public class BedrockPlayerManager {
         if (floodgatePlayer != null) {
             Connection connection = Geyser.api().connectionByXuid(floodgatePlayer.getXuid());
             if (connection != null) {
+                playerUUIDs.put(player.getUniqueId(), connection.uuid());
                 PrimeGames.getInstance().getMySQLprovider().scheduleTask(new PlayerLoadTask(connection.uuid(), player, connection.name()));
                 //todo check if bedrock player has a linked java account and if yes then save it to database: (javaUuid, bedrockUuid, xboxUuid)
                 //todo and if player is not liked then try to delete store from database

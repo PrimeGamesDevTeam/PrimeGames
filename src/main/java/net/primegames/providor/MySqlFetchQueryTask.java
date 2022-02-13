@@ -8,7 +8,9 @@
 
 package net.primegames.providor;
 
+import lombok.NonNull;
 import net.primegames.PrimeGames;
+import org.bukkit.Bukkit;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -21,22 +23,26 @@ public abstract class MySqlFetchQueryTask extends ProviderRunnable {
     public void run() {
         ResultSet rs = null;
         try {
-            rs = prepareStatement(PrimeGames.getInstance().getMySQLprovider().getConnection()).executeQuery();
+            rs = preparedStatement(PrimeGames.getInstance().getMySQLprovider().getConnection()).executeQuery();
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
         if (rs != null) {
-            try {
-                handleResult(rs);
-            } catch (SQLException exception) {
-                exception.printStackTrace();
-            }
+            ResultSet finalRs = rs;
+            Bukkit.getScheduler().getMainThreadExecutor(PrimeGames.plugin()).execute(() -> {
+                try {
+                    handleResult(finalRs);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            });
         } else {
             throw new RuntimeException("Could not load player data from Database since resultSet returned null");
         }
     }
 
-    protected abstract PreparedStatement prepareStatement(Connection connection) throws SQLException;
+
+    protected abstract @NonNull PreparedStatement preparedStatement(Connection connection) throws SQLException;
 
     protected abstract void handleResult(ResultSet resultSet) throws SQLException;
 
