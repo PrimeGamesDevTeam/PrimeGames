@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.geysermc.cumulus.SimpleForm;
 import org.geysermc.cumulus.component.ButtonComponent;
 import org.geysermc.cumulus.response.SimpleFormResponse;
+import org.geysermc.floodgate.api.FloodgateApi;
 
 public class WarpsForm {
 
@@ -44,8 +45,11 @@ public class WarpsForm {
                 } catch (WarpNotFoundException | InvalidWorldException e) {
                     e.printStackTrace();
                 }
+            } else {
+                player.sendMessage("&cselected warp is invalid, report this to a staff member");
             }
         });
+        FloodgateApi.getInstance().sendForm(player.getUniqueId(), form.build());
     }
 
 }
