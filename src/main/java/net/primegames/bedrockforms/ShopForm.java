@@ -1,4 +1,4 @@
-package net.primegames.economy.shop.forms;
+package net.primegames.bedrockforms;
 
 import lombok.NonNull;
 import net.brcdev.shopgui.ShopGuiPlusApi;
@@ -6,6 +6,7 @@ import net.brcdev.shopgui.shop.Shop;
 import net.brcdev.shopgui.shop.ShopItem;
 import net.milkbowl.vault.economy.Economy;
 import net.primegames.PrimeGames;
+import net.primegames.player.BedrockPlayerManager;
 import net.primegames.utils.LoggerUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -28,6 +29,9 @@ public class ShopForm {
     private final Economy economy;
     String[] shopIds = {"armor", "blocks", "drops", "dyes", "dyes", "farming", "food", "miscellaneous", "ores", "tools"};
     public ShopForm(Player player) {
+        if (!BedrockPlayerManager.getInstance().isFloodGatePlayer(player)){
+            throw new IllegalArgumentException("Player is not a Floodgate player!");
+        }
         this.player = player;
         for (String id : shopIds) {
             Shop shop = ShopGuiPlusApi.getShop(id);

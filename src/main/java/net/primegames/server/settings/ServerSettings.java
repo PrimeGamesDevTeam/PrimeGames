@@ -54,6 +54,6 @@ public abstract class ServerSettings implements VoteReward{
     public abstract String getLobbyWorldName();
 
     @NonNull
-    public abstract Vector getLobbySpawn();
+    public abstract Location getLobbySpawnLocation();
 
 }

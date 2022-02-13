@@ -1,6 +1,7 @@
 package net.primegames.commands;
 
-import net.primegames.economy.shop.forms.ShopForm;
+import net.primegames.bedrockforms.ShopForm;
+import net.primegames.bedrockforms.WarpsForm;
 import net.primegames.player.BedrockPlayerManager;
 import net.primegames.utils.BedrockPlayerCallback;
 import org.bukkit.Bukkit;
@@ -26,6 +27,12 @@ public class BedrockPlayerCommandHandler implements Listener {
                 ignore(DeviceOs.UWP);
             }
         });
+        handle("/warps", new BedrockPlayerCallback() {
+            @Override
+            public void call(Player player) {
+                WarpsForm.init(player);
+            }
+        });
     }
 
     public static void handle(String command, BedrockPlayerCallback callback) {
@@ -40,7 +47,7 @@ public class BedrockPlayerCommandHandler implements Listener {
     public void onCommand(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
         FloodgatePlayer fPlayer = BedrockPlayerManager.getInstance().getFloodGatePlayer(player);
-        if (fPlayer != null && !fPlayer.getDeviceOs().equals(DeviceOs.UWP)) {
+        if (fPlayer != null) {
             Command command = Bukkit.getCommandMap().getCommand(event.getMessage().split(" ")[0].replace("/", ""));
             if (command != null) {
                 if (command.getPermission() == null || player.hasPermission(command.getPermission())) {
