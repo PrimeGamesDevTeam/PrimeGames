@@ -3,7 +3,6 @@ package net.primegames.plugin;
 import lombok.Getter;
 import net.primegames.PrimeGames;
 import net.primegames.components.ComponentManager;
-import net.primegames.components.vote.VoteComponent;
 import net.primegames.server.settings.ServerSettings;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;

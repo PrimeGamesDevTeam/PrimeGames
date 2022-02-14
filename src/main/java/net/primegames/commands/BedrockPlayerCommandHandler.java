@@ -1,7 +1,5 @@
 package net.primegames.commands;
 
-import net.primegames.bedrockforms.ShopForm;
-import net.primegames.bedrockforms.WarpsForm;
 import net.primegames.player.BedrockPlayerManager;
 import net.primegames.utils.BedrockPlayerCallback;
 import org.bukkit.Bukkit;
@@ -11,7 +9,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.geysermc.floodgate.api.player.FloodgatePlayer;
-import org.geysermc.floodgate.util.DeviceOs;
 
 import java.util.HashMap;
 
@@ -20,19 +17,6 @@ public class BedrockPlayerCommandHandler implements Listener {
     private static HashMap<String, BedrockPlayerCallback> commands = new HashMap<>();
 
     public BedrockPlayerCommandHandler() {
-        handle("/shop", new BedrockPlayerCallback() {
-            @Override
-            public void call(Player player) {
-                ShopForm.init(player);
-                ignore(DeviceOs.UWP);
-            }
-        });
-        handle("/warps", new BedrockPlayerCallback() {
-            @Override
-            public void call(Player player) {
-                WarpsForm.init(player);
-            }
-        });
     }
 
     public static void handle(String command, BedrockPlayerCallback callback) {
