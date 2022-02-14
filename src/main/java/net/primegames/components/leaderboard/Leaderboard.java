@@ -1,4 +1,4 @@
-package net.primegames.leaderboard;
+package net.primegames.components.leaderboard;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;

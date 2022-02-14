@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import net.milkbowl.vault.economy.Economy;
 import net.primegames.commands.BedrockPlayerCommandHandler;
-import net.primegames.leaderboard.LeaderboardManager;
 import net.primegames.listener.BedrockPlayerListener;
 import net.primegames.player.BedrockPlayerManager;
 import net.primegames.plugin.PrimePlugin;
@@ -13,7 +12,6 @@ import net.primegames.providor.MySqlProvider;
 import net.primegames.providor.task.MySQLInitialCoreTask;
 import net.primegames.server.GameServer;
 import net.primegames.server.GameServerManager;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.geysermc.floodgate.api.FloodgateApi;
@@ -75,12 +73,6 @@ public final class PrimeGames {
     }
 
     public boolean attemptEnable() {
-        if (!Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
-            getLogger().severe("*** HolographicDisplays is not installed or not enabled. ***");
-            getLogger().severe("*** This plugin will be disabled. ***");
-            return false;
-        }
-        LeaderboardManager.init();
         this.floodgateApi = FloodgateApi.getInstance();
         if (!setupEconomy()) {
             getLogger().severe(String.format("[%s] - Disabled due to no Vault dependency found!", plugin.getDescription().getName()));
