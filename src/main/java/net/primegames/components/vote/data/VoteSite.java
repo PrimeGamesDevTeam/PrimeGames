@@ -1,6 +1,7 @@
 package net.primegames.components.vote.data;
 
 import com.vexsoftware.votifier.model.Vote;
+import com.vexsoftware.votifier.net.VotifierSession;
 import lombok.Getter;
 import lombok.NonNull;
 import net.primegames.PrimeGames;
@@ -59,7 +60,7 @@ public class VoteSite{
 
     public void claimVote(@NonNull Player player) {
         Vote vote = new Vote(name, player.getName(), getVote(), System.currentTimeMillis() + "");
-        VoteComponent.getInstance().getVotifier().onVoteReceived(vote, null, getVote());
+        VoteComponent.getInstance().getVotifier().onVoteReceived(vote, ProtocolVersion.TWO, getVote());
         if (PrimeGames.getInstance().getPlugin().getServerSettings().onVoteClaim(player, this)){
             CompletableFuture.runAsync(new SendClaimedVoteTask(this, player));
         }

@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.primegames</groupId>
     <artifactId>primegames</artifactId>
-    <version>1.45.24</version>
+    <version>1.45.26</version>
     <packaging>jar</packaging>
     <name>PrimeGames</name>
     <description>PrimeGames Core Plugin for Paper Spigot</description>
@@ -163,6 +163,11 @@
             <artifactId>nuvotifier-bukkit</artifactId>
             <version>2.7.2</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.NuVotifier.NuVotifier</groupId>
+            <artifactId>nuvotifier-common</artifactId>
+            <version>2.7.2</version>
         </dependency>
     </dependencies>
 </project>
