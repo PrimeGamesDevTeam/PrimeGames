@@ -5,10 +5,12 @@ import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import lombok.Getter;
 import net.primegames.PrimeGames;
 import net.primegames.components.vote.VoteComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 public class VoteParty {
 
+    @Getter
     private static VoteParty instance;
 
     public static void init() {
@@ -46,12 +48,12 @@ public class VoteParty {
         hologram.appendTextLine(" ");
         hologram.appendTextLine("{fast}&fCurrent votes: &#ffb16e"+ currentVotes +"/"+ parytIn);
         //show progress bar
-        StringBuilder progressChat = new StringBuilder("=");
+        StringBuilder progressChat = new StringBuilder();
         for (int i = 0; i < parytIn; i++){
             if (i < currentVotes){
-                progressChat.append("&a|");
+                progressChat.append("&a∎");
             } else {
-                progressChat.append("&7|");
+                progressChat.append("&7∎");
             }
         }
         hologram.appendTextLine("{fast}"+ progressChat);
@@ -63,6 +65,16 @@ public class VoteParty {
     public void onVote(){
         currentVotes++;
         if (currentVotes >= parytIn){
+            Bukkit.broadcastMessage(" ");
+            Bukkit.broadcastMessage(" &c♫");
+            Bukkit.broadcastMessage("  &b♫  &e♫  &fThe votes for the &6Vote Party &fhave been obtained!");
+            Bukkit.broadcastMessage("&a♫   &c♫          &fThis will be started in &e10 seconds&f!");
+            Bukkit.broadcastMessage("  &e♫ ");
+            Bukkit.broadcastMessage(" ");
+            Bukkit.getScheduler().scheduleSyncDelayedTask(PrimeGames.plugin(), () -> {
+                PrimeGames.plugin().getServerSettings().onVoteParty();
+                currentVotes = 0;
+            }, 200);
             PrimeGames.plugin().getServerSettings().onVoteParty();
             currentVotes = 0;
         }
