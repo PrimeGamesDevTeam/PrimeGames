@@ -2,7 +2,10 @@ package net.primegames.components.vote.task;
 
 import com.google.common.net.HttpHeaders;
 import com.google.gson.Gson;
+import com.vexsoftware.votifier.model.Vote;
+import com.vexsoftware.votifier.model.VotifierEvent;
 import net.primegames.PrimeGames;
+import net.primegames.components.vote.VoteComponent;
 import net.primegames.components.vote.data.VoteTaskResponse;
 import net.primegames.components.vote.data.VoteSite;
 import net.primegames.utils.LoggerUtils;
@@ -75,9 +78,9 @@ public class CheckAllVoteTask implements Runnable {
             }
             responses.forEach((site, response) -> {
                 Gson gson = new Gson();
-                VoteTaskResponse responseObject = gson.fromJson(response, VoteTaskResponse.class);
-                if (responseObject.voted) {
-                    if (!responseObject.claimed) {
+                VoteTaskResponse voteTaskResponse = gson.fromJson(response, VoteTaskResponse.class);
+                if (voteTaskResponse.voted) {
+                    if (!voteTaskResponse.claimed) {
                         LoggerUtils.info("claiming vote for " + name + " on " + site.getVote());
                         site.claimVote(player);
                         LoggerUtils.info("claimed vote for " + name + " on " + site.getVote());
@@ -89,5 +92,30 @@ public class CheckAllVoteTask implements Runnable {
                 }
             });
         });
+        Bukkit.getScheduler().runTask(VoteComponent.getInstance().getVotifier(), () -> {
+            Player player = Bukkit.getPlayer(uuid);
+            if (player == null) {
+                LoggerUtils.debug("player: " + name + " logged out while checking vote sites.");
+                return;
+            }
+            responses.forEach((site, response) -> {
+                Gson gson = new Gson();
+                VoteTaskResponse voteTaskResponse = gson.fromJson(response, VoteTaskResponse.class);
+                if (voteTaskResponse.voted) {
+                    if (!voteTaskResponse.claimed) {
+                        fireVotifierEvent(new Vote(name, player.getName(), site.getVote(), System.currentTimeMillis() + ""));
+                    }
+                }
+            });
+        });
+    }
+
+    private void fireVotifierEvent(Vote vote) {
+        if (VotifierEvent.getHandlerList().getRegisteredListeners().length == 0) {
+            LoggerUtils.error("A vote was received, but you don't have any listeners available to listen for it.");
+            LoggerUtils.error("See https://github.com/NuVotifier/NuVotifier/wiki/Setup-Guide#vote-listeners for");
+            LoggerUtils.error("a list of listeners you can configure.");
+        }
+        Bukkit.getPluginManager().callEvent(new VotifierEvent(vote));
     }
 }
