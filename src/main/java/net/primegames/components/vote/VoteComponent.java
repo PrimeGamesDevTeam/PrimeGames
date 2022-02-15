@@ -1,6 +1,7 @@
 package net.primegames.components.vote;
 
 import com.google.gson.Gson;
+import com.vexsoftware.votifier.model.Vote;
 import lombok.Getter;
 import net.primegames.components.Component;
 import net.primegames.components.vote.commands.VoteCommand;
