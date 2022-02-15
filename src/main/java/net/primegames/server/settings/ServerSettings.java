@@ -2,7 +2,7 @@ package net.primegames.server.settings;
 
 import lombok.Getter;
 import lombok.NonNull;
-import net.primegames.components.vote.data.VoteReward;
+import net.primegames.components.vote.settings.VoteSettings;
 import net.primegames.plugin.PrimePlugin;
 import net.primegames.server.GameServerSettings;
 import org.bukkit.Bukkit;
@@ -13,7 +13,7 @@ import org.bukkit.util.Vector;
 
 import java.io.File;
 
-public abstract class ServerSettings implements VoteReward{
+public abstract class ServerSettings implements VoteSettings {
 
     @Getter
     private final PrimePlugin plugin;

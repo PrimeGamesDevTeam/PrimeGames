@@ -1,19 +1,17 @@
 package net.primegames.components.vote;
 
 import com.google.gson.Gson;
-import com.vexsoftware.votifier.NuVotifierBukkit;
 import lombok.Getter;
 import net.primegames.components.Component;
 import net.primegames.components.vote.commands.VoteCommand;
+import net.primegames.components.vote.data.VoteParty;
 import net.primegames.components.vote.data.VoteSite;
 import net.primegames.components.vote.listener.VoteListener;
 import net.primegames.components.vote.task.CheckAllVoteTask;
 import net.primegames.utils.LoggerUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,22 +28,14 @@ public final class VoteComponent implements Component {
     private final JavaPlugin plugin;
     @Getter
     private final HashMap<String, VoteSite> voteSites = new HashMap<>();
-    @Getter
-    private NuVotifierBukkit votifier;
 
     public VoteComponent(JavaPlugin plugin) throws IOException {
         instance = this;
         this.plugin = plugin;
-        Plugin nuVotifier = plugin.getServer().getPluginManager().getPlugin("Votifier");
-        if (nuVotifier != null) {
-            votifier = (NuVotifierBukkit) nuVotifier;
-        } else {
-            LoggerUtils.warn("NuVotifier not found, vote commands will not work!");
-            return;
-        }
         Bukkit.getPluginManager().registerEvents(new VoteListener(), plugin);
         Bukkit.getCommandMap().register("primevote", new VoteCommand());
         loadVoteSites();
+        VoteParty.init();
     }
 
     public void checkVotes(Player player, boolean sendResponse) {

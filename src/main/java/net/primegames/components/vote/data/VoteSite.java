@@ -1,18 +1,11 @@
 package net.primegames.components.vote.data;
 
-import com.vexsoftware.votifier.model.Vote;
-import com.vexsoftware.votifier.model.VotifierEvent;
-import com.vexsoftware.votifier.net.VotifierSession;
 import lombok.Getter;
 import lombok.NonNull;
 import net.primegames.PrimeGames;
-import net.primegames.components.vote.VoteComponent;
 import net.primegames.components.vote.task.CheckVoteTask;
-import net.primegames.components.vote.task.SendClaimedVoteTask;
 import net.primegames.player.BedrockPlayer;
 import net.primegames.player.BedrockPlayerManager;
-import com.vexsoftware.votifier.net.VotifierSession.ProtocolVersion;
-import net.primegames.utils.LoggerUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -61,9 +54,7 @@ public class VoteSite{
     }
 
     public void claimVote(@NonNull Player player) {
-        if (PrimeGames.getInstance().getPlugin().getServerSettings().onVoteClaim(player, this)){
-            CompletableFuture.runAsync(new SendClaimedVoteTask(this, player));
-        }
+        PrimeGames.getInstance().getPlugin().getServerSettings().onVoteClaim(player, this);
     }
 
     public void checkVoteFor(@NonNull Player player, boolean sendResult) {
