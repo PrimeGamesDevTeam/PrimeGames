@@ -36,7 +36,7 @@ public final class VoteComponent implements Component {
     public VoteComponent(JavaPlugin plugin) throws IOException {
         instance = this;
         this.plugin = plugin;
-        Plugin nuVotifier = plugin.getServer().getPluginManager().getPlugin("NuVotifier");
+        Plugin nuVotifier = plugin.getServer().getPluginManager().getPlugin("Votifier");
         if (nuVotifier != null) {
             votifier = (NuVotifierBukkit) nuVotifier;
         } else {
