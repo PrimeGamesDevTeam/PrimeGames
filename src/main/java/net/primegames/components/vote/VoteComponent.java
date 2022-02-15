@@ -1,7 +1,6 @@
 package net.primegames.components.vote;
 
 import com.google.gson.Gson;
-import com.vexsoftware.votifier.model.Vote;
 import lombok.Getter;
 import net.primegames.components.Component;
 import net.primegames.components.vote.commands.VoteCommand;
@@ -11,6 +10,7 @@ import net.primegames.components.vote.task.CheckAllVoteTask;
 import net.primegames.utils.LoggerUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -33,6 +33,10 @@ public final class VoteComponent implements Component {
         instance = this;
         this.plugin = plugin;
         Bukkit.getPluginManager().registerEvents(new VoteListener(), plugin);
+        Command command = Bukkit.getCommandMap().getCommand("vote");
+        if (command != null) {
+            command.unregister(Bukkit.getCommandMap());
+        }
         Bukkit.getCommandMap().register("primevote", new VoteCommand());
         loadVoteSites();
     }
