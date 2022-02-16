@@ -11,14 +11,13 @@ package net.primegames.providor;
 import lombok.Getter;
 import net.primegames.providor.connection.ConnectionId;
 import net.primegames.providor.connection.MySqlConnectionBuilder;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Map;
 
 public class MySqlProvider {
@@ -27,7 +26,7 @@ public class MySqlProvider {
 
     @Getter
     private final Plugin plugin;
-    private Map<ConnectionId, Connection> connections;
+    private final Map<ConnectionId, Connection> connections = new HashMap<>();
 
     public MySqlProvider(Plugin plugin) {
         this.plugin = plugin;
