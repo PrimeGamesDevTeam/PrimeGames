@@ -3,6 +3,7 @@ package net.primegames.components.store.task;
 import lombok.NonNull;
 import net.primegames.components.store.StoreComponent;
 import net.primegames.providor.task.MySqlPostQueryTask;
+import net.primegames.utils.LoggerUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,6 +20,7 @@ public class PlayerPurchaseCompleteTask extends MySqlPostQueryTask {
         this.transactionId = transactionId;
         this.executedCommand = executedCommand;
         this.claimed_ip = claim_ip;
+        LoggerUtils.info("[STORE]Claiming transaction " + transactionId + " with command " + executedCommand + " and ip " + claim_ip);
     }
 
     @Override
