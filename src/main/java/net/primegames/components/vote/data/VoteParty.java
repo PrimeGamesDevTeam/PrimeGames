@@ -46,17 +46,17 @@ public class VoteParty {
         hologram.appendTextLine("&fus grow. Plus, you get rewarded");
         hologram.appendTextLine("&fwith awesome items!");
         hologram.appendTextLine(" ");
-        hologram.appendTextLine("{fast}&fCurrent votes: &#ffb16e"+ currentVotes +"/"+ parytIn);
+        hologram.appendTextLine("&fCurrent votes: &e"+ currentVotes +"/"+ parytIn);
         //show progress bar
         StringBuilder progressChat = new StringBuilder();
         for (int i = 0; i < parytIn; i++){
             if (i < currentVotes){
-                progressChat.append("&a∎");
+                progressChat.append("&a∎∎");
             } else {
-                progressChat.append("&7∎");
+                progressChat.append("&7∎∎");
             }
         }
-        hologram.appendTextLine("{fast}"+ progressChat);
+        hologram.appendTextLine(String.valueOf(progressChat));
         hologram.appendTextLine(" ");
         hologram.appendTextLine("&6Vote now!");
     }
@@ -66,17 +66,16 @@ public class VoteParty {
         currentVotes++;
         if (currentVotes >= parytIn){
             Bukkit.broadcastMessage(" ");
-            Bukkit.broadcastMessage(" &c♫");
-            Bukkit.broadcastMessage("  &b♫  &e♫  &fThe votes for the &6Vote Party &fhave been obtained!");
-            Bukkit.broadcastMessage("&a♫   &c♫          &fThis will be started in &e10 seconds&f!");
-            Bukkit.broadcastMessage("  &e♫ ");
+            Bukkit.broadcastMessage(" §c♫");
+            Bukkit.broadcastMessage("  §b♫  §e♫  §fThe votes for the §6Vote Party §fhave been obtained!");
+            Bukkit.broadcastMessage("§a♫   &c♫          §fThis will be started in §e10 seconds§f!");
+            Bukkit.broadcastMessage("  §e♫ ");
             Bukkit.broadcastMessage(" ");
             Bukkit.getScheduler().scheduleSyncDelayedTask(PrimeGames.plugin(), () -> {
                 PrimeGames.plugin().getServerSettings().onVoteParty();
                 currentVotes = 0;
+                Bukkit.broadcastMessage("'§6§lVote§e§lParty§r §8➠ §eYour §fVote Party §erewards have been applied!'");
             }, 200);
-            PrimeGames.plugin().getServerSettings().onVoteParty();
-            currentVotes = 0;
         }
         resetHoloGram();
     }
