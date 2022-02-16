@@ -76,7 +76,9 @@ public class PlayerPurchaseCheckTask extends MySqlFetchQueryTask {
                     player.sendMessage("§5§l[STORE]§r§aYou have purchased one or more packages from store! use §e/store §ato see and claim them!");
                 }
             } else {
-                player.sendMessage("No purchases were found for you! Use §e/store §afor more info");
+                if (sendForm){
+                    player.sendMessage("No purchases were found for you! Use §e/store §afor more info");
+                }
             }
         } else {
             LoggerUtils.info(username  + " went offline before we could check for purchases!");
