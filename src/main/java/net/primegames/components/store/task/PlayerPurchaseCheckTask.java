@@ -54,6 +54,7 @@ public class PlayerPurchaseCheckTask extends MySqlFetchQueryTask {
                 hasPurchased = true;
                 Payment payment = Payment.Builder.create()
                         .id(resultSet.getInt("id"))
+                        .transaction_id(resultSet.getString("transaction_id"))
                         .xuid(resultSet.getString("user_id"))
                         .username(resultSet.getString("username"))
                         .email(resultSet.getString("email"))
@@ -61,7 +62,6 @@ public class PlayerPurchaseCheckTask extends MySqlFetchQueryTask {
                         .time(resultSet.getString("time"))
                         .ip(resultSet.getString("ip"))
                         .package_name(resultSet.getString("package_name"))
-                        .package_price(resultSet.getString("package_id"))
                         .package_price(resultSet.getString("package_price"))
                         .command(resultSet.getString("command"))
                         .inventory(resultSet.getInt("inventory"))
