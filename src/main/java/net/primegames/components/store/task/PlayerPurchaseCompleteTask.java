@@ -25,7 +25,7 @@ public class PlayerPurchaseCompleteTask extends MySqlPostQueryTask {
 
     @Override
     protected @NonNull PreparedStatement preparedStatement(Connection connection) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement("UPDATE `payments` SET `claim_ip` = ?, `command` = ?, claimed = 1 WHERE `transaction_id` = ?");
+        PreparedStatement preparedStatement = connection.prepareStatement("UPDATE payments SET claim_ip = ?, command = ?, claimed = 1 WHERE transaction_id = ?", PreparedStatement.RETURN_GENERATED_KEYS);
         preparedStatement.setString(1, claimed_ip);
         preparedStatement.setString(2, executedCommand);
         preparedStatement.setString(3, transactionId);
