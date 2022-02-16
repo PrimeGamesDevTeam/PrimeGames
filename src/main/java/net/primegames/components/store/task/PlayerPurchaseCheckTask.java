@@ -28,6 +28,7 @@ public class PlayerPurchaseCheckTask extends MySqlFetchQueryTask {
         this.xuid = player.getFloodgatePlayer().getXuid();
         this.uuid = player.getServerUUID();
         this.username = player.getUsername();
+        LoggerUtils.info("Fetching purchases for " + player.getUsername() + " (" + player.getFloodgatePlayer().getXuid() + ")");
     }
 
     public PlayerPurchaseCheckTask(FloodgatePlayer player, boolean sendForm) throws SQLException {
@@ -35,7 +36,6 @@ public class PlayerPurchaseCheckTask extends MySqlFetchQueryTask {
         this.xuid = player.getXuid();
         this.uuid = player.getJavaUniqueId();
         this.sendForm = sendForm;
-        LoggerUtils.info("Fetching purchases for " + player.getUsername());
     }
 
     @Override
