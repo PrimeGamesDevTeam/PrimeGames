@@ -86,11 +86,12 @@ public class StoreComponent implements Component {
                 }));
             });
         } else {
+            String fetchButton = "§aFetch Payments";
             form.content("§aVisit our store at: §cstore.primegames.net §ato purchase ranks and keys");
-            form.button("§bFetch payment");
+            form.button(fetchButton);
             form.responseHandler(((simpleForm, s) -> {
                 SimpleFormResponse response = simpleForm.parseResponse(s);
-                if (Objects.requireNonNull(response.getClickedButton()).getText().equals("§bFetch payment")){
+                if (Objects.requireNonNull(response.getClickedButton()).getText().equals(fetchButton)){
                     try {
                         StoreComponent.getInstance().getMySqlProvider().scheduleTask(new PlayerPurchaseCheckTask(floodgatePlayer, true));
                     } catch (SQLException e) {

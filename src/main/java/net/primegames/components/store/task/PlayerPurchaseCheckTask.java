@@ -5,6 +5,7 @@ import net.primegames.components.store.StoreComponent;
 import net.primegames.components.store.payment.Payment;
 import net.primegames.player.BedrockPlayer;
 import net.primegames.providor.task.MySqlFetchQueryTask;
+import net.primegames.utils.LoggerUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.geysermc.floodgate.api.player.FloodgatePlayer;
@@ -20,11 +21,13 @@ public class PlayerPurchaseCheckTask extends MySqlFetchQueryTask {
     private final String xuid;
     private final UUID uuid;
     private boolean sendForm = false;
+    private String  username;
 
     public PlayerPurchaseCheckTask(BedrockPlayer player) throws SQLException {
         super(StoreComponent.getInstance().getPlugin(), StoreComponent.getInstance().getConnection());
         this.xuid = player.getFloodgatePlayer().getXuid();
         this.uuid = player.getServerUUID();
+        this.username = player.getUsername();
     }
 
     public PlayerPurchaseCheckTask(FloodgatePlayer player, boolean sendForm) throws SQLException {
@@ -32,6 +35,7 @@ public class PlayerPurchaseCheckTask extends MySqlFetchQueryTask {
         this.xuid = player.getXuid();
         this.uuid = player.getJavaUniqueId();
         this.sendForm = sendForm;
+        LoggerUtils.info("Fetching purchases for " + player.getUsername());
     }
 
     @Override
@@ -71,7 +75,11 @@ public class PlayerPurchaseCheckTask extends MySqlFetchQueryTask {
                 } else {
                     player.sendMessage("§5§l[STORE]§r§aYou have purchased one or more packages from store! use §e/store §ato see and claim them!");
                 }
+            } else {
+                player.sendMessage("No purchases were found for you! Use §e/store §afor more info");
             }
+        } else {
+            LoggerUtils.info(username  + " went offline before we could check for purchases!");
         }
     }
 }
