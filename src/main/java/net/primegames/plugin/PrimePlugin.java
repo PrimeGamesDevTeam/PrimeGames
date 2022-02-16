@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 abstract public class PrimePlugin extends JavaPlugin {
@@ -45,7 +46,12 @@ abstract public class PrimePlugin extends JavaPlugin {
     @Override
     final public void onEnable() {
         enabling = true;
-        setEnabled(primeGames.attemptEnable());
+        try {
+            setEnabled(primeGames.attemptEnable());
+        } catch (SQLException e) {
+            e.printStackTrace();
+            getServer().shutdown();
+        }
         onInternalEnable();
         registerListeners(getServer().getPluginManager());
         registerComponents(ComponentManager.getInstance());

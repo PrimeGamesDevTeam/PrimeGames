@@ -8,13 +8,18 @@
 
 package net.primegames.providor.task;
 
-import net.primegames.providor.MySqlTask;
 import net.primegames.utils.LoggerUtils;
+import org.bukkit.plugin.Plugin;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 final public class MySQLInitialCoreTask extends MySqlTask {
+
+    public MySQLInitialCoreTask(Connection connection) {
+        super(connection);
+    }
 
     public void doOperations(Statement statement) throws SQLException {
         LoggerUtils.info("Initializing Core database tables");

@@ -9,10 +9,11 @@
 package net.primegames.providor.task.player;
 
 import net.primegames.PrimeGames;
-import net.primegames.event.player.CorePlayerLoadedEvent;
+import net.primegames.event.player.BedrockPlayerLoadedEvent;
 import net.primegames.player.BedrockPlayer;
 import net.primegames.player.BedrockPlayerManager;
-import net.primegames.providor.MySqlFetchQueryTask;
+import net.primegames.providor.connection.ConnectionId;
+import net.primegames.providor.task.MySqlFetchQueryTask;
 import net.primegames.providor.task.player.punishment.MySQLCheckPlayerPunishmentTask;
 import net.primegames.utils.LoggerUtils;
 import org.bukkit.entity.Player;
@@ -33,7 +34,8 @@ final public class PlayerLoadTask extends MySqlFetchQueryTask {
     private final UUID serverUuid;
     private final String name;
 
-    public PlayerLoadTask(UUID uuid, Player player, String username) {
+    public PlayerLoadTask(UUID uuid, Player player, String username) throws SQLException {
+        super(PrimeGames.plugin(), PrimeGames.getInstance().getMySQLprovider().getConnection(ConnectionId.CORE));
         LoggerUtils.debug("Initiating data load task for " + player.getName() + " with uuid: " + uuid + "from MySQL");
         this.bedrockUuid = uuid;
         this.serverUuid = player.getUniqueId();
@@ -86,7 +88,7 @@ final public class PlayerLoadTask extends MySqlFetchQueryTask {
                         groupIdList.add(Integer.parseInt(groupdId));
                     }
                     bedrockPlayer.addGroups(groupIdList);
-                    (new CorePlayerLoadedEvent(player, bedrockPlayer)).callEvent();
+                    (new BedrockPlayerLoadedEvent(player, bedrockPlayer)).callEvent();
                     PrimeGames.getInstance().getMySQLprovider().scheduleTask(new MySQLCheckPlayerPunishmentTask(bedrockUuid, serverUuid));
                     LoggerUtils.info("Bedrock Player: " + name + " successfully loaded for with Core UUID: " + bedrockUuid);
                 } catch (SQLException exception) {

@@ -1,6 +1,7 @@
 package net.primegames.providor.task.server;
 
-import net.primegames.providor.MySqlPostQueryTask;
+import net.primegames.PrimeGames;
+import net.primegames.providor.task.MySqlPostQueryTask;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
@@ -11,7 +12,8 @@ public class MysqlDeleteServerData extends MySqlPostQueryTask {
 
     private final String serverId;
 
-    public MysqlDeleteServerData(String serverId) {
+    public MysqlDeleteServerData(String serverId) throws SQLException {
+        super(PrimeGames.defaultConnection(), PrimeGames.plugin());
         this.serverId = serverId;
     }
 

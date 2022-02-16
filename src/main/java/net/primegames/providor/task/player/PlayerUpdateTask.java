@@ -8,8 +8,10 @@
 
 package net.primegames.providor.task.player;
 
+import net.primegames.PrimeGames;
 import net.primegames.player.BedrockPlayer;
-import net.primegames.providor.MySqlPostQueryTask;
+import net.primegames.providor.connection.ConnectionId;
+import net.primegames.providor.task.MySqlPostQueryTask;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
@@ -20,7 +22,8 @@ final public class PlayerUpdateTask extends MySqlPostQueryTask {
 
     private final BedrockPlayer corePlayer;
 
-    public PlayerUpdateTask(BedrockPlayer player) {
+    public PlayerUpdateTask(BedrockPlayer player) throws SQLException {
+        super(PrimeGames.defaultConnection(), PrimeGames.plugin());
         this.corePlayer = player;
     }
 
@@ -69,8 +72,4 @@ final public class PlayerUpdateTask extends MySqlPostQueryTask {
         return statement;
     }
 
-    @Override
-    protected void onInsert(int Id) {
-        //todo
-    }
 }

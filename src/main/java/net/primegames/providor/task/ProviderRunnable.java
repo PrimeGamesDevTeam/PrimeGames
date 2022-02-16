@@ -1,4 +1,4 @@
-package net.primegames.providor;
+package net.primegames.providor.task;
 
 import net.primegames.player.BedrockPlayerManager;
 import net.primegames.plugin.PrimePlugin;

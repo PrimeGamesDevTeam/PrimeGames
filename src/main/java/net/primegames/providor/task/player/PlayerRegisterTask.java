@@ -8,10 +8,12 @@
 
 package net.primegames.providor.task.player;
 
+import net.primegames.PrimeGames;
 import net.primegames.event.player.CorePlayerRegisteredEvent;
 import net.primegames.player.BedrockPlayer;
 import net.primegames.player.BedrockPlayerManager;
-import net.primegames.providor.MySqlPostQueryTask;
+import net.primegames.providor.connection.ConnectionId;
+import net.primegames.providor.task.MySqlPostQueryTask;
 import net.primegames.utils.LoggerUtils;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -32,7 +34,8 @@ final public class PlayerRegisterTask extends MySqlPostQueryTask {
     private final String userName;
     private String address = "0.0.0.0";
 
-    public PlayerRegisterTask(UUID bedrockUuid, Player player) {
+    public PlayerRegisterTask(UUID bedrockUuid, Player player) throws SQLException {
+        super(PrimeGames.defaultConnection(), PrimeGames.plugin());
         this.bedrockUuid = bedrockUuid;
         this.serverUuid = player.getUniqueId();
         userName = player.getName();

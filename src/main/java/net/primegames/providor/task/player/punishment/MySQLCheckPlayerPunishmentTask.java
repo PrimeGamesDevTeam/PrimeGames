@@ -8,9 +8,10 @@
 
 package net.primegames.providor.task.player.punishment;
 
+import net.primegames.PrimeGames;
 import net.primegames.player.BedrockPlayer;
 import net.primegames.player.BedrockPlayerManager;
-import net.primegames.providor.MySqlFetchQueryTask;
+import net.primegames.providor.task.MySqlFetchQueryTask;
 import net.primegames.utils.LoggerUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -26,7 +27,8 @@ final public class MySQLCheckPlayerPunishmentTask extends MySqlFetchQueryTask {
     private final UUID bedrockUUid;
     private final UUID serverUuid;
 
-    public MySQLCheckPlayerPunishmentTask(UUID bedrockUuid, UUID serverUuid){
+    public MySQLCheckPlayerPunishmentTask(UUID bedrockUuid, UUID serverUuid) throws SQLException {
+        super(PrimeGames.plugin(), PrimeGames.defaultConnection());
         verifyPlayer(serverUuid, bedrockUuid);
         this.serverUuid = serverUuid;
         this.bedrockUUid = bedrockUuid;

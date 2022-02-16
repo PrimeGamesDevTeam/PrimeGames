@@ -8,9 +8,10 @@
 
 package net.primegames.providor.task.player.punishment;
 
+import net.primegames.PrimeGames;
 import net.primegames.player.BedrockPlayer;
 import net.primegames.player.BedrockPlayerManager;
-import net.primegames.providor.MySqlPostQueryTask;
+import net.primegames.providor.task.MySqlPostQueryTask;
 import net.primegames.utils.LoggerUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -35,7 +36,8 @@ final public class MySQLPunishPlayerTask extends MySqlPostQueryTask {
     private final String ip;
     private final int category;
 
-    public MySQLPunishPlayerTask(String username, String effector, String reason, UUID bedrockUuid, UUID serverUuid, Date expiration, String lastAddress, int category){
+    public MySQLPunishPlayerTask(String username, String effector, String reason, UUID bedrockUuid, UUID serverUuid, Date expiration, String lastAddress, int category) throws SQLException {
+        super(PrimeGames.defaultConnection(), PrimeGames.plugin());
         this.username = username;
         this.effector = effector;
         this.reason = reason;

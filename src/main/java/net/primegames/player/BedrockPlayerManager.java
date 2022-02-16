@@ -1,7 +1,6 @@
 package net.primegames.player;
 
 import lombok.Getter;
-import lombok.Setter;
 import net.primegames.PrimeGames;
 import net.primegames.providor.task.player.PlayerLoadTask;
 import net.primegames.utils.BedrockPlayerCallback;
@@ -64,7 +63,12 @@ public class BedrockPlayerManager {
             Connection connection = Geyser.api().connectionByXuid(floodgatePlayer.getXuid());
             if (connection != null) {
                 playerUUIDs.put(player.getUniqueId(), connection.uuid());
-                PrimeGames.getInstance().getMySQLprovider().scheduleTask(new PlayerLoadTask(connection.uuid(), player, connection.name()));
+                try {
+                    PrimeGames.getInstance().getMySQLprovider().scheduleTask(new PlayerLoadTask(connection.uuid(), player, connection.name()));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    player.sendMessage( "§cAn error occurred while loading your player.");
+                }
                 //todo check if bedrock player has a linked java account and if yes then save it to database: (javaUuid, bedrockUuid, xboxUuid)
                 //todo and if player is not liked then try to delete store from database
             } else {

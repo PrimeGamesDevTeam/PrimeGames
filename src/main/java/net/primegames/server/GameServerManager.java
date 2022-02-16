@@ -10,6 +10,7 @@ import net.primegames.providor.task.server.MysqlSendServerDataTask;
 import net.primegames.utils.LoggerUtils;
 import org.bukkit.scheduler.BukkitScheduler;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 
 public class GameServerManager {
@@ -28,12 +29,30 @@ public class GameServerManager {
         LoggerUtils.info("Initializing server schedulers");
         BukkitScheduler scheduler = PrimeGames.getInstance().getPlugin().getServer().getScheduler();
         //send server data to database
-        scheduler.scheduleSyncRepeatingTask(PrimeGames.getInstance().getPlugin(), () -> provider.scheduleTask(new MysqlSendServerDataTask(this.getSettings())), 0, 200);
+        scheduler.scheduleSyncRepeatingTask(PrimeGames.getInstance().getPlugin(), () -> {
+            try {
+                provider.scheduleTask(new MysqlSendServerDataTask(this.getSettings()));
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }, 0, 200);
         //get servers Data
-        scheduler.scheduleSyncRepeatingTask(PrimeGames.getInstance().getPlugin(), () -> provider.scheduleTask(new MySQLReceiveServerData()), 0, 200);
+        scheduler.scheduleSyncRepeatingTask(PrimeGames.getInstance().getPlugin(), () -> {
+            try {
+                provider.scheduleTask(new MySQLReceiveServerData());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }, 0, 200);
 
         //delete garbage data
-        scheduler.scheduleSyncRepeatingTask(PrimeGames.getInstance().getPlugin(), () -> provider.scheduleTask(new MySQLCleanDeadServerData()), 0, 1200);
+        scheduler.scheduleSyncRepeatingTask(PrimeGames.getInstance().getPlugin(), () -> {
+            try {
+                provider.scheduleTask(new MySQLCleanDeadServerData());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }, 0, 1200);
     }
 
     public void addServer(String identifier, String gameModeId, String address, int port, int playerAmount, int capacity, String software, String imageUrl, int statusCode) {

@@ -8,7 +8,8 @@
 
 package net.primegames.providor.task.player.punishment;
 
-import net.primegames.providor.MySqlPostQueryTask;
+import net.primegames.providor.task.MySqlPostQueryTask;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
@@ -18,8 +19,9 @@ import java.util.UUID;
 
 final public class MySQLPardonPlayerTask extends MySqlPostQueryTask {
 
-    public MySQLPardonPlayerTask(UUID bedrockUUID) {
 
+    public MySQLPardonPlayerTask(Connection connection, Plugin plugin) {
+        super(connection, plugin);
     }
 
     @Override

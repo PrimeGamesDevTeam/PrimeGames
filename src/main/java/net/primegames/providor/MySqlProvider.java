@@ -8,25 +8,64 @@
 
 package net.primegames.providor;
 
-import net.primegames.PrimeGames;
+import lombok.Getter;
+import net.primegames.providor.connection.ConnectionId;
+import net.primegames.providor.connection.MySqlConnectionBuilder;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Map;
 
 public class MySqlProvider {
 
-    private final Connection connection;
+    public static final String PREFIX = ChatColor.DARK_PURPLE + "[" + ChatColor.GOLD + "MySql" + ChatColor.DARK_PURPLE + "] " + ChatColor.RESET;
 
-    public MySqlProvider() {
-        connection = MySqlConnectionBuilder.build(PrimeGames.getInstance()).getConnection();
+    @Getter
+    private final Plugin plugin;
+    private Map<ConnectionId, Connection> connections;
+
+    public MySqlProvider(Plugin plugin) {
+        this.plugin = plugin;
     }
 
     public void scheduleTask(BukkitRunnable mySqlTask) {
-        mySqlTask.runTaskAsynchronously(PrimeGames.getInstance().getPlugin());
+        mySqlTask.runTaskAsynchronously(this.plugin);
     }
 
-    public Connection getConnection() {
-        return connection;
+
+    public Map<ConnectionId, Connection> getConnections() {
+        return connections;
     }
 
+    public Connection getConnection(ConnectionId connectionId) throws SQLException {
+        Connection connection = this.connections.get(connectionId);
+        if (connection.isClosed()){
+            throw new SQLException("Tried to get a closed SQL Connection with ID: " + connectionId.toString());
+        }
+        return this.connections.get(connectionId);
+    }
+
+    public void createConnection(ConnectionId connectionId, MysqlCredentials credentials){
+        try {
+            this.connections.put(connectionId, credentials.createConnection());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public MySqlConnectionBuilder buildCoreConnection(Plugin plugin) {
+        plugin.saveDefaultConfig();
+        return new MySqlConnectionBuilder(MysqlCredentials.getCredentials(plugin, "core"));
+    }
+
+
+    public void remove(ConnectionId connectionId) {
+        this.connections.remove(connectionId);
+    }
 }

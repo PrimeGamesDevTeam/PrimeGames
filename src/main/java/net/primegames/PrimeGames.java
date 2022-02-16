@@ -9,6 +9,8 @@ import net.primegames.listener.BedrockPlayerListener;
 import net.primegames.player.BedrockPlayerManager;
 import net.primegames.plugin.PrimePlugin;
 import net.primegames.providor.MySqlProvider;
+import net.primegames.providor.MysqlCredentials;
+import net.primegames.providor.connection.ConnectionId;
 import net.primegames.providor.task.MySQLInitialCoreTask;
 import net.primegames.server.GameServer;
 import net.primegames.server.GameServerManager;
@@ -17,6 +19,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.geysermc.floodgate.api.FloodgateApi;
 import org.jetbrains.annotations.NotNull;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 
 import static org.bukkit.Bukkit.getLogger;
@@ -48,7 +51,8 @@ public final class PrimeGames {
     public PrimeGames(PrimePlugin plugin) {
         this.plugin = plugin;
         instance = this;
-        this.mySQLprovider = new MySqlProvider();
+        this.mySQLprovider = new MySqlProvider(plugin);
+        mySQLprovider.createConnection(ConnectionId.CORE, MysqlCredentials.getCredentials(plugin, "core"));
         this.corePlayerManager = new BedrockPlayerManager();
     }
 
@@ -72,7 +76,7 @@ public final class PrimeGames {
         return true;
     }
 
-    public boolean attemptEnable() {
+    public boolean attemptEnable() throws SQLException {
         this.floodgateApi = FloodgateApi.getInstance();
         if (!setupEconomy()) {
             getLogger().severe(String.format("[%s] - Disabled due to no Vault dependency found!", plugin.getDescription().getName()));
@@ -84,7 +88,7 @@ public final class PrimeGames {
             getServer().getPluginManager().disablePlugin(plugin);
             return false;
         }
-        mySQLprovider.scheduleTask(new MySQLInitialCoreTask());
+        mySQLprovider.scheduleTask(new MySQLInitialCoreTask(mySQLprovider.getConnection(ConnectionId.CORE)));
         registerCoreListeners();
         gameServerManager = new GameServerManager(plugin);
         return true;
@@ -92,11 +96,14 @@ public final class PrimeGames {
 
     public void disable() {
         //close mysql connection
-        try {
-            mySQLprovider.getConnection().close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        mySQLprovider.getConnections().forEach((ConnectionId connectionId, Connection connection) -> {
+            try {
+                connection.close();
+                mySQLprovider.remove(connectionId);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     private void registerCoreListeners() {
@@ -110,5 +117,9 @@ public final class PrimeGames {
             throw new IllegalStateException("PrimePlugin is not enabled!");
         }
         return instance.getPlugin();
+    }
+
+    public static Connection defaultConnection() throws SQLException {
+        return instance.getMySQLprovider().getConnection(ConnectionId.CORE);
     }
 }

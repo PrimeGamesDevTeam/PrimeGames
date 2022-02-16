@@ -1,7 +1,9 @@
 package net.primegames.providor.task.server;
 
 import net.primegames.PrimeGames;
-import net.primegames.providor.MySqlFetchQueryTask;
+import net.primegames.providor.connection.ConnectionId;
+import net.primegames.providor.task.MySqlFetchQueryTask;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
@@ -10,6 +12,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class MySQLReceiveServerData extends MySqlFetchQueryTask {
+
+    public MySQLReceiveServerData() throws SQLException {
+        super(PrimeGames.plugin(), PrimeGames.getInstance().getMySQLprovider().getConnection(ConnectionId.CORE));
+    }
 
     @Override
     protected @NotNull PreparedStatement preparedStatement(Connection connection) throws SQLException {

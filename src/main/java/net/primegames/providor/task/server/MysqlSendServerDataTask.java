@@ -1,7 +1,8 @@
 package net.primegames.providor.task.server;
 
 import net.primegames.PrimeGames;
-import net.primegames.providor.MySqlPostQueryTask;
+import net.primegames.providor.connection.ConnectionId;
+import net.primegames.providor.task.MySqlPostQueryTask;
 import net.primegames.server.GameServerSettings;
 import org.bukkit.Server;
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +25,8 @@ public class MysqlSendServerDataTask extends MySqlPostQueryTask {
     private final int status;
 
 
-    public MysqlSendServerDataTask(GameServerSettings settings) {
+    public MysqlSendServerDataTask(GameServerSettings settings) throws SQLException {
+        super(PrimeGames.getInstance().getMySQLprovider().getConnection(ConnectionId.CORE), PrimeGames.plugin());
         Server server = PrimeGames.getInstance().getPlugin().getServer();
         this.identifier = settings.getIdentifier();
         this.gameMode = settings.getGameMode().name();
