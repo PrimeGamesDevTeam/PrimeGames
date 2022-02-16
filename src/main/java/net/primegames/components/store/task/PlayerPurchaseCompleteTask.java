@@ -3,7 +3,6 @@ package net.primegames.components.store.task;
 import lombok.NonNull;
 import net.primegames.components.store.StoreComponent;
 import net.primegames.providor.task.MySqlPostQueryTask;
-import org.bukkit.plugin.Plugin;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

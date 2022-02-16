@@ -107,9 +107,9 @@ public class StoreComponent implements Component {
     public void sendConformationForm(Player player, Payment payment){
         String claimButton = "§aClaim payment";
         SimpleForm.Builder form = SimpleForm.builder().title("Payment Claim");
-        form.content("§aYou have a payment of §c" + payment.getPackage_price() + " §afor §c" + payment.getPackage_name() + "\n§aTo claim this payment, click on the button below. " +
-                "Note: if you purchase this item for another server. Please do not claim here." +
-                "Inventory Space Required: " + payment.getInventory() + " §a\n§aIf you have any issues please contact us on discord.io/primegames or support@primegames.net");
+        form.content("§aYou have a payment of §c" + payment.getPackage_price() + " §afor §c" + payment.getPackage_name() + "\n\n§aTo claim this payment, click on the button below." +
+                "\n\n§cNote: §aif you purchase this item for another server. Please do not claim here." +
+                "Inventory Space Required: " + payment.getInventory() + " §a\n\n§eIf you have any issues please contact us on discord.io/primegames or support@primegames.net");
         form.button(claimButton);
         form.responseHandler(((simpleForm, s) -> {
             SimpleFormResponse response = simpleForm.parseResponse(s);
@@ -124,6 +124,9 @@ public class StoreComponent implements Component {
                             InetSocketAddress inetSocketAddress  = player.getAddress();
                             if (inetSocketAddress != null){
                                 ip = inetSocketAddress.getAddress().getHostAddress();
+                            }
+                            if (ip.isEmpty()){
+                                ip = null;
                             }
                             StoreComponent.getInstance().getMySqlProvider().scheduleTask(new PlayerPurchaseCompleteTask(payment.getTransaction_id(), command, ip));
                         } catch (SQLException e) {
