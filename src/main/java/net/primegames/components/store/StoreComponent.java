@@ -119,6 +119,7 @@ public class StoreComponent implements Component {
                     command = command.replace("%playername%", player.getName());
                     if (Bukkit.getCommandMap().dispatch(Bukkit.getConsoleSender(), command)){
                         Bukkit.broadcastMessage("§a" + player.getName() + " §ahas claimed a payment of §c" + payment.getPackage_price() + " §afor §c" + payment.getPackage_name() + "§a from store.primegames.net");
+                        StoreComponent.getInstance().getStore().removePayment(payment.getTransaction_id());
                         try {
                             String ip = payment.getIp();
                             InetSocketAddress inetSocketAddress  = player.getAddress();
