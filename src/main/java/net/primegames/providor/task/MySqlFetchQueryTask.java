@@ -9,6 +9,8 @@
 package net.primegames.providor.task;
 
 import lombok.NonNull;
+import net.primegames.PrimeGames;
+import net.primegames.plugin.PrimePlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
@@ -16,14 +18,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Objects;
 
 public abstract class MySqlFetchQueryTask extends ProviderRunnable {
 
-    private final Plugin plugin;
+    private final String pluginName;
     private final Connection connection;
 
     public MySqlFetchQueryTask(Plugin plugin, Connection connection) {
-        this.plugin = plugin;
+        this.pluginName = plugin.getName();
         this.connection = connection;
     }
 
@@ -37,9 +40,10 @@ public abstract class MySqlFetchQueryTask extends ProviderRunnable {
         }
         if (rs != null) {
             ResultSet finalRs = rs;
-            Bukkit.getScheduler().getMainThreadExecutor(plugin).execute(() -> {
+            Bukkit.getScheduler().getMainThreadExecutor(Objects.requireNonNull(Bukkit.getPluginManager().getPlugin(pluginName))).execute(() -> {
                 try {
                     handleResult(finalRs);
+                    Bukkit.getScheduler().cancelTask(getTaskId());
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }

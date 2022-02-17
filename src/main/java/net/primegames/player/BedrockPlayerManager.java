@@ -54,7 +54,7 @@ public class BedrockPlayerManager {
     }
 
     public boolean isFloodGatePlayer(Player player) {
-        return getFloodGatePlayer(player) != null;
+        return getFloodGatePlayer(player) == null;
     }
 
     public void initPlayer(Player player) {

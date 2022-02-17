@@ -16,15 +16,16 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Objects;
 
 public abstract class MySqlPostQueryTask extends ProviderRunnable {
 
     private final Connection connection;
-    private final Plugin plugin;
+    private final String pluginName;
 
     public MySqlPostQueryTask(Connection connection, Plugin plugin) {
         this.connection = connection;
-        this.plugin = plugin;
+        this.pluginName = plugin.getName();
     }
 
     @Override
@@ -36,7 +37,7 @@ public abstract class MySqlPostQueryTask extends ProviderRunnable {
                 throw new SQLException("Creating user failed, no rows affected.");
             }
             ResultSet generatedKeys = statement.getGeneratedKeys();
-            Bukkit.getScheduler().getMainThreadExecutor(plugin).execute(() -> {
+            Bukkit.getScheduler().getMainThreadExecutor(Objects.requireNonNull(Bukkit.getPluginManager().getPlugin(pluginName))).execute(() -> {
                 int effectRows = 0;
                 while (true) {
                     try {
@@ -52,6 +53,7 @@ public abstract class MySqlPostQueryTask extends ProviderRunnable {
                     }
                 }
                 onSuccess(effectRows);
+                Bukkit.getScheduler().cancelTask(getTaskId());
             });
         } catch (SQLException e) {
             e.printStackTrace();
