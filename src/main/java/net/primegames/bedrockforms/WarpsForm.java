@@ -4,7 +4,6 @@ import com.earth2me.essentials.Warps;
 import com.earth2me.essentials.commands.WarpNotFoundException;
 import net.ess3.api.InvalidWorldException;
 import net.primegames.PrimeGames;
-import net.primegames.player.BedrockPlayerManager;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.geysermc.cumulus.SimpleForm;
@@ -21,7 +20,7 @@ public class WarpsForm {
     }
 
     private WarpsForm(Player player){
-        if (!BedrockPlayerManager.getInstance().isFloodGatePlayer(player)){
+        if (!FloodgateApi.getInstance().isFloodgatePlayer(player.getUniqueId())){
             throw new IllegalArgumentException("Player is not a floodgate player");
         }
         this.player = player;
@@ -45,7 +44,7 @@ public class WarpsForm {
                     e.printStackTrace();
                 }
             } else {
-                player.sendMessage("&cselected warp is invalid, report this to a staff member");
+                player.sendMessage("&cSelected warp is invalid, report this to a staff member");
             }
         });
         FloodgateApi.getInstance().sendForm(player.getUniqueId(), form.build());

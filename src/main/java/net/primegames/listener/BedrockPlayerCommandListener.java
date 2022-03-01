@@ -1,6 +1,5 @@
-package net.primegames.commands;
+package net.primegames.listener;
 
-import net.primegames.player.BedrockPlayerManager;
 import net.primegames.utils.BedrockPlayerCallback;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -8,15 +7,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.geysermc.floodgate.api.FloodgateApi;
 import org.geysermc.floodgate.api.player.FloodgatePlayer;
 
 import java.util.HashMap;
 
-public class BedrockPlayerCommandHandler implements Listener {
+public class BedrockPlayerCommandListener implements Listener {
 
     private static HashMap<String, BedrockPlayerCallback> commands = new HashMap<>();
 
-    public BedrockPlayerCommandHandler() {
+    public BedrockPlayerCommandListener() {
     }
 
     public static void handle(String command, BedrockPlayerCallback callback) {
@@ -24,13 +24,13 @@ public class BedrockPlayerCommandHandler implements Listener {
     }
 
     public static void setCommands(HashMap<String, BedrockPlayerCallback> commands) {
-        BedrockPlayerCommandHandler.commands = commands;
+        BedrockPlayerCommandListener.commands = commands;
     }
 
     @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
-        FloodgatePlayer fPlayer = BedrockPlayerManager.getInstance().getFloodGatePlayer(player);
+        FloodgatePlayer fPlayer = FloodgateApi.getInstance().getPlayer(player.getUniqueId());
         if (fPlayer != null) {
             Command command = Bukkit.getCommandMap().getCommand(event.getMessage().split(" ")[0].replace("/", ""));
             if (command != null) {

@@ -41,7 +41,7 @@ public abstract class Leaderboard {
             hologram.delete();
             hologram = null;
         }
-        hologram = HologramsAPI.createHologram(PrimeGames.getInstance().getPlugin(), location);
+        hologram = HologramsAPI.createHologram(PrimeGames.getInstance(), location);
         hologram.appendTextLine(name);
         AtomicInteger maxRows = new AtomicInteger(rows);
         AtomicInteger ranking = new AtomicInteger(1);

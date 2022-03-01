@@ -1,0 +1,12 @@
+name: PrimeGames
+version: '${project.name}'
+main: net.primegames.PrimeGames
+api-version: 1.17
+authors: [ nasir_idrishi ]
+description: PrimeGames server core
+website: https://primegames.net
+depend:
+  - floodgate
+  - ShopGUIPlus
+  - Essentials
+  - Vault

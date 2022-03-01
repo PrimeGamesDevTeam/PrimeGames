@@ -12,7 +12,7 @@ public class ColorUtils {
 
     public static String getColString(String string) {
         Matcher matcher = HEX_PATTERN.matcher(string);
-        if (PrimeGames.getInstance().getPlugin().isEnabled()) {
+        if (PrimeGames.getInstance().isEnabled()) {
             while (matcher.find()) {
                 final ChatColor hexColor = ChatColor.of(matcher.group().substring(1, matcher.group().length() - 1));
                 final String before = string.substring(0, matcher.start());

@@ -49,7 +49,7 @@ public class LoggerUtils {
     }
 
     static public void debug(String msg) {
-        PrimeGames.getInstance().getPlugin().getLogger().log(Level.CONFIG, msg);
+        PrimeGames.getInstance().getLogger().log(Level.CONFIG, msg);
     }
 
     public static void setPrefix(String s) {
