@@ -34,8 +34,11 @@ public class BedrockPlayerCommandListener implements Listener {
         });
     }
 
-    public static void handle(String command, BedrockPlayerCallback callback) {
+    public static void handle(String command, BedrockPlayerCallback callback, String ...commandAliases) {
         commands.put(command.toLowerCase(), callback);
+        for (String commandAlias : commandAliases) {
+            commands.put(commandAlias.toLowerCase(), callback);
+        }
     }
 
     public static void setCommands(HashMap<String, BedrockPlayerCallback> commands) {
