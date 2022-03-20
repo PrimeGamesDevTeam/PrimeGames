@@ -23,23 +23,16 @@ import java.util.Locale;
 public class ShopForm {
 
     private final Player player;
-    private final HashMap<String, Shop> shops = new HashMap<>();
+    private final HashMap<String, Shop> shops;
     private final FloodgateApi api = FloodgateApi.getInstance();
     private final Economy economy;
-    String[] shopIds = {"armor", "blocks", "drops", "dyes", "dyes", "farming", "food", "miscellaneous", "ores", "tools"};
+
     public ShopForm(Player player) {
         if (!FloodgateApi.getInstance().isFloodgatePlayer(player.getUniqueId())){
             throw new IllegalArgumentException("Player is not a Floodgate player!");
         }
+        shops = ShopGuiPlusApi.getPlugin().getShopManager().shops;
         this.player = player;
-        for (String id : shopIds) {
-            Shop shop = ShopGuiPlusApi.getShop(id);
-            if (shop != null) {
-                shops.put(id, shop);
-            } else {
-                throw new IllegalArgumentException("Shop with id " + id + " does not exist");
-            }
-        }
         economy = PrimeGames.getInstance().getEconomy();
         openMainMenu();
     }

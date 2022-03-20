@@ -9,6 +9,17 @@ public abstract class BedrockPlayerCallback {
 
     private final ArrayList<DeviceOs> ignoreList = new ArrayList<>();
 
+
+    public BedrockPlayerCallback() {
+    }
+
+    public BedrockPlayerCallback(DeviceOs ... ignoreDeviceOs) {
+        for (DeviceOs os : ignoreDeviceOs) {
+            ignore(os);
+        }
+    }
+
+
     public abstract void call(Player player);
 
 
