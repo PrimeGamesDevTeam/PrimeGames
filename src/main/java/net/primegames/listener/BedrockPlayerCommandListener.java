@@ -25,13 +25,13 @@ public class BedrockPlayerCommandListener implements Listener {
             public void call(Player player) {
                 ShopForm.init(player);
             }
-        });
+        }, "shops");
         handle("warp", new BedrockPlayerCallback() {
             @Override
             public void call(Player player) {
                 WarpsForm.init(player);
             }
-        });
+        }, "warps");
     }
 
     public static void handle(String command, BedrockPlayerCallback callback, String ...commandAliases) {
