@@ -22,16 +22,16 @@ public class LeaderboardComponent implements Component {
             return;
         }
         instance = this;
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(PrimeGames.getInstance(), () -> leaderboards.forEach((name, lb) -> lb.scheduleUpdate()), 100, 1200);
+        //Bukkit.getScheduler().scheduleSyncRepeatingTask(PrimeGames.getInstance(), () -> leaderboards.forEach((name, lb) -> lb.scheduleUpdate()), 100, 1200);
     }
     @Override
     public @NonNull String getIdentifier() {
         return "LeaderboardComponent";
     }
 
-    public void registerLeaderboard(Leaderboard leaderboard) {
-        leaderboards.put(leaderboard.getName(), leaderboard);
-    }
+//    public void registerLeaderboard(Leaderboard leaderboard) {
+//        leaderboards.put(leaderboard.getName(), leaderboard);
+//    }
 
     public void getLeaderboard(String name) {
         leaderboards.get(name);
