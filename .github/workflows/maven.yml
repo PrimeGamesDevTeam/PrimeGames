@@ -26,4 +26,11 @@ jobs:
       uses: whelk-io/maven-settings-xml-action@v21    
     - name: Build with Maven
       run: mvn -B package --file pom.xml
+    - name: Delete Package Versions
+      uses: actions/delete-package-versions@v4.1.1
+      with: 
+       package-name: 'primegames'
+       package-type: 'npm'
+       min-versions-to-keep: 10
+       delete-only-pre-release-versions: "false"
 
