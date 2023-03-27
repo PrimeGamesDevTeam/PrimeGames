@@ -33,4 +33,3 @@ jobs:
        package-type: 'npm'
        min-versions-to-keep: 10
        delete-only-pre-release-versions: "false"
-
